@@ -1,0 +1,60 @@
+{
+  "bsonType": "object",
+  "required": ["name", "capacity", "cover"],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "name": {
+      "bsonType": "string",
+      "label": "包厢名称",
+      "description": "展示名称",
+      "trim": true,
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "capacity": {
+      "bsonType": "int",
+      "label": "容纳人数",
+      "description": "可容纳人数"
+    },
+    "cover": {
+      "bsonType": "string",
+      "label": "封面文件ID",
+      "description": "云存储fileID或URL"
+    },
+    "hot": {
+      "bsonType": "bool",
+      "label": "是否热门",
+      "defaultValue": false
+    },
+    "themed": {
+      "bsonType": "bool",
+      "label": "是否主题精选",
+      "defaultValue": false
+    },
+    "sort": {
+      "bsonType": "int",
+      "label": "排序值",
+      "defaultValue": 999
+    },
+    "created_at": {
+      "bsonType": "timestamp",
+      "label": "创建时间",
+      "defaultValue": { "$env": "now" }
+    },
+    "updated_at": {
+      "bsonType": "timestamp",
+      "label": "更新时间",
+      "defaultValue": { "$env": "now" }
+    }
+  },
+  "requiredPushRules": ["cover"],
+  "validationLevel": "strict",
+  "validationAction": "error"
+}
+
+

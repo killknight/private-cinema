@@ -1,0 +1,16 @@
+{
+  "bsonType": "object",
+  "required": ["openTime", "closeTime"],
+  "permission": { "read": true },
+  "properties": {
+    "openTime": { "bsonType": "string", "label": "开门时间", "description": "HH:mm" },
+    "closeTime": { "bsonType": "string", "label": "打烊时间", "description": "HH:mm" },
+    "tags": {
+      "bsonType": "array",
+      "items": { "bsonType": "string" },
+      "label": "特色标签"
+    }
+  }
+}
+
+

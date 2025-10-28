@@ -1,0 +1,67 @@
+[
+	{
+		"name": "情侣主题房",
+		"capacity": 2,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": true,
+		"sort": 1
+	},
+	{
+		"name": "家庭欢聚房",
+		"capacity": 4,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": true,
+		"sort": 2
+	},
+	{
+		"name": "漫威主题房",
+		"capacity": 6,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": true,
+		"sort": 3
+	},
+	{
+		"name": "电竞观赛房",
+		"capacity": 4,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": false,
+		"sort": 4
+	},
+	{
+		"name": "女神专享房",
+		"capacity": 2,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": false,
+		"sort": 5
+	},
+	{
+		"name": "复古怀旧房",
+		"capacity": 4,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": true,
+		"themed": false,
+		"sort": 6
+	},
+	{
+		"name": "星际大战",
+		"capacity": 4,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": false,
+		"themed": true,
+		"sort": 7
+	},
+	{
+		"name": "海底世界",
+		"capacity": 6,
+		"cover": "cloud://env-00jxu7cbl7c1/bx/bx.jpg",
+		"hot": false,
+		"themed": true,
+		"sort": 8
+	}
+]
+
