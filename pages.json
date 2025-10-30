@@ -275,23 +275,23 @@
 	},
 	"tabBar": {
 		"color": "#bfbfbf",
-		"selectedColor": "#C084FC",
+		"selectedColor": "#8b5cf6",
 		"backgroundColor": "#0f1320",
 		"list": [{
 			"pagePath": "pages/home/home",
-			"iconPath": "/static/tabbar/intro.png",
-			"selectedIconPath": "/static/tabbar/intro_active.png",
+			"iconPath": "/static/tabbar/home.png",
+			"selectedIconPath": "/static/tabbar/home_active.png",
 			"text": "首页"
 		}, {
 			"pagePath": "pages/cinema-introduction/cinema-introduction",
-			"iconPath": "static/tabbar/grid.png",
-			"selectedIconPath": "static/tabbar/grid_active.png",
+			"iconPath": "static/tabbar/intro.png",
+			"selectedIconPath": "static/tabbar/intro_active.png",
 			"text": "影院介绍"
 		}, {
 			"pagePath": "pages/ucenter/ucenter",
-			"iconPath": "static/tabbar/me.png",
-			"selectedIconPath": "static/tabbar/me_active.png",
-			"text": "我的"
+			"iconPath": "/static/tabbar/contact.png",
+			"selectedIconPath": "/static/tabbar/contact_active.png",
+			"text": "联系客服"
 		}]
 	},
 	"uniIdRouter": {
