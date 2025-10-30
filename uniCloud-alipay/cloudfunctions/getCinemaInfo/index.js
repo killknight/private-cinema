@@ -212,6 +212,11 @@ exports.main = async (event, context) => {
       }
     }
     
+    // 确保地址和经纬度信息存在
+    if (!cinemaInfo.address) cinemaInfo.address = "北京市朝阳区建国路88号";
+    if (!cinemaInfo.latitude) cinemaInfo.latitude = 39.908823;
+    if (!cinemaInfo.longitude) cinemaInfo.longitude = 116.466544;
+    
     // 组织返回数据
     return {
       code: 200,

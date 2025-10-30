@@ -15,6 +15,42 @@
       "bsonType": "string",
       "description": "标题"
     },
+    "cinemaName": {
+      "bsonType": "string",
+      "description": "影院名称",
+      "label": "影院名称"
+    },
+    "openTime": {
+      "bsonType": "string",
+      "description": "开门时间",
+      "label": "开门时间"
+    },
+    "closeTime": {
+      "bsonType": "string",
+      "description": "打烊时间",
+      "label": "打烊时间"
+    },
+    "tags": {
+      "bsonType": "array",
+      "items": { "bsonType": "string" },
+      "description": "特色标签",
+      "label": "特色标签"
+    },
+    "address": {
+      "bsonType": "string",
+      "description": "影院地址",
+      "label": "影院地址"
+    },
+    "latitude": {
+      "bsonType": "number",
+      "description": "纬度",
+      "label": "纬度"
+    },
+    "longitude": {
+      "bsonType": "number",
+      "description": "经度",
+      "label": "经度"
+    },
     "story": {
       "bsonType": "array",
       "description": "影院故事文本数组",

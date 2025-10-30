@@ -60,8 +60,7 @@
 			</view>
 			<view class="grid">
 				<view class="card" v-for="room in hotRooms" :key="room.id" @click="toDetail(room)">
-					<!-- <image class="cover" :src="room.cover" mode="aspectFill" /> -->
-					<image class="cover" src="/static/bx.jpg" mode="aspectFill" />
+					<image class="cover" :src="room.cover" mode="aspectFill" />
 					<view class="card-body">
 						<view class="c-title">{{ room.name }}</view>
 						<view class="c-meta"><text class="ico">👥</text>{{ room.capacity }} 人</view>
@@ -164,8 +163,32 @@
 				// 根据不同功能跳转到不同页面
 				if (f.key === 'intro') {
 					uni.switchTab({ url: '/pages/cinema-introduction/cinema-introduction' });
-				} else {
-					// 其他功能暂时保持原有提示
+				} else if (f.key === 'vip') {
+					// 打开地图，使用从云函数返回的店铺位置信息
+					const shopLocation = {
+						name: this.business.cinemaName || '星展影院',
+						address: this.business.address || '北京市朝阳区建国路88号',
+						latitude: this.business.latitude || 39.908823,
+						longitude: this.business.longitude || 116.466544
+					};
+					
+					// 使用uni-app的打开地图功能
+					uni.openLocation({
+						latitude: shopLocation.latitude,
+						longitude: shopLocation.longitude,
+						name: shopLocation.name,
+						address: shopLocation.address,
+						scale: 18,
+						fail: (err) => {
+							console.error('打开地图失败:', err);
+							uni.showToast({ 
+								title: '无法打开地图，请检查是否有权限', 
+								icon: 'none' 
+							});
+						}
+					});
+				} else if (f.key === 'contact') {
+					// 联系客服功能
 					uni.showToast({ title: f.text, icon: 'none' });
 				}
 			},

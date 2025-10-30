@@ -3,26 +3,25 @@
 // 数据库集合名称，可按需修改
 const ROOMS_COLLECTION = 'rooms'
 const BANNER_COLLECTION = 'opendb-banner'
-const CONFIG_COLLECTION = 'cinema-config'
 
 // 返回首页数据：热门包厢、主题包厢（来自数据库）；封面图片使用云存储临时链接
 exports.main = async () => {
   const db = uniCloud.database()
   const collection = db.collection(ROOMS_COLLECTION)
   const bannerCol = db.collection(BANNER_COLLECTION)
-  const configCol = db.collection(CONFIG_COLLECTION)
+  const cinemaInfoCol = db.collection('cinema_info')
 
   // 并行拉取两类数据与轮播
-  const [hotRes, themedRes, bannerRes, configRes] = await Promise.all([
+  const [hotRes, themedRes, bannerRes, cinemaInfoRes] = await Promise.all([
     collection.where({ hot: true }).orderBy('sort', 'asc').limit(6).get(),
     collection.where({ themed: true }).orderBy('sort', 'asc').limit(6).get(),
     bannerCol.where({ status: true }).orderBy('sort', 'asc').limit(5).get(),
-    configCol.limit(1).get()
+    cinemaInfoCol.limit(1).get()
   ])
   let hotRooms = hotRes && hotRes.data ? hotRes.data : []
   let themedRooms = themedRes && themedRes.data ? themedRes.data : []
   let banners = bannerRes && bannerRes.data ? bannerRes.data : []
-  const cfg = (configRes && configRes.data && configRes.data[0]) || null
+  const cinemaInfo = (cinemaInfoRes && cinemaInfoRes.data && cinemaInfoRes.data[0]) || null
 
   // 统一处理封面文件ID为临时URL
   hotRooms = await attachTempFileURL(hotRooms)
@@ -35,11 +34,23 @@ exports.main = async () => {
     themedRooms = mockRooms(6)
   }
 
-  const business = cfg ? {
-    openTime: cfg.openTime || '10:00',
-    closeTime: cfg.closeTime || '24:00',
-    tags: Array.isArray(cfg.tags) ? cfg.tags : []
-  } : { openTime: '10:00', closeTime: '24:00', tags: ['4K HDR','杜比音效','私密空间','主题包厢'] }
+  const business = cinemaInfo ? {
+    openTime: cinemaInfo.openTime || '10:00',
+    closeTime: cinemaInfo.closeTime || '24:00',
+    tags: Array.isArray(cinemaInfo.tags) ? cinemaInfo.tags : [],
+    address: cinemaInfo.address || '北京市朝阳区建国路88号',
+    latitude: cinemaInfo.latitude || 39.908823,
+    longitude: cinemaInfo.longitude || 116.466544,
+    cinemaName: cinemaInfo.cinemaName || '星展影院'
+  } : { 
+    openTime: '10:00', 
+    closeTime: '24:00', 
+    tags: ['4K HDR','杜比音效','私密空间','主题包厢'],
+    address: '北京市朝阳区建国路88号',
+    latitude: 39.908823,
+    longitude: 116.466544,
+    cinemaName: '星展影院'
+  }
 
   return { code: 0, msg: 'ok', data: { hotRooms, themedRooms, banners, business } }
 }
