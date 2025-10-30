@@ -1,0 +1,372 @@
+<template>
+	<view class="cinema-intro">
+		<!-- 主要内容区域 -->
+		<scroll-view class="content" scroll-y>
+			<!-- 我们的故事 -->
+			<view class="section story">
+				<view class="section-title">我们的故事</view>
+				<view class="story-content">
+					<text v-if="!cinemaInfo" class="story-text">加载中...</text>
+					<template v-else>
+						<text v-for="(paragraph, index) in cinemaInfo.story" :key="index" class="story-text">{{ paragraph }}</text>
+					</template>
+				</view>
+			</view>
+
+			<!-- 环境与设施 -->
+			<view class="section environment">
+				<view class="section-title">环境与设施</view>
+				<swiper class="env-swiper" circular autoplay interval="4000" duration="500" :indicator-dots="false">
+					<swiper-item v-for="(env, idx) in environmentImages" :key="env._id || idx">
+						<image class="env-img" :src="env.image" mode="aspectFill" />
+					</swiper-item>
+				</swiper>
+			</view>
+
+			<!-- 员工介绍 -->
+			<view class="section staff">
+				<view class="section-title">专业团队</view>
+				<view class="staff-grid">
+					<view class="staff-card" v-for="staff in staffList" :key="staff._id">
+						<image class="staff-avatar" :src="staff.avatar" mode="aspectFill" />
+						<view class="staff-info">
+							<text class="staff-name">{{ staff.name }}</text>
+							<text class="staff-position">{{ staff.position }}</text>
+							<text class="staff-desc">{{ staff.description }}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<!-- 包厢类型 -->
+			<view class="section rooms">
+				<view class="section-title">包厢类型</view>
+				<view class="room-list">
+					<view class="room-card" v-for="room in roomTypes" :key="room._id">
+						<image class="room-image" :src="room.image" mode="aspectFill" />
+						<view class="room-content">
+							<view class="room-header">
+								<text class="room-name">{{ room.name }}</text>
+								<text class="room-capacity">👥 {{ room.capacity }}人</text>
+							</view>
+							<text class="room-desc">{{ room.description }}</text>
+							<view class="room-tags">
+								<text v-for="tag in room.tags" :key="tag" class="room-tag">{{ tag }}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<!-- 设备配置 -->
+			<view class="section equipment">
+				<view class="section-title">设备配置</view>
+				<view class="equipment-list">
+					<view class="equipment-item" v-for="item in equipmentList" :key="item.id">
+						<text class="equipment-icon">{{ item.icon }}</text>
+						<view class="equipment-info">
+							<text class="equipment-title">{{ item.title }}</text>
+							<text class="equipment-desc">{{ item.description }}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<!-- 服务亮点 -->
+			<view class="section services">
+				<view class="section-title">服务亮点</view>
+				<view class="service-grid">
+					<view class="service-card" v-for="service in serviceList" :key="service.id">
+						<text class="service-icon">{{ service.icon }}</text>
+						<view class="service-content">
+							<text class="service-title">{{ service.title }}</text>
+							<text class="service-desc">{{ service.description }}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				statusBarHeight: 0,
+				cinemaInfo: null,
+				environmentImages: [],
+				staffList: [],
+				roomTypes: [],
+				equipmentList: [],
+				serviceList: []
+			}
+		},
+		onLoad() {
+			const info = uni.getSystemInfoSync();
+			this.statusBarHeight = (info.statusBarHeight || 0);
+			this.loadCinemaInfo();
+		},
+		methods: {
+			async loadCinemaInfo() {
+				try {
+					const { result } = await uniCloud.callFunction({
+						name: 'getCinemaInfo'
+					});
+					
+					if (result.code === 200) {
+						// 处理返回的数据
+						this.cinemaInfo = result.data.cinemaInfo || null;
+						this.environmentImages = result.data.environmentImages || [];
+						this.staffList = result.data.staffList || [];
+						this.roomTypes = result.data.roomTypes || [];
+						this.equipmentList = result.data.equipmentList || [];
+						this.serviceList = result.data.serviceList || [];
+					} else {
+						uni.showToast({
+							title: result.message || '获取影院信息失败',
+							icon: 'none'
+						});
+					}
+				} catch (error) {
+					console.error('调用云函数失败:', error);
+					uni.showToast({
+						title: '网络错误，请稍后重试',
+						icon: 'none'
+					});
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+.cinema-intro {
+	background: #0f1320;
+	min-height: 100vh;
+	color: #e7e9f0;
+}
+
+.nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12rpx 24rpx 20rpx 24rpx;
+	box-sizing: border-box;
+	border-bottom: 1rpx solid rgba(255,255,255,0.1);
+}
+.brand {
+	display: flex;
+	align-items: center;
+}
+.brand-icon { color: #8b5cf6; margin-right: 12rpx; }
+.brand-name { font-weight: 700; font-size: 36rpx; }
+
+.content {
+	height: calc(100vh - 20rpx);
+}
+
+.section {
+	margin: 40rpx 24rpx;
+}
+
+.section-title {
+	font-size: 36rpx;
+	font-weight: 700;
+	margin-bottom: 30rpx;
+	color: #ffffff;
+}
+
+/* 我们的故事 */
+.story-content {
+	/* padding: 40rpx 32rpx; */
+}
+.story-text {
+	display: block;
+	font-size: 28rpx;
+	line-height: 1.8;
+	color: #c9d1ee;
+	margin-bottom: 24rpx;
+}
+.story-text:last-child {
+	margin-bottom: 0;
+}
+
+/* 环境与设施 */
+.env-swiper {
+	height: 400rpx;
+	border-radius: 20rpx;
+	overflow: hidden;
+}
+.env-img {
+	width: 100%;
+	height: 100%;
+}
+
+/* 员工介绍 */
+.staff-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 24rpx;
+}
+.staff-card {
+	display: flex;
+	background: #171b2b;
+	border-radius: 20rpx;
+	padding: 32rpx;
+	gap: 24rpx;
+}
+.staff-avatar {
+	width: 120rpx;
+	height: 120rpx;
+	border-radius: 60rpx;
+}
+.staff-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.staff-name {
+	font-size: 32rpx;
+	font-weight: 700;
+	color: #ffffff;
+	margin-bottom: 8rpx;
+}
+.staff-position {
+	font-size: 24rpx;
+	color: #8b5cf6;
+	margin-bottom: 12rpx;
+}
+.staff-desc {
+	font-size: 26rpx;
+	color: #9aa3c7;
+	line-height: 1.6;
+}
+
+/* 包厢类型 */
+.room-list {
+	display: flex;
+	flex-direction: column;
+	gap: 32rpx;
+}
+.room-card {
+	background: #171b2b;
+	border-radius: 20rpx;
+	overflow: hidden;
+}
+.room-image {
+	width: 100%;
+	height: 300rpx;
+}
+.room-content {
+	padding: 18rpx 24rpx;
+}
+.room-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16rpx;
+}
+.room-name {
+	font-size: 32rpx;
+	font-weight: 700;
+	color: #ffffff;
+}
+.room-capacity {
+	font-size: 24rpx;
+	color: #8b5cf6;
+}
+.room-desc {
+	font-size: 26rpx;
+	color: #9aa3c7;
+	line-height: 1.6;
+	margin-bottom: 20rpx;
+}
+.room-tags {
+	display: flex;
+	gap: 12rpx;
+	flex-wrap: wrap;
+	margin-top: 24rpx;
+}
+.room-tag {
+	background: #22273b;
+	color: #aeb6d6;
+	padding: 8rpx 16rpx;
+	border-radius: 999rpx;
+	font-size: 22rpx;
+}
+
+/* 设备配置 */
+.equipment-list {
+	display: flex;
+	flex-direction: column;
+	gap: 24rpx;
+}
+.equipment-item {
+	display: flex;
+	align-items: center;
+	// background: #171b2b;
+	border-radius: 20rpx;
+	padding: 12rpx 0rpx;
+	gap: 24rpx;
+}
+.equipment-icon {
+	font-size: 48rpx;
+	width: 80rpx;
+	height: 80rpx;
+	background: rgba(139,92,246,0.15);
+	border-radius: 999rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #b197ff;
+}
+.equipment-info {
+	flex: 1;
+}
+.equipment-title {
+	font-size: 28rpx;
+	font-weight: 700;
+	color: #ffffff;
+	display: block;
+	margin-bottom: 8rpx;
+}
+.equipment-desc {
+	font-size: 24rpx;
+	color: #9aa3c7;
+	line-height: 1.5;
+}
+
+/* 服务亮点 */
+.service-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 24rpx;
+}
+.service-card {
+	background: #171b2b;
+	border-radius: 20rpx;
+	padding: 32rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+.service-icon {
+	font-size: 48rpx;
+	margin-bottom: 16rpx;
+}
+.service-title {
+	font-size: 28rpx;
+	font-weight: 700;
+	color: #ffffff;
+	display: block;
+	margin-bottom: 8rpx;
+}
+.service-desc {
+	font-size: 24rpx;
+	color: #9aa3c7;
+	line-height: 1.5;
+}
+</style>

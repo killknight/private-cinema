@@ -1,0 +1,105 @@
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID"
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "标题"
+    },
+    "story": {
+      "bsonType": "array",
+      "description": "影院故事文本数组",
+      "items": {
+        "bsonType": "string"
+      }
+    },
+    "equipment": {
+      "bsonType": "array",
+      "description": "设备配置列表",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "id": {
+            "bsonType": "int",
+            "description": "设备ID"
+          },
+          "icon": {
+            "bsonType": "string",
+            "description": "设备图标"
+          },
+          "title": {
+            "bsonType": "string",
+            "description": "设备标题"
+          },
+          "description": {
+            "bsonType": "string",
+            "description": "设备描述"
+          }
+        }
+      }
+    },
+    "services": {
+      "bsonType": "array",
+      "description": "服务亮点列表",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "id": {
+            "bsonType": "int",
+            "description": "服务ID"
+          },
+          "icon": {
+            "bsonType": "string",
+            "description": "服务图标"
+          },
+          "title": {
+            "bsonType": "string",
+            "description": "服务标题"
+          },
+          "description": {
+            "bsonType": "string",
+            "description": "服务描述"
+          }
+        }
+      }
+    },
+    "environments": {
+      "bsonType": "array",
+      "description": "环境图片列表",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "id": {
+            "bsonType": "int",
+            "description": "环境ID"
+          },
+          "image": {
+            "bsonType": "string",
+            "description": "环境图片fileID"
+          },
+          "order": {
+            "bsonType": "number",
+            "description": "排序序号"
+          }
+        }
+      }
+    },
+    "createTime": {
+      "bsonType": "timestamp",
+      "description": "创建时间"
+    },
+    "updateTime": {
+      "bsonType": "timestamp",
+      "description": "更新时间"
+    }
+  }
+}

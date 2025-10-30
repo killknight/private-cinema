@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "culture_1",
+    "icon": "star",
+    "title": "热爱电影",
+    "description": "我们深爱着电影艺术，致力于为观众带来最纯粹的观影体验",
+    "order": 1,
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  },
+  {
+    "_id": "culture_2",
+    "icon": "users",
+    "title": "以客户为中心",
+    "description": "每一位顾客的需求都是我们服务的核心，用心创造满意体验",
+    "order": 2,
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  },
+  {
+    "_id": "culture_3",
+    "icon": "rocket",
+    "title": "追求卓越",
+    "description": "不断提升服务品质和技术水平，为顾客带来超越期待的体验",
+    "order": 3,
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  },
+  {
+    "_id": "culture_4",
+    "icon": "heart",
+    "title": "团队协作",
+    "description": "我们是一个充满活力的团队，相互支持，共同成长",
+    "order": 4,
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  }
+]

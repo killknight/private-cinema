@@ -1,0 +1,47 @@
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "teamInfo": {
+      "bsonType": "object",
+      "description": "团队基本信息",
+      "properties": {
+        "title": {"bsonType": "string"},
+        "description": {"bsonType": "string"}
+      }
+    },
+    "coreMembers": {
+      "bsonType": "array",
+      "description": "核心团队成员"
+    },
+    "serviceMembers": {
+      "bsonType": "array",
+      "description": "服务团队成员"
+    },
+    "cultures": {
+      "bsonType": "array",
+      "description": "企业文化"
+    },
+    "joinInfo": {
+      "bsonType": "object",
+      "description": "加入我们信息"
+    },
+    "createTime": {
+      "bsonType": "timestamp",
+      "description": "创建时间"
+    },
+    "updateTime": {
+      "bsonType": "timestamp",
+      "description": "更新时间"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "icon": {
+      "bsonType": "string",
+      "description": "文化图标"
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "文化标题"
+    },
+    "description": {
+      "bsonType": "string",
+      "description": "文化描述"
+    },
+    "order": {
+      "bsonType": "number",
+      "description": "排序字段"
+    },
+    "createTime": {
+      "bsonType": "timestamp",
+      "description": "创建时间"
+    },
+    "updateTime": {
+      "bsonType": "timestamp",
+      "description": "更新时间"
+    }
+  }
+}

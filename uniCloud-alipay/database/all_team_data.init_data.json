@@ -1,0 +1,112 @@
+[
+  {
+    "_id": "all_info",
+    "teamInfo": {
+      "title": "遇见星辰团队",
+      "description": "我们是一群热爱电影与服务的专业人士，致力于为您打造极致观影体验"
+    },
+    "coreMembers": [
+      {
+        "id": "core_member_1",
+        "name": "张明",
+        "position": "创始人兼CEO",
+        "bio": "拥有10年电影行业经验，曾就职于多家知名影院集团，致力于打造高品质私人观影体验",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m1.jpg",
+        "socialIcons": [
+          {"type": "weixin", "url": "#"},
+          {"type": "linkedin", "url": "#"},
+          {"type": "email", "url": "#"}
+        ]
+      },
+      {
+        "id": "core_member_2",
+        "name": "李芳",
+        "position": "运营总监",
+        "bio": "8年影院运营管理经验，擅长用户体验设计和会员体系构建",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m2.jpg",
+        "socialIcons": [
+          {"type": "weixin", "url": "#"},
+          {"type": "linkedin", "url": "#"}
+        ]
+      },
+      {
+        "id": "core_member_3",
+        "name": "王强",
+        "position": "技术总监",
+        "bio": "全栈开发工程师，专注于影院数字化建设和智能化观影解决方案",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m3.jpg",
+        "socialIcons": [
+          {"type": "github", "url": "#"},
+          {"type": "linkedin", "url": "#"}
+        ]
+      }
+    ],
+    "serviceMembers": [
+      {
+        "id": "service_member_1",
+        "name": "赵娜",
+        "position": "客户服务主管",
+        "bio": "5年高端客户服务经验，致力于为每一位顾客提供贴心周到的观影服务",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m4.jpg",
+        "socialIcons": []
+      },
+      {
+        "id": "service_member_2",
+        "name": "陈思",
+        "position": "影院经理",
+        "bio": "7年影院管理经验，熟悉放映技术和影院运营的各个环节",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m5.jpg",
+        "socialIcons": []
+      },
+      {
+        "id": "service_member_3",
+        "name": "刘洋",
+        "position": "技术支持专员",
+        "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m6.jpg",
+        "socialIcons": []
+      },
+      {
+        "id": "service_member_4",
+        "name": "吴思雨",
+        "position": "技术支持专员",
+        "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
+        "avatar": "cloud://env-00jxu7cbl7c1/td/m7.jpg",
+        "socialIcons": []
+      }
+    ],
+    "cultures": [
+      {
+        "id": "culture_1",
+        "icon": "star",
+        "title": "热爱电影",
+        "description": "我们深爱着电影艺术，致力于为观众带来最纯粹的观影体验"
+      },
+      {
+        "id": "culture_2",
+        "icon": "users",
+        "title": "以客户为中心",
+        "description": "每一位顾客的需求都是我们服务的核心，用心创造满意体验"
+      },
+      {
+        "id": "culture_3",
+        "icon": "rocket",
+        "title": "追求卓越",
+        "description": "不断提升服务品质和技术水平，为顾客带来超越期待的体验"
+      },
+      {
+        "id": "culture_4",
+        "icon": "heart",
+        "title": "团队协作",
+        "description": "我们是一个充满活力的团队，相互支持，共同成长"
+      }
+    ],
+    "joinInfo": {
+      "title": "加入我们",
+      "description": "我们正在寻找热爱电影与服务的你，一起创造更多美好回忆",
+      "buttonText": "查看职位"
+    },
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  }
+]

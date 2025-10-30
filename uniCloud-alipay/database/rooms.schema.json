@@ -26,6 +26,22 @@
       "label": "封面文件ID",
       "description": "云存储fileID或URL"
     },
+    "description": {
+      "bsonType": "string",
+      "label": "包厢描述",
+      "description": "包厢详细介绍",
+      "trim": true,
+      "maxLength": 500
+    },
+    "tags": {
+      "bsonType": "array",
+      "label": "包厢标签",
+      "description": "包厢特色标签",
+      "items": {
+        "bsonType": "string"
+      },
+      "defaultValue": []
+    },
     "hot": {
       "bsonType": "bool",
       "label": "是否热门",

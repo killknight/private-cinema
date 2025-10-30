@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "main",
+    "title": "加入我们",
+    "description": "我们正在寻找热爱电影与服务的你，一起创造更多美好回忆",
+    "buttonText": "查看职位",
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  }
+]

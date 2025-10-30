@@ -1,0 +1,81 @@
+[
+  {
+    "_id": "cinema_story",
+    "title": "我们的故事",
+    "story": [
+      "星辰影院创立于2018年，源于一群电影爱好者对高品质观影体验的追求。我们相信，电影不仅仅是一种娱乐，更是一种生活方式。",
+      "在这里，我们致力于打造一个私密、舒适、高品质的观影空间，让每一位顾客都能沉浸在电影的世界中，享受无与伦比的视听盛宴。"
+    ],
+    "equipment": [
+      {
+        "id": 1,
+        "icon": "📺",
+        "title": "4K超清投影",
+        "description": "采用最新4K激光投影技术，画面清晰细腻"
+      },
+      {
+        "id": 2,
+        "icon": "🔊",
+        "title": "杜比全景声",
+        "description": "专业级音响系统，带来沉浸式听觉体验"
+      },
+      {
+        "id": 3,
+        "icon": "💺",
+        "title": "电动沙发",
+        "description": "可调节电动沙发，观影姿势随心所欲"
+      },
+      {
+        "id": 4,
+        "icon": "❄️",
+        "title": "中央空调",
+        "description": "独立温控系统，确保观影环境舒适宜人"
+      }
+    ],
+    "services": [
+      {
+        "id": 1,
+        "icon": "🎯",
+        "title": "专属定制",
+        "description": "根据您的需求定制专属观影方案"
+      },
+      {
+        "id": 2,
+        "icon": "⏰",
+        "title": "24小时服务",
+        "description": "全天候营业，随时满足您的观影需求"
+      },
+      {
+        "id": 3,
+        "icon": "🍿",
+        "title": "免费小食",
+        "description": "提供爆米花、饮料等观影小食"
+      },
+      {
+        "id": 4,
+        "icon": "🎁",
+        "title": "会员特权",
+        "description": "会员专享折扣和优先预约服务"
+      }
+    ],
+    "environments": [
+      {
+        "id": 1,
+        "image": "cloud://env-00jxu7cbl7c1/banner/bj1.jpg",
+        "order": 1
+      },
+      {
+        "id": 2,
+        "image": "cloud://env-00jxu7cbl7c1/banner/bj2.jpg",
+        "order": 2
+      },
+      {
+        "id": 3,
+        "image": "cloud://env-00jxu7cbl7c1/banner/bj3.jpg",
+        "order": 3
+      }
+    ],
+    "createTime": {"$date": "2023-01-01T00:00:00Z"},
+    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
+  }
+]
