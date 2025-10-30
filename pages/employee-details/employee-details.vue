@@ -33,6 +33,7 @@
 			<!-- 成就展示 - 自动轮播显示所有生活照 -->
 			<view class="achievement-section">
 				<view class="achievement-container">
+					<image class="achievement-bg" :src="currentLifeMoment" mode="aspectFill"></image>
 					<view class="achievement-item">
 						<image class="achievement-image" :src="currentLifeMoment" mode="aspectFit"></image>
 					</view>
@@ -424,48 +425,71 @@ export default {
 
 		// 成就展示
 		.achievement-section {
-			margin: 0 24rpx 0rpx;
-			padding: 40rpx 24rpx;
+				margin: 0 24rpx 0rpx;
+				padding: 40rpx 24rpx;
 
-			.section-title {
-				font-size: 36rpx;
-				font-weight: 700;
-				color: #ffffff;
-				margin-bottom: 30rpx;
-				position: relative;
+				.section-title {
+					font-size: 36rpx;
+					font-weight: 700;
+					color: #ffffff;
+					margin-bottom: 30rpx;
+					position: relative;
 
-				&::after {
-					content: '';
-					display: block;
-					position: absolute;
-					bottom: -10rpx;
-					left: 0;
-					width: 100rpx;
-					height: 6rpx;
-					background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-					border-radius: 3rpx;
+					&::after {
+						content: '';
+						display: block;
+						position: absolute;
+						bottom: -10rpx;
+						left: 0;
+						width: 100rpx;
+						height: 6rpx;
+						background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+						border-radius: 3rpx;
+					}
 				}
-			}
 
-			.achievement-container {
-				width: 100%;
-				border-radius: 20rpx;
-				overflow: hidden;
-			}
+				.achievement-container {
+					width: 100%;
+					height: 500rpx;
+					border-radius: 20rpx;
+					overflow: hidden;
+					position: relative;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
 
-			.achievement-item {
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
+				// 背景模糊层
+				.achievement-bg {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					filter: blur(30rpx);
+					opacity: 0.7;
+					z-index: 1;
+					// transform: scale(1.1); // 稍微放大背景以消除边缘空白
+					object-fit: cover;
+				}
 
-			.achievement-image {
-				width: 100%;
-				height: 500rpx;
-				object-fit: cover;
-				border-radius: 20rpx;
-			}
+				.achievement-item {
+					width: 100%;
+					height: 100%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					position: relative;
+					z-index: 2;
+				}
+
+				.achievement-image {
+					max-width: 100%;
+					max-height: 100%;
+					object-fit: contain;
+					border-radius: 20rpx;
+					transform: scale(1.15);
+				}
 		}
 
 		// 生活瞬间
