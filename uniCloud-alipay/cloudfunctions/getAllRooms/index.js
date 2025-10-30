@@ -13,8 +13,9 @@ exports.main = async (event, context) => {
     
     // 如果有标签筛选
     if (tag && tag !== '全部包厢') {
+      // 使用$all操作符查询数组中包含指定标签的文档
       query = query.where({
-        tags: tag
+        tags: db.command.all([tag])
       });
     }
     
