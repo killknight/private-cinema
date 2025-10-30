@@ -446,6 +446,11 @@
 		margin-bottom: 20rpx;
 		padding: 0;
 		word-break: break-all;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
 	}
 
 	/* 社交图标 */
@@ -650,6 +655,11 @@
 		position: relative;
 		z-index: 1;
 		text-align: center;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
 	}
 
 	/* 企业文化样式 */
@@ -723,6 +733,11 @@
 		color: rgba(255, 255, 255, 0.7);
 		position: relative;
 		z-index: 1;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
 	}
 
 	/* 加入我们样式 */
