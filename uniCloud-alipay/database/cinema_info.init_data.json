@@ -62,16 +62,19 @@
       {
         "id": 1,
         "image": "cloud://env-00jxu7cbl7c1/banner/bj1.jpg",
+        "name": "豪华接待大厅",
         "order": 1
       },
       {
         "id": 2,
         "image": "cloud://env-00jxu7cbl7c1/banner/bj2.jpg",
+        "name": "舒适观影区",
         "order": 2
       },
       {
         "id": 3,
         "image": "cloud://env-00jxu7cbl7c1/banner/bj3.jpg",
+        "name": "高级休息区",
         "order": 3
       }
     ],

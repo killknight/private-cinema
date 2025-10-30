@@ -4,7 +4,9 @@
 		<scroll-view class="content" scroll-y>
 			<!-- 我们的故事 -->
 			<view class="section story">
-				<view class="section-title">我们的故事</view>
+				<view class="section-header">
+					<view class="section-title">我们的故事</view>
+				</view>
 				<view class="story-content">
 					<text v-if="!cinemaInfo" class="story-text">加载中...</text>
 					<template v-else>
@@ -15,19 +17,33 @@
 
 			<!-- 环境与设施 -->
 			<view class="section environment">
-				<view class="section-title">环境与设施</view>
-				<swiper class="env-swiper" circular autoplay interval="4000" duration="500" :indicator-dots="false">
-					<swiper-item v-for="(env, idx) in environmentImages" :key="env._id || idx">
-						<image class="env-img" :src="env.image" mode="aspectFill" />
-					</swiper-item>
-				</swiper>
+				<view class="section-header">
+					<view class="section-title">环境与设施</view>
+				</view>
+				<view class="swiper-container">
+					<swiper ref="envSwiper" class="env-swiper" circular autoplay interval="4000" duration="500" :indicator-dots="true" :indicator-active-color="'#ffffff'" :indicator-color="'rgba(255, 255, 255, 0.5)'" indicator-dots-class="custom-indicators" @change="onSwiperChange">
+						<swiper-item v-for="(env, idx) in environmentImages" :key="env._id || idx">
+							<view class="swiper-item-wrapper">
+								<image class="env-img" :src="env.image" mode="aspectFill" />
+								<view class="swiper-text-overlay">
+									<text class="swiper-text">{{ env.name || (idx === 0 ? '豪华接待大厅' : `环境 ${idx + 1}`) }}</text>
+								</view>
+							</view>
+						</swiper-item>
+					</swiper>
+					<!-- 左右箭头 -->
+					<!-- <view class="swiper-arrow swiper-arrow-left" @click="prevSwiper">&lt;</view>
+					<view class="swiper-arrow swiper-arrow-right" @click="nextSwiper">&gt;</view> -->
+				</view>
 			</view>
-
 			<!-- 员工介绍 -->
 			<view class="section staff">
-				<view class="section-title">专业团队</view>
+				<view class="section-header">
+					<view class="section-title">专业团队</view>
+					<text class="more-btn" @click="toTeamPage" v-if="staffList.length > 3">查看更多 〉</text>
+				</view>
 				<view class="staff-grid">
-					<view class="staff-card" v-for="staff in staffList" :key="staff._id">
+					<view class="staff-card" v-for="staff in staffList.slice(0, 4)" :key="staff._id">
 						<image class="staff-avatar" :src="staff.avatar" mode="aspectFill" />
 						<view class="staff-info">
 							<text class="staff-name">{{ staff.name }}</text>
@@ -39,10 +55,13 @@
 			</view>
 
 			<!-- 包厢类型 -->
-			<view class="section rooms">
+		<view class="section rooms">
+			<view class="section-header">
 				<view class="section-title">包厢类型</view>
-				<view class="room-list">
-					<view class="room-card" v-for="room in roomTypes" :key="room._id">
+				<text class="more-btn" @click="toRoomsPage" v-if="roomTypes.length > 4">查看更多 〉</text>
+			</view>
+			<view class="room-list">
+				<view class="room-card" v-for="room in roomTypes.slice(0, 4)" :key="room._id">
 						<image class="room-image" :src="room.image" mode="aspectFill" />
 						<view class="room-content">
 							<view class="room-header">
@@ -60,7 +79,9 @@
 
 			<!-- 设备配置 -->
 			<view class="section equipment">
-				<view class="section-title">设备配置</view>
+				<view class="section-header">
+					<view class="section-title">设备配置</view>
+				</view>
 				<view class="equipment-list">
 					<view class="equipment-item" v-for="item in equipmentList" :key="item.id">
 						<text class="equipment-icon">{{ item.icon }}</text>
@@ -74,7 +95,9 @@
 
 			<!-- 服务亮点 -->
 			<view class="section services">
-				<view class="section-title">服务亮点</view>
+				<view class="section-header">
+					<view class="section-title">服务亮点</view>
+				</view>
 				<view class="service-grid">
 					<view class="service-card" v-for="service in serviceList" :key="service.id">
 						<text class="service-icon">{{ service.icon }}</text>
@@ -91,18 +114,23 @@
 
 <script>
 	export default {
-		data() {
-			return {
-				statusBarHeight: 0,
-				cinemaInfo: null,
-				environmentImages: [],
-				staffList: [],
-				roomTypes: [],
-				equipmentList: [],
-				serviceList: []
-			}
-		},
-		onLoad() {
+			data() {
+				return {
+					statusBarHeight: 0,
+					cinemaInfo: null,
+					environmentImages: [
+						{ image: '/static/banner/bj1.jpg', name: '豪华接待大厅' },
+						{ image: '/static/banner/bj2.jpg', name: '精品包厢环境' },
+						{ image: '/static/banner/bj3.jpg', name: '专业影音设备' }
+					],
+					staffList: [],
+					roomTypes: [],
+					equipmentList: [],
+					serviceList: [],
+					swiperCurrent: 0
+				}
+			},
+			onLoad() {
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
 			this.loadCinemaInfo();
@@ -135,8 +163,32 @@
 						icon: 'none'
 					});
 				}
+			},
+			toTeamPage() {
+				// 跳转到团队页面
+				uni.navigateTo({ url: '/pages/our-team/our-team' });
+			},
+			toRoomsPage() {
+				// 跳转到包厢列表页面
+				uni.navigateTo({ url: '/pages/all-private-boxes/all-private-boxes' });
+			},
+			// 轮播图控制
+			prevSwiper() {
+				const swiper = this.$refs.envSwiper;
+				if (swiper) {
+					swiper.slidePrev();
+				}
+			},
+			nextSwiper() {
+				const swiper = this.$refs.envSwiper;
+				if (swiper) {
+					swiper.slideNext();
+				}
+			},
+			onSwiperChange(e) {
+				this.swiperCurrent = e.detail.current;
 			}
-		}
+		},
 	}
 </script>
 
@@ -170,11 +222,34 @@
 	margin: 40rpx 24rpx;
 }
 
+/* 通用标题样式 */
 .section-title {
 	font-size: 36rpx;
 	font-weight: 700;
-	margin-bottom: 30rpx;
 	color: #ffffff;
+	margin-bottom: 0;
+}
+
+/* 带查看更多的标题容器 */
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30rpx;
+	width: 100%;
+}
+
+.section-header .section-title {
+	flex: 1;
+	margin-bottom: 0;
+}
+
+/* 查看更多按钮 */
+.more-btn {
+	font-size: 24rpx;
+	color: #8b5cf6;
+	white-space: nowrap;
+	margin-left: 10rpx;
 }
 
 /* 我们的故事 */
@@ -193,10 +268,87 @@
 }
 
 /* 环境与设施 */
-.env-swiper {
-	height: 400rpx;
+.swiper-container {
+	position: relative;
 	border-radius: 20rpx;
 	overflow: hidden;
+}
+
+.env-swiper {
+	height: 400rpx;
+}
+
+.swiper-item-wrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+/* 文字提示层 */
+.swiper-text-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 30rpx 0 50rpx;
+	z-index: 10;
+	text-align: center;
+}
+
+.swiper-text {
+	display: inline-block;
+	text-align: center;
+	font-size: 24rpx;
+	color: #ffffff;
+	font-weight: 500;
+	background-color: rgba(0, 0, 0, 0.4);
+	padding: 10rpx 30rpx;
+	border-radius: 30rpx;
+	z-index: 11;
+}
+
+/* 左右箭头 */
+.swiper-arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 60rpx;
+	height: 60rpx;
+	background: rgba(0, 0, 0, 0.3);
+	color: #ffffff;
+	font-size: 48rpx;
+	text-align: center;
+	line-height: 60rpx;
+	border-radius: 50%;
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
+.swiper-arrow-left {
+	left: 20rpx;
+}
+
+.swiper-arrow-right {
+	right: 20rpx;
+}
+
+/* 自定义轮播提示点样式 */
+.custom-indicators {
+	bottom: 20rpx !important;
+}
+
+.custom-indicators .uni-swiper-dot {
+	width: 16rpx;
+	height: 16rpx;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.5);
+	margin: 0 12rpx !important;
+}
+
+.custom-indicators .uni-swiper-dot-active {
+	background-color: #ffffff;
+	width: 16rpx;
+	height: 16rpx;
 }
 .env-img {
 	width: 100%;
@@ -215,11 +367,12 @@
 	border-radius: 20rpx;
 	padding: 32rpx;
 	gap: 24rpx;
+	align-items: center;
 }
 .staff-avatar {
-	width: 120rpx;
-	height: 120rpx;
-	border-radius: 60rpx;
+	width: 180rpx;
+	height: 180rpx;
+	border-radius: 90rpx;
 }
 .staff-info {
 	flex: 1;
@@ -266,7 +419,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 16rpx;
+	margin-bottom: 30rpx;
 }
 .room-name {
 	font-size: 32rpx;
@@ -306,7 +459,6 @@
 .equipment-item {
 	display: flex;
 	align-items: center;
-	// background: #171b2b;
 	border-radius: 20rpx;
 	padding: 12rpx 0rpx;
 	gap: 24rpx;

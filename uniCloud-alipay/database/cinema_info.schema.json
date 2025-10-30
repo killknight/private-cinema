@@ -86,6 +86,10 @@
             "bsonType": "string",
             "description": "环境图片fileID"
           },
+          "name": {
+            "bsonType": "string",
+            "description": "环境名称"
+          },
           "order": {
             "bsonType": "number",
             "description": "排序序号"

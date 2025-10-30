@@ -68,13 +68,17 @@ exports.main = async (event, context) => {
       }
     }
     
-    // 转换环境图片URL
+    // 转换环境图片URL并确保包含name字段
     const environmentData = (cinemaData && cinemaData.environments) ? [...cinemaData.environments] : [];
     environmentData.forEach(env => {
       if (env.image) {
         if (fileIdMap[env.image]) {
           env.image = fileIdMap[env.image];
         }
+      }
+      // 确保每个环境图片都有name字段，默认为空字符串
+      if (!env.hasOwnProperty('name')) {
+        env.name = '';
       }
     });
     
