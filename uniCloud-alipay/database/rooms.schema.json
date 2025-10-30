@@ -21,6 +21,16 @@
       "label": "容纳人数",
       "description": "可容纳人数"
     },
+    "price": {
+      "bsonType": "number",
+      "label": "价格",
+      "description": "包厢价格"
+    },
+    "priceUnit": {
+      "bsonType": "string",
+      "label": "价格单位",
+      "description": "价格单位，如'3小时起'"
+    },
     "cover": {
       "bsonType": "string",
       "label": "封面文件ID",

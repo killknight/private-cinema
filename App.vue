@@ -53,4 +53,11 @@
 
 <style>
 	/*每个页面公共css */
+	body {
+		background: #0f1320;
+	}
+	page {
+		min-height: 100vh;
+		background: #0f1320;
+	}
 </style>

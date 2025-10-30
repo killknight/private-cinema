@@ -29,9 +29,9 @@
         <image :src="room.cover" mode="aspectFill" class="room-image"></image>
         <view class="room-info">
           <view class="room-header">
-            <text class="room-name">{{ room.name }}</text>
-            <text class="room-price">¥{{ room.price }}/3小时起</text>
-          </view>
+              <text class="room-name">{{ room.name }}</text>
+              <text class="room-price" v-if="room.price && room.priceUnit">¥{{ room.price }}/{{ room.priceUnit }}</text>
+            </view>
           <view class="room-capacity">{{ room.capacity }}人</view>
           <text class="room-description">{{ room.description }}</text>
           <view class="room-tags">
@@ -39,7 +39,7 @@
           </view>
           <!-- 修改：将按钮改为文字形式 -->
           <view class="detail-link" @click="viewDetail(room._id)">
-            查看详情 <uni-icons type="right" size="24" color="#5b6cf9"></uni-icons>
+            查看详情 <uni-icons type="right" size="24" color="#8b5cf6"></uni-icons>
           </view>
         </view>
       </view>
@@ -194,7 +194,7 @@ export default {
   transform: translateX(-50%);
   width: 60rpx;
   height: 4rpx;
-  background: linear-gradient(90deg, #5b6cf9, #8d99ff); /* 蓝色渐变 */
+  background: linear-gradient(90deg, #8b5cf6, #8d99ff); /* 蓝色渐变 */
   border-radius: 2rpx;
   animation: slideIn 0.3s ease;
 }
@@ -255,7 +255,7 @@ export default {
 
 .room-price {
   font-size: 32rpx;
-  color: #4e6ef2; /* 主题蓝色 */
+  color: #8b5cf6;
   font-weight: bold;
 }
 
@@ -285,7 +285,7 @@ export default {
 
 .tag {
   font-size: 24rpx;
-  color: #5b6cf9;
+  color: #8b5cf6;
   background-color: rgba(91, 108, 249, 0.15);
   padding: 8rpx 20rpx;
   border-radius: 15rpx;
@@ -297,7 +297,7 @@ export default {
   align-items: center;
   justify-content: left;
   font-size: 28rpx;
-  color: #5b6cf9;
+  color: #8b5cf6;
   font-weight: 500;
   padding: 0rpx 0;
   transition: color 0.3s;
