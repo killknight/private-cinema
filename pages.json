@@ -3,8 +3,7 @@
 			"path" : "pages/home/home",
 			"style" : 
 			{
-				"navigationBarTitleText" : "首页",
-				"navigationStyle": "custom"
+				"navigationBarTitleText" : "星辰影院"
 			}
 		},{
 			"path": "pages/list/list",
@@ -248,7 +247,7 @@
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-starter",
 		"navigationBarBackgroundColor": "#0f1320",
-		"backgroundColor": "#F8F8F8",
+		"backgroundColor": "#0f1320",
 		"enablePullDownRefresh": false,
 		// "maxWidth":375,
 		"rpxCalcMaxDeviceWidth": 375,
@@ -268,13 +267,13 @@
 		"current": 1
 	},
 	"tabBar": {
-		"color": "#99A9BF",
-		"selectedColor": "#FFFFFF",
+		"color": "#bfbfbf",
+		"selectedColor": "#C084FC",
 		"backgroundColor": "#0f1320",
 		"list": [{
 			"pagePath": "pages/home/home",
-			"iconPath": "static/tabbar/list.png",
-			"selectedIconPath": "static/tabbar/list_active.png",
+			"iconPath": "/static/tabbar/intro.png",
+			"selectedIconPath": "/static/tabbar/intro_active.png",
 			"text": "首页"
 		}, {
 			"pagePath": "pages/cinema-introduction/cinema-introduction",

@@ -1,7 +1,7 @@
 <template>
 	<view class="home dark">
 		<!-- 顶部导航 -->
-		<view class="nav" :style="{ paddingTop: (statusBarHeight + 6) + 'px' }">
+		<!-- <view class="nav" :style="{ paddingTop: (statusBarHeight + 6) + 'px' }">
 			<view class="brand">
 				<text class="brand-icon">◼︎</text>
 				<text class="brand-name">星展影院</text>
@@ -9,14 +9,14 @@
 			<view class="nav-right">
 				<text class="avatar">🟣</text>
 			</view>
-		</view>
+		</view> -->
 
 		<!-- 顶部横幅与轮播占位 -->
 		<view class="banner">
 			<swiper class="banner-swiper" circular autoplay interval="4000" duration="500" :indicator-dots="false" @change="onBannerChange">
 				<swiper-item v-for="(b,idx) in banners" :key="idx">
-					<!-- <image class="banner-img" :src="b.url || bannerImage" mode="aspectFill" /> -->
-					<image class="banner-img" :src="bannerImage" mode="aspectFill" />
+					<image class="banner-img" :src="b.url || bannerImage" mode="aspectFill" />
+					<!-- <image class="banner-img" src="/static/bx.jpg" mode="aspectFill" /> -->
 				</swiper-item>
 			</swiper>
 			<view class="banner-info">
@@ -32,7 +32,10 @@
 		<!-- 核心功能入口 -->
 		<view class="features">
 			<view class="feature" v-for="f in features" :key="f.key" @click="onFeatureClick(f)">
-				<text class="f-icon">{{ f.icon }}</text>
+				<!-- 使用每个功能对应的图标路径，并添加错误处理 -->
+				<view class="f-icon">
+					<image class="f-image" :src="f.icon" mode="scaleToFill" style="width: 45rpx; height: 45rpx;" @error="handleImageError($event, f)" />
+				</view>
 				<text class="f-text">{{ f.text }}</text>
 			</view>
 		</view>
@@ -71,6 +74,7 @@
 		<view class="section">
 			<view class="section-head">
 				<text class="section-title">主题包厢精选</text>
+				<text class="more" @click="toMore('themed')">查看全部 〉</text>
 			</view>
 			<view class="grid small">
 				<view class="card mini" v-for="room in themedRooms" :key="room.id" @click="toDetail(room)">
@@ -90,9 +94,9 @@
 				statusBarHeight: 0,
 				currentBanner: 0,
 				features: [
-					{ key: 'intro', icon: '🏛️', text: '影城介绍' },
-					{ key: 'vip', icon: '💳', text: '怎么会' },
-					{ key: 'contact', icon: '☎️', text: '联系电话' }
+					{ key: 'intro', icon: '/static/tabbar/intro_active.png', text: '影院介绍' },
+					{ key: 'vip', icon: '/static/tabbar/vip_active.png', text: '怎么去' },
+					{ key: 'contact', icon: '/static/tabbar/contact_active.png', text: '联系客服' }
 				],
 				banners: [],
 				business: null,
@@ -157,17 +161,28 @@
 				return arr;
 			},
 			onFeatureClick(f) {
-				// 预留路由
-				uni.showToast({ title: f.text, icon: 'none' });
+				// 根据不同功能跳转到不同页面
+				if (f.key === 'intro') {
+					uni.switchTab({ url: '/pages/cinema-introduction/cinema-introduction' });
+				} else {
+					// 其他功能暂时保持原有提示
+					uni.showToast({ title: f.text, icon: 'none' });
+				}
 			},
 			toMore(key) {
-				uni.navigateTo({ url: '/pages/list/list.nvue?type=' + key });
+				// 修改跳转路径，确保跳转到包厢列表页面而不是影院介绍页面
+				uni.navigateTo({ url: '/pages/all-private-boxes/all-private-boxes?type=' + key });
 			},
 			toDetail(room) {
 				uni.navigateTo({ url: '/pages/list/detail?roomId=' + room.id });
 			},
 			onBannerChange(e){
 				this.currentBanner = e?.detail?.current || 0;
+			},
+			// 添加图片错误处理方法
+			handleImageError(e, feature) {
+				// 设置默认图标或其他处理
+				e.target.src = '/static/bx.jpg'; // 使用默认图片作为备选
 			}
 		}
 	}
@@ -180,6 +195,7 @@
 	min-height: 100vh;
 	color: #e7e9f0;
 	padding-bottom: 24rpx;
+	padding-top: 24rpx;
 }
 
 .nav {
@@ -227,7 +243,7 @@
 	flex-direction: column;
 	align-items: center;
 }
-.f-icon { font-size: 44rpx; margin-bottom: 12rpx; background: rgba(139,92,246,.15); color: #b197ff; width: 80rpx; height: 80rpx; border-radius: 999rpx; display:flex; align-items:center; justify-content:center; }
+.f-icon { margin-bottom: 12rpx; background: #9333ea33; width: 80rpx; height: 80rpx; border-radius: 999rpx; display:flex; align-items:center; justify-content:center; }
 .f-text { font-size: 26rpx; color: #d6daf0; }
 
 .status-card { margin: 0 24rpx; background: #171b2b; border-radius: 20rpx; padding: 30rpx 28rpx; box-shadow: 0 6rpx 20rpx rgba(0,0,0,.25) inset; }
@@ -236,13 +252,13 @@
 .dot.offline { width: 12rpx; height: 12rpx; background: #9ca3af; border-radius: 50%; margin-right: 10rpx; }
 .s-text { color: #c9d1ee; font-size: 24rpx; }
 .tags { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 12rpx;}
-.tag { background: #22273b; color: #aeb6d6; padding: 8rpx 14rpx; border-radius: 999rpx; font-size: 22rpx; }
+.tag { background: #9333ea33; color: #C084FC; padding: 8rpx 14rpx; border-radius: 999rpx; font-size: 22rpx; }
 
 .section { margin: 24rpx 0; }
 .section.hot { margin-bottom: 44rpx; }
 .section-head { padding: 0 24rpx; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24rpx; }
 .section-title { font-weight: 700; font-size: 32rpx; }
-.more { color: #8b5cf6; font-size: 24rpx; }
+.more { color: #C084FC; font-size: 24rpx; }
 
 .grid { display: flex; flex-wrap: wrap; padding: 0 24rpx; justify-content: space-between; }
 .grid .card { width: calc(50% - 16rpx); margin: 0 0 20rpx 0; background: #171b2b; border-radius: 22rpx; overflow: hidden; position: relative; border: 1rpx solid rgba(255,255,255,.06); box-shadow: 0 12rpx 32rpx rgba(0,0,0,.35); }

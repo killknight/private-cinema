@@ -73,7 +73,17 @@ export default {
       loading: false
     };
   },
-  onLoad() {
+  onLoad(options) {
+    // 处理查询参数
+    if (options && options.type) {
+      if (options.type === 'hot') {
+        // 热门类型可以选择一个默认标签
+        this.currentTag = '全部包厢';
+      } else if (options.type === 'themed') {
+        // 主题包厢类型，可以默认选择一个主题标签
+        this.currentTag = '浪漫';
+      }
+    }
     this.loadRooms();
   },
   methods: {
