@@ -43,7 +43,7 @@
 					<text class="more-btn" @click="toTeamPage" v-if="staffList.length > 3">查看更多 〉</text>
 				</view>
 				<view class="staff-grid">
-					<view class="staff-card" v-for="staff in staffList.slice(0, 4)" :key="staff._id">
+					<view class="staff-card" v-for="staff in staffList.slice(0, 4)" :key="staff._id" @click="toEmployeeDetails(staff._id)">
 						<image class="staff-avatar" :src="staff.avatar" mode="aspectFill" />
 						<view class="staff-info">
 							<text class="staff-name">{{ staff.name }}</text>
@@ -171,6 +171,10 @@
 			toRoomsPage() {
 				// 跳转到包厢列表页面
 				uni.navigateTo({ url: '/pages/all-private-boxes/all-private-boxes' });
+			},
+			toEmployeeDetails(employeeId) {
+				// 跳转到员工详情页面
+				uni.navigateTo({ url: `/pages/employee-details/employee-details?id=${employeeId}` });
 			},
 			// 轮播图控制
 			prevSwiper() {

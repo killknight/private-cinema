@@ -29,6 +29,13 @@
 			}
 		},
 		{
+			"path" : "pages/employee-details/employee-details",
+			"style" : 
+			{
+				"navigationBarTitleText" : "员工生活照"
+			}
+		},
+		{
 			"path" : "pages/all-private-boxes/all-private-boxes",
 			"style" : 
 			{
