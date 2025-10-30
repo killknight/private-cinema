@@ -396,10 +396,15 @@
 	margin-bottom: 12rpx;
 }
 .staff-desc {
-	font-size: 26rpx;
-	color: #9aa3c7;
-	line-height: 1.6;
-}
+		font-size: 26rpx;
+		color: #9aa3c7;
+		line-height: 1.6;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+	}
 
 /* 包厢类型 */
 .room-list {

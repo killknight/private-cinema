@@ -1,10 +1,15 @@
-[
-  {
+[{
     "_id": "core_member_1",
     "name": "张明",
     "position": "创始人兼CEO",
     "bio": "拥有10年电影行业经验，曾就职于多家知名影院集团，致力于打造高品质私人观影体验",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m1.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m1.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m2.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m3.jpg"
+    ],
+    "interests": ["电影收藏", "摄影", "旅行"],
     "socialIcons": [
       {"type": "weixin", "url": "#"},
       {"type": "linkedin", "url": "#"},
@@ -21,6 +26,12 @@
     "position": "运营总监",
     "bio": "8年影院运营管理经验，擅长用户体验设计和会员体系构建",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m2.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m2.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m4.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m5.jpg"
+    ],
+    "interests": ["瑜伽", "阅读", "烹饪"],
     "socialIcons": [
       {"type": "weixin", "url": "#"},
       {"type": "linkedin", "url": "#"}
@@ -36,6 +47,12 @@
     "position": "技术总监",
     "bio": "全栈开发工程师，专注于影院数字化建设和智能化观影解决方案",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m3.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m3.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m7.jpg"
+    ],
+    "interests": ["编程", "游戏开发", "电子竞技"],
     "socialIcons": [
       {"type": "github", "url": "#"},
       {"type": "linkedin", "url": "#"}
@@ -51,6 +68,12 @@
     "position": "客户服务主管",
     "bio": "5年高端客户服务经验，致力于为每一位顾客提供贴心周到的观影服务",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m4.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m4.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m1.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m2.jpg"
+    ],
+    "interests": ["插花", "茶艺", "心理学"],
     "socialIcons": [],
     "type": "service",
     "order": 1,
@@ -63,6 +86,12 @@
     "position": "影院经理",
     "bio": "7年影院管理经验，熟悉放映技术和影院运营的各个环节",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m5.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m5.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m3.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m4.jpg"
+    ],
+    "interests": ["电影史研究", "音乐鉴赏", "骑行"],
     "socialIcons": [],
     "type": "service",
     "order": 2,
@@ -75,6 +104,12 @@
     "position": "技术支持专员",
     "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m6.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m5.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m7.jpg"
+    ],
+    "interests": ["音乐制作", "摄影", "健身"],
     "socialIcons": [],
     "type": "service",
     "order": 3,
@@ -87,6 +122,12 @@
     "position": "技术支持专员",
     "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
     "avatar": "cloud://env-00jxu7cbl7c1/td/m7.jpg",
+      "lifeMoments": [
+      "cloud://env-00jxu7cbl7c1/td/m7.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
+      "cloud://env-00jxu7cbl7c1/td/m1.jpg"
+    ],
+    "interests": ["天文学", "徒步", "电影特效"],
     "socialIcons": [],
     "type": "service",
     "order": 3,

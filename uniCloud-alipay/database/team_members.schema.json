@@ -59,6 +59,22 @@
     "updateTime": {
       "bsonType": "timestamp",
       "description": "更新时间"
+    },
+    "lifeMoments": {
+      "bsonType": "array",
+      "description": "生活瞬间照片列表",
+      "items": {
+        "bsonType": "string",
+        "description": "生活瞬间照片URL"
+      }
+    },
+    "interests": {
+      "bsonType": "array",
+      "description": "兴趣爱好列表",
+      "items": {
+        "bsonType": "string",
+        "description": "兴趣爱好名称"
+      }
     }
   }
 }

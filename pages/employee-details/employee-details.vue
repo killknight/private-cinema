@@ -30,36 +30,20 @@
 				</view>
 			</view>
 
-			<!-- 成就展示轮播 -->
+			<!-- 成就展示 - 自动轮播显示所有生活照 -->
 			<view class="achievement-section">
-				<swiper class="achievement-swiper" :current="currentAchievement" @change="onAchievementChange" indicator-dots=false>
-					<swiper-item v-for="(achievement, index) in employeeData.achievements" :key="index">
-						<view class="achievement-item">
-							<image class="achievement-image" :src="achievement.image" mode="aspectFill"></image>
-						</view>
-					</swiper-item>
-				</swiper>
-			<!-- 轮播控制箭头 -->
-			<view class="swiper-controls">
-				<view class="swiper-arrow swiper-arrow-left" @click="prevAchievement" v-if="employeeData.achievements.length > 1">
-					<text>‹</text>
+				<view class="achievement-container">
+					<view class="achievement-item">
+						<image class="achievement-image" :src="currentLifeMoment" mode="aspectFit"></image>
+					</view>
 				</view>
-				<view class="swiper-arrow swiper-arrow-right" @click="nextAchievement" v-if="employeeData.achievements.length > 1">
-					<text>›</text>
-				</view>
-			</view>
-			<!-- 成就描述 -->
-			<view class="achievement-desc">
-				<text class="achievement-title">{{ currentAchievementData.title }}</text>
-				<text class="achievement-text">{{ currentAchievementData.description }}</text>
-			</view>
 		</view>
 
 			<!-- 生活瞬间 -->
 			<view class="life-section">
 				<view class="section-title">生活瞬间</view>
 				<view class="life-grid">
-					<view class="life-item" v-for="(item, index) in employeeData.lifeMoments" :key="index" @click="previewImage(index)">
+					<view class="life-item" :class="{ 'active': index === currentMomentIndex }" v-for="(item, index) in employeeData.lifeMoments" :key="index" @click="previewImage(index)">
 						<image class="life-image" :src="item" mode="aspectFill"></image>
 					</view>
 				</view>
@@ -69,7 +53,10 @@
 			<view class="about-section">
 				<view class="section-title">关于我</view>
 				<view class="about-content">
-					<text class="about-text">{{ employeeData.bio }}</text>
+					<!-- 循环渲染每个段落 -->
+				<view v-for="(paragraph, index) in bioParagraphs" :key="index" class="about-paragraph">
+					<text class="about-text">{{ paragraph }}</text>
+				</view>
 				</view>
 			</view>
 
@@ -87,13 +74,14 @@ export default {
 					name: '',
 					position: '',
 					avatar: '',
-					achievements: [],
 					lifeMoments: [],
 					bio: '',
 					interests: []
-				},
-				currentAchievement: 0,
-				loading: true
+			},
+			currentMomentIndex: 0,
+			timer: null,
+
+			loading: true
 			};
 	},
 	onLoad(options) {
@@ -102,22 +90,26 @@ export default {
 			this.loadEmployeeDetails();
 		}
 	},
+
 	computed: {
-		currentAchievementData() {
-			if (this.employeeData.achievements && this.employeeData.achievements.length > 0) {
-				return this.employeeData.achievements[this.currentAchievement] || {
-					title: '参加国际电影节',
-					description: '2023年参加戛纳电影节，与国际导演交流学习'
-				};
+		// 获取当前显示的生活照
+		currentLifeMoment() {
+			if (this.employeeData.lifeMoments && this.employeeData.lifeMoments.length > 0) {
+				return this.employeeData.lifeMoments[this.currentMomentIndex];
 			}
-			return {
-				title: '参加国际电影节',
-				description: '2023年参加戛纳电影节，与国际导演交流学习'
-			};
+			return '';
+		},
+		
+		// 将个人简介按换行符分割成段落数组
+		bioParagraphs() {
+			if (!this.employeeData.bio) return [];
+			// 按换行符分割，过滤空字符串
+			return this.employeeData.bio.split('\n').filter(paragraph => paragraph.trim() !== '');
 		}
 	},
+
 	methods: {
-		// 返回上一页
+			// 返回上一页
 		goBack() {
 			uni.navigateBack();
 		},
@@ -125,6 +117,8 @@ export default {
 		// 加载员工详情
 		async loadEmployeeDetails() {
 			this.loading = true;
+			// 清除之前的定时器
+			this.clearTimer();
 			try {
 				const { result } = await uniCloud.callFunction({
 					name: 'getEmployeeDetails',
@@ -139,9 +133,6 @@ export default {
 						name: result.data.name || '员工姓名',
 						position: result.data.position || '职位名称',
 						avatar: result.data.avatar || '/static/banner/logo.png',
-						achievements: result.data.achievements && Array.isArray(result.data.achievements) ? result.data.achievements : [
-							{ image: '/static/banner/bj1.jpg', title: '参加国际电影节', description: '2023年参加戛纳电影节，与国际导演交流学习' }
-						],
 						lifeMoments: result.data.lifeMoments && Array.isArray(result.data.lifeMoments) ? result.data.lifeMoments : [
 							'/static/banner/bj1.jpg',
 							'/static/banner/bj2.jpg',
@@ -159,9 +150,6 @@ export default {
 						name: '张明',
 						position: '创始人 & 总经理',
 						avatar: '/static/logo.png',
-						achievements: [
-							{ image: '/static/banner/bj1.jpg', title: '参加国际电影节', description: '2023年参加戛纳电影节，与国际导演交流学习' }
-						],
 						lifeMoments: [
 							'/static/banner/bj1.jpg',
 							'/static/banner/bj2.jpg',
@@ -181,9 +169,6 @@ export default {
 					name: '张明',
 					position: '创始人 & 总经理',
 					avatar: '/static/logo.png',
-					achievements: [
-						{ image: '/static/banner/bj1.jpg', title: '参加国际电影节', description: '2023年参加戛纳电影节，与国际导演交流学习' }
-					],
 					lifeMoments: [
 						'/static/banner/bj1.jpg',
 						'/static/banner/bj2.jpg',
@@ -194,30 +179,49 @@ export default {
 					],
 					bio: '作为一名资深电影爱好者，我从小就对光影世界充满好奇。毕业后投身影院行业，从基层做起，积累了十年的管理经验。2018年创立星辰影院，希望打造一个真正以观众体验为中心的私人观影空间。\n\n工作之余，我喜欢收藏经典电影周边，徒步旅行，以及和团队一起探索新的电影技术。\n\n我相信，只有真正热爱的人，才能为观众带来最纯粹的观影享受。',
 					interests: ['电影收藏', '徒步旅行', '咖啡品鉴', '摄影']
-				};
+				}
 			} finally {
 				this.loading = false;
+				// 启动轮播定时器
+				this.startRotation();
 			}
 		},
 
-		// 轮播图切换
-		onAchievementChange(e) {
-			this.currentAchievement = e.detail.current;
-		},
-
-		// 上一张成就图
-		prevAchievement() {
-			if (this.currentAchievement > 0) {
-				this.currentAchievement--;
+		// 启动自动轮播
+		startRotation() {
+			if (this.employeeData.lifeMoments && this.employeeData.lifeMoments.length > 1) {
+				this.timer = setInterval(() => {
+					this.currentMomentIndex = (this.currentMomentIndex + 1) % this.employeeData.lifeMoments.length;
+				}, 4000); // 每2秒切换一次
 			}
 		},
 
-		// 下一张成就图
-		nextAchievement() {
-			if (this.currentAchievement < this.employeeData.achievements.length - 1) {
-				this.currentAchievement++;
+		// 清除定时器
+		clearTimer() {
+			if (this.timer) {
+				clearInterval(this.timer);
+				this.timer = null;
 			}
 		},
+
+		// 页面显示时重启轮播
+		onShow() {
+			if (!this.loading && this.employeeData.lifeMoments && this.employeeData.lifeMoments.length > 1) {
+				this.startRotation();
+			}
+		},
+
+		// 页面隐藏时清除定时器
+		onHide() {
+			this.clearTimer();
+		},
+
+		// 页面卸载时清除定时器
+		onUnload() {
+			this.clearTimer();
+		},
+
+
 
 		// 预览图片
 		previewImage(index) {
@@ -418,75 +422,49 @@ export default {
 			}
 		}
 
-		// 成就展示轮播
+		// 成就展示
 		.achievement-section {
-			margin: 0 24rpx 40rpx;
-			position: relative;
+			margin: 0 24rpx 0rpx;
+			padding: 40rpx 24rpx;
 
-			.achievement-swiper {
-				height: 400rpx;
+			.section-title {
+				font-size: 36rpx;
+				font-weight: 700;
+				color: #ffffff;
+				margin-bottom: 30rpx;
+				position: relative;
+
+				&::after {
+					content: '';
+					display: block;
+					position: absolute;
+					bottom: -10rpx;
+					left: 0;
+					width: 100rpx;
+					height: 6rpx;
+					background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+					border-radius: 3rpx;
+				}
+			}
+
+			.achievement-container {
+				width: 100%;
 				border-radius: 20rpx;
 				overflow: hidden;
-
-				.achievement-item {
-					width: 100%;
-					height: 100%;
-
-					.achievement-image {
-						width: 100%;
-						height: 100%;
-					}
-				}
 			}
 
-			.swiper-controls {
-				position: absolute;
-				top: 50%;
-				transform: translateY(-50%);
+			.achievement-item {
 				width: 100%;
 				display: flex;
-				justify-content: space-between;
-				padding: 0 10rpx;
-				box-sizing: border-box;
-
-				.swiper-arrow {
-					width: 60rpx;
-					height: 60rpx;
-					background: rgba(0, 0, 0, 0.5);
-					color: #ffffff;
-					font-size: 48rpx;
-					text-align: center;
-					line-height: 60rpx;
-					border-radius: 30rpx;
-					cursor: pointer;
-					touch-action: manipulation;
-					z-index: 10;
-
-					&:active {
-						background: rgba(0, 0, 0, 0.7);
-					}
-				}
+				align-items: center;
+				justify-content: center;
 			}
 
-			.achievement-desc {
-				margin-top: 20rpx;
-				padding: 24rpx;
-				background: #171b2b;
+			.achievement-image {
+				width: 100%;
+				height: 500rpx;
+				object-fit: cover;
 				border-radius: 20rpx;
-
-				.achievement-title {
-					font-size: 32rpx;
-					font-weight: 700;
-					color: #ffffff;
-					margin-bottom: 12rpx;
-					display: block;
-				}
-
-				.achievement-text {
-					font-size: 26rpx;
-					color: #9aa3c7;
-					line-height: 1.6;
-				}
 			}
 		}
 
@@ -504,7 +482,7 @@ export default {
 			.life-grid {
 				display: grid;
 				grid-template-columns: repeat(3, 1fr);
-				gap: 16rpx;
+				gap: 24rpx;
 
 				.life-item {
 					position: relative;
@@ -512,6 +490,15 @@ export default {
 					padding-bottom: 100%; // 正方形
 					overflow: hidden;
 					border-radius: 12rpx;
+					transition: all 0.3s ease;
+
+					// 当前显示的图片样式
+					&.active {
+						opacity: 1;
+						border: 3rpx solid #4facfe;
+						transform: scale(1.05);
+						box-shadow: 0 0 20rpx rgba(79, 172, 254, 0.5);
+					}
 
 					.life-image {
 						position: absolute;
@@ -519,6 +506,11 @@ export default {
 						left: 0;
 						width: 100%;
 						height: 100%;
+						transition: transform 0.3s ease;
+
+						&:active {
+							transform: scale(0.95);
+						}
 					}
 
 					&:active {
@@ -544,11 +536,18 @@ export default {
 				padding: 32rpx;
 				border-radius: 20rpx;
 
+				.about-paragraph {
+					margin-bottom: 20rpx;
+				}
+				
+				.about-paragraph:last-child {
+					margin-bottom: 0;
+				}
+				
 				.about-text {
 					font-size: 28rpx;
 					color: #c9d1ee;
 					line-height: 1.8;
-					white-space: pre-wrap;
 				}
 			}
 		}
