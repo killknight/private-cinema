@@ -10,8 +10,7 @@
     "qr"
 ],
   "repository": "https://github.com/Sansnn/uQRCode",
-  "engines": {
-    "HBuilderX": "^3.1.0"
+"engines": {
   },
 "dcloudext": {
     "sale": {
