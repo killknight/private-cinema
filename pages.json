@@ -425,6 +425,11 @@
 			"iconPath": "/static/tabbar/contact.png",
 			"selectedIconPath": "/static/tabbar/contact_active.png",
 			"text": "联系客服"
+		}, {
+			"pagePath": "pages/ucenter/ucenter",
+			"iconPath": "static/tabbar/me.png",
+			"selectedIconPath": "static/tabbar/me_active.png",
+			"text": "我的"
 		}]
 	},
 	"uniIdRouter": {

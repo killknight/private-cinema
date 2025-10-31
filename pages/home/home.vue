@@ -189,7 +189,7 @@
 					});
 				} else if (f.key === 'contact') {
 					// 联系客服功能
-					uni.showToast({ title: f.text, icon: 'none' });
+					uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat' });
 				}
 			},
 			toMore(key) {
