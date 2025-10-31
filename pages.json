@@ -5,14 +5,6 @@
 			{
 				"navigationBarTitleText" : "星辰影院"
 			}
-		},{
-			"path": "pages/list/list",
-			"style": {
-				// #ifndef APP
-				"enablePullDownRefresh": true,
-				// #endif
-				"navigationStyle": "custom"
-			}
 		},
 		{
 			"path" : "pages/cinema-introduction/cinema-introduction",
@@ -43,34 +35,10 @@
 			}
 		},
 		{
-			"path": "pages/grid/grid",
-			"style": {
-				//#ifndef MP
-				"navigationStyle": "custom"
-				//#endif
-			}
-		}, {
-			"path": "pages/list/search/search",
-			"style": {
-				"navigationBarTitleText": "搜索"
-			}
-		}, {
-			"path": "pages/list/detail",
-			"style": {
-				"app-plus": {
-					"titleNView": {
-						"buttons": [{
-							"type": "share"
-						}],
-						"type": "transparent"
-					}
-				},
-				"h5": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				},
-				"navigationBarTitleText": "文章详情"
+			"path" : "pages/online-customer-service/online-customer-service",
+			"style" : 
+			{
+				"navigationBarTitleText" : "在线客服"
 			}
 		},
 		{
@@ -243,6 +211,173 @@
 				}
 				// #endif
 			]
+		}, {
+			"root": "uni_modules/uni-im/pages",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+					 "navigationBarTitleText": "会话列表",
+						"enablePullDownRefresh": false,
+						"app-plus": {
+							"titleNView": {
+								"buttons": [{
+									"color": "#999999",
+									"colorPressed": "#111111",
+									"float": "right",
+									"text": "我的",
+									"fontSize": 14,
+									"onclick": "toLogin"
+								}]
+							}
+						}
+					}
+				},
+				{
+					"path": "common/view-code-page/view-code-page",
+					"style": {
+						"navigationBarTitleText": "代码浏览",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "userList/userList",
+					"style": {
+						"navigationBarTitleText": "用户列表",
+						"enablePullDownRefresh": true
+					}
+				},
+				// #ifdef MP-WEIXIN
+				{
+					"path": "chat/chat",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"app-plus": {
+							"titleNView": {
+								"buttons": [{
+									"color": "#333",
+									"colorPressed": "#111111",
+									"float": "right",
+									"text": "...",
+									"fontSize": 26,
+									"onclick": "more"
+								}]
+							}
+						}
+					}
+				},
+				// #endif
+				{
+					"path": "common/video/video",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+
+				},
+				{
+					"path": "group/info",
+					"style": {
+						"navigationBarTitleText": "群信息",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "contacts/notification/notification",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "contacts/contacts",
+					"style": {
+						"navigationBarTitleText": "通讯录",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "contacts/addPeopleGroups/addPeopleGroups",
+					"style": {
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "contacts/createGroup/createGroup",
+					"style": {
+						"navigationBarTitleText": "创建群聊",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "group/qrCode",
+					"style": {
+						"navigationBarTitleText": "群聊二维码",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "contacts/groupList/groupList",
+					"style": {
+						"navigationBarTitleText": "我的群聊",
+						"enablePullDownRefresh": false
+					}
+
+				}, {
+					"path": "chat/info",
+					"style": {
+						"navigationBarTitleText": "聊天设置",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path" : "share-msg/share-msg",
+					"style":{
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "选择会话",
+						"app-plus": {
+							"titleNView": {
+								"autoBackButton": false,
+								"buttons": [{
+									"text": "取消",
+									"fontSize": 16,
+									"float": "left"
+								},{
+									"text": "确定",
+									"fontSize": 16,
+									"float": "right",
+									"color": "#EEE",
+									"width": "100px"
+								}]
+							}
+						}
+					}
+				},
+				{
+					"path": "group/members",
+					"style": {
+						"navigationBarTitleText": "群成员",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path" : "group/notice/list",
+					"style" : 
+					{
+						"navigationBarTitleText" : "群公告列表"
+					}
+				},
+				{
+					"path" : "group/notice/edit",
+					"style" : 
+					{
+						"navigationBarTitleText" : "群公告管理"
+					}
+				}
+			]
 		}
 	],
 	"globalStyle": {
@@ -263,8 +398,6 @@
 	},
 	"condition": {
 		"list": [{
-				"path": "pages/list/detail"
-			}, {
 				"path": "pages/home/home"
 			},
 			{
@@ -288,7 +421,7 @@
 			"selectedIconPath": "static/tabbar/intro_active.png",
 			"text": "影院介绍"
 		}, {
-			"pagePath": "pages/ucenter/ucenter",
+			"pagePath": "pages/online-customer-service/online-customer-service",
 			"iconPath": "/static/tabbar/contact.png",
 			"selectedIconPath": "/static/tabbar/contact_active.png",
 			"text": "联系客服"

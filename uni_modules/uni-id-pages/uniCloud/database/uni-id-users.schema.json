@@ -86,7 +86,7 @@
 			"title": "邮箱",
 			"trim": "both",
 			"permission": {
-				"read": "doc._id == auth.uid || 'READ_UNI_ID_USERS' in auth.permission",
+				"read": true, // 在触发器内会拦截，只有特定员才能读取
 				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
 			}
 		},
@@ -232,7 +232,7 @@
 			"bsonType": "object",
 			"description": "实名认证信息",
 			"permission": {
-				"read": "doc._id == auth.uid || 'READ_UNI_ID_USERS' in auth.permission",
+				"read": true, // 触发器内限制
 				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
 			},
 			"properties": {
@@ -452,22 +452,6 @@
 				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
 			}
 		},
-		"huawei_openid": {
-			"bsonType": "string",
-			"description": "Huawei openid",
-			"permission": {
-				"read": "'READ_UNI_ID_USERS' in auth.permission",
-				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
-			}
-		},
-		"huawei_unionid": {
-			"bsonType": "string",
-			"description": "Huawei unionid",
-			"permission": {
-				"read": "'READ_UNI_ID_USERS' in auth.permission",
-				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
-			}
-		},
 		"third_party": {
 			"bsonType": "object",
 			"description": "三方平台凭证",
@@ -476,14 +460,14 @@
 				"write": false
 			}
 		},
-		"identities": {
-			"bsonType": "array",
-			"description": "三方平台身份信息；一个对象代表一个身份，参数支持: provider 身份源, userInfo 三方用户信息, openid 三方openid, unionid 三方unionid, uid 三方uid",
-			"permission": {
-				"read": "'READ_UNI_ID_USERS' in auth.permission",
-				"write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
-			}
-		}
+    "identities": {
+      "bsonType": "array",
+      "description": "三方平台身份信息；一个对象代表一个身份，参数支持: provider 身份源, userInfo 三方用户信息, openid 三方openid, unionid 三方unionid, uid 三方uid",
+      "permission": {
+        "read": "'READ_UNI_ID_USERS' in auth.permission",
+        "write": "'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"
+      }
+    }
 	},
 	"required": []
 }

@@ -37,12 +37,22 @@
 <script>
 	let platform
 	setTimeout(() => {
-		// #ifdef MP-WEIXIN
-		platform = uni.getDeviceInfo().platform
-		// #endif
-		// #ifndef MP-WEIXIN
-		platform = uni.getSystemInfoSync().platform
-		// #endif
+		try {
+			// #ifdef MP-WEIXIN
+			const deviceInfo = uni.getDeviceInfo() || {}
+			platform = deviceInfo.platform || ''
+			// #endif
+			// #ifndef MP-WEIXIN
+			try {
+				const sysInfo = uni.getSystemInfoSync() || {}
+				platform = sysInfo.platform || ''
+			} catch (e) {
+				platform = ''
+			}
+			// #endif
+		} catch (e) {
+			platform = ''
+		}
 	}, 16)
 
 	import {

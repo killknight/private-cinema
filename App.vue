@@ -4,8 +4,14 @@
 	// #ifdef H5
 		openApp() //创建在h5端全局悬浮引导用户下载app的功能
 	// #endif
+	//1. 导入uni身份信息管理模块
+	import uniIdPagesInit from '@/uni_modules/uni-id-pages/init.js';
+	//2. 导入uniIm
+	import uniIm from '@/uni_modules/uni-im/sdk/index.js';
+	// 3.引入扩展插件（项目默认引入了，扩展插件uniImMsgReader用于展示消息是否已读）
+	import MsgReaderExtension from '@/uni_modules/uni-im-msg-reader/extension.js'
 	import checkIsAgree from '@/pages/uni-agree/utils/uni-agree.js';
-	import uniIdPageInit from '@/uni_modules/uni-id-pages/init.js';
+	// import uniIdPageInit from '@/uni_modules/uni-id-pages/init.js';
 	export default {
 		globalData: {
 			searchText: '',
@@ -19,7 +25,13 @@
 			this.globalData.$i18n = this.$i18n
 			this.globalData.$t = str => this.$t(str)
 			initApp();
-			uniIdPageInit()
+			// uniIdPageInit()
+			//4. 安装uniIm扩展插件
+			MsgReaderExtension.install()
+			//5. 初始化uni身份信息管理模块
+			uniIdPagesInit();
+			//6. 初始化uniIm
+			uniIm.init();
 			
 			// #ifdef APP
 			//checkIsAgree(); APP端暂时先用原生默认生成的。目前，自定义方式启动vue界面时，原生层已经请求了部分权限这并不符合国家的法规

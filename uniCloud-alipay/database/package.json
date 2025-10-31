@@ -1,8 +1,12 @@
 {
-    "name": "database",
-    "origin-plugin-dev-name": "uni-starter",
-    "origin-plugin-version": "2.2.8",
-    "plugin-dev-name": "uni-starter",
-    "plugin-version": "2.2.8",
-    "description": ""
+  "name": "database",
+  "origin-plugin-dev-name": "uni-starter",
+  "origin-plugin-version": "2.2.8",
+  "plugin-dev-name": "uni-starter",
+  "plugin-version": "2.2.8",
+  "description": "",
+  "dependencies": {
+    "uni-im-utils": "file:../../uni_modules/uni-im/uniCloud/cloudfunctions/common/uni-im-utils"
+  },
+  "extensions": {}
 }
