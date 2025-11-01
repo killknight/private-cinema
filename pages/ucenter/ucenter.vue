@@ -1,21 +1,33 @@
 <template>
 	<view class="center">
-		<!-- 用户信息区域 -->
+		<!-- 用户信息区域 - 炫酷设计 -->
 		<view class="userInfo">
 			<view class="user-info-container">
+				<!-- 装饰元素 -->
+				<view class="bg-particle particle-1"></view>
+				<view class="bg-particle particle-2"></view>
+				<view class="bg-particle particle-3"></view>
+				
 				<view class="avatar-section">
-					<view class="avatar" @click="toUserInfo">
-						<view v-if="hasLogin&&userInfo.avatar_file&&userInfo.avatar_file.url" class="avatar-image">
-							<image :src="userInfo.avatar_file.url" mode="aspectFill"></image>
-						</view>
-						<view v-else class="default-avatar">
-							<uni-icons type="person" size="64" color="#fff"></uni-icons>
+					<view class="avatar-container">
+						<view class="avatar-glow"></view>
+						<view class="avatar" @click="toUserInfo">
+							<view v-if="hasLogin&&userInfo.avatar_file&&userInfo.avatar_file.url" class="avatar-image">
+								<image :src="userInfo.avatar_file.url" mode="aspectFill"></image>
+							</view>
+							<view v-else class="default-avatar">
+								<uni-icons type="person" size="64" color="#fff"></uni-icons>
+							</view>
 						</view>
 					</view>
 					<view class="user-info">
-						<text class="user-name" @click="toUserInfo">{{userInfo.nickname||userInfo.username||userInfo.mobile||'123'}}</text>
+						<view class="name-container">
+							<text class="user-name" @click="toUserInfo">{{userInfo.nickname||userInfo.username||userInfo.mobile||'123'}}</text>
+							<view class="name-animation"></view>
+						</view>
 						<view class="status-section">
 							<view class="verified-badge">
+								<uni-icons type="star" size="20" color="#fff"></uni-icons>
 								<text>已认证</text>
 							</view>
 							<view class="online-status">
@@ -26,75 +38,62 @@
 					</view>
 				</view>
 				<view class="actions-section">
-					<view class="action-icon" @click="navigateTo('/pages/ucenter/settings/settings')">
+					<view class="setting-button" @click="navigateTo('/pages/ucenter/settings/settings')">
 						<uni-icons type="setting" size="40" color="#fff"></uni-icons>
-					</view>
-					<view class="action-icon">
-						<uni-icons type="more" size="40" color="#fff"></uni-icons>
 					</view>
 				</view>
 			</view>
 		</view>
 
-		<!-- 菜单列表 -->
+		<!-- 菜单列表 - 取消分组 -->
 		<view class="menu-container">
-			<!-- 主要功能区 -->
-			<view class="menu-group">
-				<view class="menu-item" @click="navigateTo('/pages/ucenter/profile/profile')">
-					<view class="icon-container blue">
-						<uni-icons type="person" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title">个人中心</text>
-					<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			<view class="menu-item" @click="navigateTo('/pages/ucenter/profile/profile')">
+				<view class="icon-container blue">
+					<uni-icons type="person" size="30" color="#fff"></uni-icons>
 				</view>
-
-				<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList')">
-					<view class="icon-container purple">
-						<uni-icons type="users" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title">用户列表</text>
-					<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
-				</view>
-
-				<view class="menu-item" @click="navigateTo('/pages/online-customer-service/online-customer-service')">
-					<view class="icon-container green">
-						<uni-icons type="chat" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title">会话列表</text>
-					<view class="arrow-with-badge">
-						<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
-						<view class="notification-badge">3</view>
-					</view>
-				</view>
+				<text class="menu-title">个人中心</text>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
-			<!-- 其他功能区 -->
-			<view class="menu-group">
-				<view class="menu-item" @click="navigateTo('/pages/ucenter/about/about')">
-					<view class="icon-container gray">
-						<uni-icons type="info" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title">关于我们</text>
-					<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList')">
+				<view class="icon-container purple" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);">
+					<uni-icons type="contact" size="30" color="#fff"></uni-icons>
 				</view>
+				<text class="menu-title">用户列表</text>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			</view>
 
-				<view class="menu-item" @click="navigateTo('/uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback')">
-					<view class="icon-container gray">
-						<uni-icons type="help" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title">帮助与反馈</text>
-					<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			<view class="menu-item" @click="navigateTo('/pages/online-customer-service/online-customer-service')">
+				<view class="icon-container green">
+					<uni-icons type="chat" size="30" color="#fff"></uni-icons>
 				</view>
+				<text class="menu-title">会话列表</text>
+				<view class="notification-badge">3</view>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			</view>
+
+			<view class="menu-item" @click="navigateTo('/pages/ucenter/about/about')">
+				<view class="icon-container gray">
+					<uni-icons type="info" size="30" color="#fff"></uni-icons>
+				</view>
+				<text class="menu-title">关于我们</text>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			</view>
+
+			<view class="menu-item" @click="navigateTo('/uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback')">
+				<view class="icon-container gray">
+					<uni-icons type="help" size="30" color="#fff"></uni-icons>
+				</view>
+				<text class="menu-title">帮助与反馈</text>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
 			<!-- 退出登录 -->
-			<view class="logout-section">
-				<view class="menu-item logout" @click="logout">
-					<view class="icon-container red">
-						<uni-icons type="logout" size="30" color="#fff"></uni-icons>
-					</view>
-					<text class="menu-title logout">退出登录</text>
+			<view class="menu-item logout" @click="logout">
+				<view class="icon-container red" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+					<uni-icons type="clear" size="30" color="#fff"></uni-icons>
 				</view>
+				<text class="menu-title logout">退出登录</text>
 			</view>
 		</view>
 	</view>
@@ -180,21 +179,70 @@
 
 <style lang="scss" scoped>
 	page {
-		background-color: #0a0a0a;
+		background-color: #0f1320;
 	}
 
 	.center {
 		min-height: 100vh;
-		background-color: #0a0a0a;
+		background-color: #0f1320;
 		padding-bottom: 60rpx;
 	}
 
-	/* 用户信息区域 */
+	/* 用户信息区域 - 炫酷设计 */
 	.userInfo {
-		background-color: #1a1a3a;
-		padding: 40rpx;
-		padding-top: 100rpx; /* 为状态栏留出空间 */
-		padding-bottom: 60rpx;
+		background: linear-gradient(135deg, #0f1320 0%, #1a1f36 50%, #2d3a5d 100%);
+		padding: 30rpx 40rpx; /* 减小内边距 */
+		padding-top: 180rpx; /* 为状态栏留出空间，减小值 */
+		padding-bottom: 50rpx; /* 减小底部内边距 */
+		border-radius: 0 0 40rpx 40rpx;
+		box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.5);
+		position: relative;
+		overflow: hidden;
+		margin-bottom: 20rpx; /* 增加与个人中心的距离 */
+	}
+	
+	/* 背景粒子效果 */
+	.bg-particle {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(40rpx);
+		opacity: 0.5;
+	}
+	
+	.particle-1 {
+		width: 300rpx;
+		height: 300rpx;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		top: -100rpx;
+		left: -50rpx;
+		animation: float 8s ease-in-out infinite;
+	}
+	
+	.particle-2 {
+		width: 200rpx;
+		height: 200rpx;
+		background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+		top: 50%;
+		right: -100rpx;
+		animation: float 10s ease-in-out infinite 2s;
+	}
+	
+	.particle-3 {
+		width: 150rpx;
+		height: 150rpx;
+		background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+		bottom: -50rpx;
+		left: 30%;
+		animation: float 7s ease-in-out infinite 1s;
+	}
+	
+	@keyframes float {
+		0%, 100% {
+			transform: translate(0, 0) scale(1);
+		}
+		50% {
+			transform: translate(40rpx, -40rpx) scale(1.1);
+		}
 	}
 
 	.user-info-container {
@@ -203,32 +251,82 @@
 		justify-content: space-between;
 	}
 
-	.user-info-section {
-		display: flex;
-		align-items: center;
-	}
-
 	.avatar-section {
 		display: flex;
 		align-items: center;
 	}
 
-	.avatar {
-		width: 150rpx;
-		height: 150rpx;
+	.avatar-container {
+		position: relative;
+		margin-right: 30rpx;
+	}
+	
+	.avatar-glow {
+		position: absolute;
+		width: 200rpx;
+		height: 200rpx;
 		border-radius: 50%;
-		background-color: #fff;
+		background: linear-gradient(135deg, #667eea, #764ba2);
+		filter: blur(30rpx);
+		animation: glowPulse 3s ease-in-out infinite;
+	}
+	
+	@keyframes glowPulse {
+		0%, 100% {
+			transform: scale(0.9);
+			opacity: 0.7;
+		}
+		50% {
+			transform: scale(1);
+			opacity: 0.9;
+		}
+	}
+
+	.avatar {
+		width: 180rpx;
+		height: 180rpx;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #1a1f36, #2d3a5d);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-right: 30rpx;
+		border: 4rpx solid rgba(255, 255, 255, 0.2);
+		box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
+		transition: all 0.3s ease;
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.avatar::before {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.3) 50%, transparent 60%);
+		transform: rotate(45deg) translateY(-100%);
+		animation: shine 6s linear infinite;
+	}
+	
+	@keyframes shine {
+		0% {
+			transform: rotate(45deg) translateY(-100%);
+		}
+		100% {
+			transform: rotate(45deg) translateY(100%);
+		}
+	}
+
+	.avatar:active {
+		transform: scale(0.95);
+		box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.2);
 	}
 
 	.avatar-image {
-		width: 100%;
-		height: 100%;
+		width: 172rpx;
+		height: 172rpx;
 		border-radius: 50%;
 		overflow: hidden;
+		background-color: #1a1f36;
 	}
 
 	.avatar-image image {
@@ -237,24 +335,82 @@
 	}
 
 	.default-avatar {
-		width: 100%;
-		height: 100%;
+		width: 172rpx;
+		height: 172rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #fff;
+		background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+		border-radius: 50%;
+	}
+	
+	.default-avatar uni-icons {
+		animation: bounce 3s ease-in-out infinite;
+	}
+	
+	@keyframes bounce {
+		0%, 20%, 50%, 80%, 100% {
+			transform: translateY(0);
+		}
+		40% {
+			transform: translateY(-20rpx);
+		}
+		60% {
+			transform: translateY(-10rpx);
+		}
 	}
 
 	.user-info {
 		flex: 1;
+		position: relative;
+	}
+
+	.name-container {
+		position: relative;
+		display: inline-block;
+		margin-bottom: 16rpx;
 	}
 
 	.user-name {
-		font-size: 44rpx;
-		font-weight: 600;
+		font-size: 52rpx;
+		font-weight: 700;
 		color: #fff;
 		display: block;
-		margin-bottom: 16rpx;
+		text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3), 0 0 20rpx rgba(102, 126, 234, 0.5);
+		position: relative;
+		z-index: 2;
+		transition: all 0.3s ease;
+	}
+	
+	.user-name:active {
+		transform: scale(0.98);
+		text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2), 0 0 15rpx rgba(102, 126, 234, 0.4);
+	}
+	
+	.name-animation {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 6rpx;
+		width: 0;
+		background: linear-gradient(90deg, #667eea, #764ba2);
+		border-radius: 3rpx;
+		animation: nameHighlight 2s ease-in-out infinite;
+	}
+	
+	@keyframes nameHighlight {
+		0% {
+			width: 0;
+			left: 0;
+		}
+		50% {
+			width: 100%;
+			left: 0;
+		}
+		100% {
+			width: 0;
+			left: 100%;
+		}
 	}
 
 	.status-section {
@@ -264,59 +420,151 @@
 	}
 
 	.verified-badge {
-		background-color: #007aff;
+		display: flex;
+		align-items: center;
+		gap: 8rpx;
+		background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
 		padding: 6rpx 20rpx;
 		border-radius: 20rpx;
+		backdrop-filter: blur(10rpx);
+		border: 2rpx solid rgba(255, 215, 0, 0.3);
+		/* 移除动画效果 */
+	}
+	
+	@keyframes badgeFloat {
+		0%, 100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-4rpx);
+		}
 	}
 
 	.verified-badge text {
-		font-size: 26rpx;
+		font-size: 28rpx;
 		color: #fff;
-		font-weight: 500;
+		font-weight: 600;
+		text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
 	}
 
 	.online-status {
 		display: flex;
 		align-items: center;
+		padding: 6rpx 16rpx;
+		background: rgba(76, 175, 80, 0.15);
+		border-radius: 20rpx;
+		backdrop-filter: blur(10rpx);
+		border: 2rpx solid rgba(76, 175, 80, 0.3);
 	}
 
 	.online-status text {
 		font-size: 28rpx;
-		color: #fff;
+		color: #4caf50;
+		font-weight: 500;
 	}
 
 	.online-dot {
-		width: 16rpx;
-		height: 16rpx;
+		width: 18rpx;
+		height: 18rpx;
 		background-color: #4caf50;
 		border-radius: 50%;
 		margin-right: 10rpx;
+		box-shadow: 0 0 16rpx #4caf50, 0 0 32rpx rgba(76, 175, 80, 0.3);
+		animation: pulse 2s infinite; /* 只保留脉冲效果 */
+	}
+	
+	@keyframes floatUpDown {
+		0%, 100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-6rpx);
+		}
+	}
+
+	@keyframes pulse {
+		0% {
+			transform: scale(1);
+			opacity: 1;
+		}
+		50% {
+			transform: scale(1.2);
+			opacity: 0.8;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
 	}
 
 	.actions-section {
 		display: flex;
-		gap: 40rpx;
+		gap: 30rpx;
 		align-items: center;
+		margin-top: 50rpx;
 	}
 
-	.action-icon {
-		width: 60rpx;
-		height: 60rpx;
+	.setting-button {
+		width: 80rpx;
+		height: 80rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background: linear-gradient(135deg, #667eea, #764ba2);
+		border-radius: 20rpx;
+		transition: all 0.3s ease;
+		box-shadow: 0 6rpx 20rpx rgba(102, 126, 234, 0.4);
+		position: relative;
+		animation: rotateIcon 10s linear infinite paused;
+	}
+	
+	.setting-button::before {
+		content: '';
+		position: absolute;
+		inset: -4rpx;
+		background: linear-gradient(45deg, #667eea, #764ba2, #4facfe, #00f2fe);
+		border-radius: 24rpx;
+		z-index: -1;
+		animation: rotateBorder 4s linear infinite;
+		filter: blur(10rpx);
+	}
+	
+	@keyframes rotateBorder {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+	
+	@keyframes rotateIcon {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	.setting-button:active {
+		transform: scale(0.95);
+		box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+		animation: rotateIcon 2s linear infinite;
+	}
+	
+	.setting-button uni-icons {
+		transition: transform 0.3s ease;
+	}
+	
+	.setting-button:active uni-icons {
+		transform: scale(1.1);
 	}
 
 	/* 菜单区域 */
 	.menu-container {
 		padding: 30rpx;
-	}
-
-	.menu-group {
-		background-color: #1a1a3a;
-		border-radius: 20rpx;
-		overflow: hidden;
-		margin-bottom: 30rpx;
+		margin-top: -20rpx;
 	}
 
 	.menu-item {
@@ -324,46 +572,49 @@
 		align-items: center;
 		padding: 48rpx;
 		position: relative;
+		transition: background-color 0.2s ease;
+		background-color: rgba(255, 255, 255, 0.05);
+		margin-bottom: 20rpx;
+		border-radius: 20rpx;
+	}
+
+	.menu-item:active {
+		background-color: rgba(255, 255, 255, 0.08);
 	}
 
 	.menu-item:not(:last-child)::after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		left: 160rpx;
-		right: 0;
-		height: 2rpx;
-		background-color: rgba(255, 255, 255, 0.1);
+		content: none;
 	}
 
 	.icon-container {
-		width: 90rpx;
-		height: 90rpx;
+		width: 88rpx;
+		height: 88rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: 24rpx;
+		border-radius: 20rpx;
 		margin-right: 30rpx;
+		box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
 	}
 
 	.icon-container.blue {
-		background-color: #007aff;
+		background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 	}
 
 	.icon-container.purple {
-		background-color: #9b59b6;
+		background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
 	}
 
 	.icon-container.green {
-		background-color: #2ecc71;
+		background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
 	}
 
 	.icon-container.gray {
-		background-color: #7f8c8d;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 	}
 
 	.icon-container.red {
-		background-color: #e74c3c;
+		background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 	}
 
 	.menu-title {
@@ -371,21 +622,15 @@
 		color: #fff;
 		font-weight: 500;
 		flex: 1;
+		margin-right: 20rpx;
 	}
 
 	.menu-title.logout {
-		color: #e74c3c;
-	}
-
-	.arrow-with-badge {
-		position: relative;
+		color: #ff4757;
 	}
 
 	.notification-badge {
-		position: absolute;
-		right: -32rpx;
-		top: -20rpx;
-		background-color: #e74c3c;
+		background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 		color: #fff;
 		font-size: 24rpx;
 		padding: 4rpx 16rpx;
@@ -393,14 +638,12 @@
 		min-width: 32rpx;
 		text-align: center;
 		font-weight: 500;
+		box-shadow: 0 4rpx 12rpx rgba(245, 87, 108, 0.3);
+		margin-right: 20rpx;
 	}
 
-	.logout-section {
-		margin-top: 20rpx;
-	}
-
-	.logout-section .menu-item {
-		background-color: #1a1a3a;
-		border-radius: 20rpx;
+	.menu-item.logout {
+		background-color: rgba(245, 87, 108, 0.1);
+		margin-top: 40rpx;
 	}
 </style>
