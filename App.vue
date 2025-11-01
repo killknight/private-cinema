@@ -53,6 +53,15 @@
 			plus.ios.deleteObject(manager);
 			console.log('idfa = '+idfa);*/
 			// #endif
+			uni.getPushClientId({
+			  success(res) {
+			    console.log('getPushClientId', res);
+			  },
+			  fail(err) {
+			    console.log('getPushClientId', err)
+			  }
+			})
+
 		},
 		onShow: function() {
 			console.log('App Show')

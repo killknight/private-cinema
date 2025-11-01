@@ -15,7 +15,7 @@
 				<h2 class="section-title">核心团队</h2>
 				<view class="core-team">
 					<!-- 核心团队成员卡片 -->
-					<view class="team-card" v-for="(member, index) in coreMembers" :key="index">
+					<view class="team-card" v-for="(member, index) in coreMembers" :key="index" @click="navigateToEmployeePhotos(member)">
 						<!-- 左右结构布局 -->
 						<view class="member-avatar">
 							<image :src="member.avatar" mode="aspectFill"></image>
@@ -39,7 +39,7 @@
 			<h2 class="section-title">服务团队</h2>
 			<view class="service-team">
 				<!-- 服务团队成员卡片 -->
-				<view class="service-card" v-for="(member, index) in serviceMembers" :key="index">
+				<view class="service-card" v-for="(member, index) in serviceMembers" :key="index" @click="navigateToEmployeePhotos(member)">
 					<view class="member-avatar">
 						<image :src="member.avatar" mode="aspectFill"></image>
 					</view>
@@ -129,6 +129,13 @@
 				} finally {
 					this.loading = false;
 				}
+			},
+			
+			// 跳转到员工生活照页面
+			navigateToEmployeePhotos: function(member) {
+				uni.navigateTo({
+					url: `/pages/employee-details/employee-details?id=${member.id}`
+				});
 			},
 			
 			// 使用默认数据作为备份
