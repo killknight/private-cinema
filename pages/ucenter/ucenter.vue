@@ -22,7 +22,7 @@
 					</view>
 					<view class="user-info">
 						<view class="name-container">
-							<text class="user-name" @click="toUserInfo">{{userInfo.nickname||userInfo.username||userInfo.mobile||'请登录'}}</text>
+							<text class="user-name" @click="toUserInfo">{{hasLogin ? (userInfo.nickname||userInfo.username||userInfo.mobile||'未设置昵称') : '未登录'}}</text>
 							<view class="name-animation"></view>
 						</view>
 						<view class="status-section">
