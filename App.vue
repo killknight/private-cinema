@@ -70,6 +70,6 @@
 	}
 	page {
 		min-height: 100vh;
-		background: #0f1320;
+		/* background: #0f1320; */
 	}
 </style>

@@ -60,9 +60,8 @@
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}
-		// #ifdef APP
-		, {
+		},
+		{
 			"path": "pages/ucenter/about/about",
 			"style": {
 				"navigationBarTitleText": "关于",
@@ -75,6 +74,7 @@
 				}
 			}
 		},
+		// #ifdef APP
 		{
 			"path": "uni_modules/uni-upgrade-center-app/pages/upgrade-popup",
 			"style": {
@@ -126,7 +126,11 @@
 					}
 				},
 				{
-					"path": "login/login-withoutpwd"
+					"path": "login/login-withoutpwd",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "登录"
+					}
 				},
 				{
 					"path": "login/login-withpwd"

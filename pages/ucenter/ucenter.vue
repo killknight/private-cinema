@@ -12,8 +12,8 @@
 					<view class="avatar-container">
 						<view class="avatar-glow"></view>
 						<view class="avatar" @click="toUserInfo">
-							<view v-if="hasLogin&&userInfo.avatar_file&&userInfo.avatar_file.url" class="avatar-image">
-								<image :src="userInfo.avatar_file.url" mode="aspectFill"></image>
+							<view v-if="hasLogin&&userInfo.avatar_file" class="avatar-image">
+								<image :src="avatarUrl" mode="aspectFill"></image>
 							</view>
 							<view v-else class="default-avatar">
 								<uni-icons type="person" size="64" color="#fff"></uni-icons>
@@ -22,17 +22,17 @@
 					</view>
 					<view class="user-info">
 						<view class="name-container">
-							<text class="user-name" @click="toUserInfo">{{userInfo.nickname||userInfo.username||userInfo.mobile||'123'}}</text>
+							<text class="user-name" @click="toUserInfo">{{userInfo.nickname||userInfo.username||userInfo.mobile||'请登录'}}</text>
 							<view class="name-animation"></view>
 						</view>
 						<view class="status-section">
-							<view class="verified-badge">
-								<uni-icons type="star" size="20" color="#fff"></uni-icons>
-								<text>已认证</text>
+							<view class="verified-badge" style="font-weight: normal; font-size: 12px;">
+								<uni-icons type="phone" size="16" color="#fff"></uni-icons>
+								<text style="font-weight: normal; font-size: 12px;line-height: 10rpx;">{{userInfo.mobile ? '已认证' : '未认证'}}</text>
 							</view>
-							<view class="online-status">
+							<view class="online-status" style="font-weight: normal; font-size: 12px;">
 								<view class="online-dot"></view>
-								<text>在线</text>
+								<text style="font-weight: normal; font-size: 12px;line-height: 10rpx;">{{hasLogin ? '在线' : '未登录'}}</text>
 							</view>
 						</view>
 					</view>
@@ -47,7 +47,7 @@
 
 		<!-- 菜单列表 - 取消分组 -->
 		<view class="menu-container">
-			<view class="menu-item" @click="navigateTo('/pages/ucenter/profile/profile')">
+			<view class="menu-item" @click="navigateTo('/uni_modules/uni-id-pages/pages/userinfo/userinfo', true)">
 				<view class="icon-container blue">
 					<uni-icons type="person" size="30" color="#fff"></uni-icons>
 				</view>
@@ -55,7 +55,7 @@
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
-			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList')">
+			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList', true)">
 				<view class="icon-container purple" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);">
 					<uni-icons type="contact" size="30" color="#fff"></uni-icons>
 				</view>
@@ -63,12 +63,12 @@
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
-			<view class="menu-item" @click="navigateTo('/pages/online-customer-service/online-customer-service')">
+			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/index/index', true)">
 				<view class="icon-container green">
 					<uni-icons type="chat" size="30" color="#fff"></uni-icons>
 				</view>
 				<text class="menu-title">会话列表</text>
-				<view class="notification-badge">3</view>
+				<view class="notification-badge" v-if="unreadMsgCount > 0">{{ unreadMsgCount }}</view>
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
@@ -79,17 +79,25 @@
 				<text class="menu-title">关于我们</text>
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
+			
+			<!-- <view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/contacts/contacts')">
+				<view class="icon-container gray">
+					<uni-icons type="help" size="30" color="#fff"></uni-icons>
+				</view>
+				<text class="menu-title">通讯录</text>
+				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
+			</view> -->
 
-			<view class="menu-item" @click="navigateTo('/uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback')">
+			<!-- <view class="menu-item" @click="navigateTo('/uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback')">
 				<view class="icon-container gray">
 					<uni-icons type="help" size="30" color="#fff"></uni-icons>
 				</view>
 				<text class="menu-title">帮助与反馈</text>
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
-			</view>
+			</view> -->
 
 			<!-- 退出登录 -->
-			<view class="menu-item logout" @click="logout">
+			<view class="menu-item logout" @click="changeLoginState">
 				<view class="icon-container red" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
 					<uni-icons type="clear" size="30" color="#fff"></uni-icons>
 				</view>
@@ -100,24 +108,34 @@
 </template>
 
 <script>
-	import { store } from '@/uni_modules/uni-id-pages/common/store.js'
+	import { store, mutations } from '@/uni_modules/uni-id-pages/common/store.js'
+	import uniIm from '@/uni_modules/uni-im/sdk/index.js';
 	export default {
 		data() {
 			return {
+				avatarUrl: ''
 			}
 		},
 		onLoad() {
 			// 加载用户信息
+			this.updateAvatarUrl()
 		},
 		onShow() {
 			// 每次页面显示时更新用户信息
+			this.updateAvatarUrl()
 		},
 		computed: {
 			userInfo() {
-				return store.userInfo || { nickname: '123' }
+				return store.userInfo || { nickname: '未登录' }
 			},
 			hasLogin(){
-				return store.hasLogin || true
+				return store.hasLogin
+			},
+			unreadMsgCount(){
+				return uniIm.conversation.unreadCount()
+			},
+			notificationUnreadCount(){
+				return uniIm.notification.unreadCount()
 			}
 		},
 		methods: {
@@ -126,18 +144,25 @@
 				if (!this.hasLogin) {
 					// 未登录则跳转到登录页面
 					uni.navigateTo({
-						url: '/uni_modules/uni-id-pages/pages/login/login'
+						url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd'
 					})
 					return
 				}
 				// 已登录则跳转到个人信息页面
-				uni.navigateTo({
-					url: '/uni_modules/uni-id-pages/pages/userinfo/userinfo'
-				})
+				// uni.navigateTo({
+				// 	url: '/uni_modules/uni-id-pages/pages/userinfo/userinfo'
+				// })
 			},
 
 			// 通用导航方法
-			navigateTo(url) {
+			navigateTo(url, flag) {
+				if (flag && !this.hasLogin) {
+					// 未登录则跳转到登录页面
+					uni.navigateTo({
+						url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd'
+					})
+					return
+				}
 				uni.navigateTo({
 					url: url,
 					fail: () => {
@@ -151,6 +176,51 @@
 				});
 			},
 
+			// 更新头像URL
+			updateAvatarUrl() {
+				if (this.hasLogin && this.userInfo.avatar_file) {
+					// 获取URL值
+					let url = this.userInfo.avatar_file.url || this.userInfo.avatar_file.fileID
+					
+					// 检查URL是否以cloud://开头
+					if (url && url.startsWith('cloud://') && typeof uniCloud !== 'undefined') {
+						// 如果是cloud://开头的fileID，通过uniCloud获取临时访问链接
+						try {
+							uniCloud.getTempFileURL({
+								fileList: [url],
+								success: (res) => {
+									if (res.fileList && res.fileList.length > 0 && res.fileList[0].tempFileURL) {
+										this.avatarUrl = res.fileList[0].tempFileURL
+									}
+								},
+								err: (err) => {
+									console.error('获取临时文件URL失败:', err)
+									// 失败时尝试直接使用
+									this.avatarUrl = url
+								}
+							})
+						} catch (e) {
+							console.error('调用uniCloud API失败:', e)
+							// 失败时尝试直接使用
+							this.avatarUrl = url
+						}
+					} else {
+						// 非cloud://开头或没有uniCloud环境，直接使用URL
+						this.avatarUrl = url || ''
+					}
+				} else {
+					this.avatarUrl = ''
+				}
+			},
+			async changeLoginState(){
+				if(this.hasLogin){
+					await mutations.logout()
+				}else{
+					uni.navigateTo({
+						url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd',
+					});
+				}
+			},
 			// 退出登录
 			logout() {
 				uni.showModal({
@@ -164,10 +234,11 @@
 							// 清空用户信息
 							store.hasLogin = false
 							store.userInfo = null
+							this.avatarUrl = ''
 							
 							// 跳转到登录页面
 							uni.navigateTo({
-								url: '/uni_modules/uni-id-pages/pages/login/login'
+								url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd'
 							})
 						}
 					}
@@ -175,7 +246,7 @@
 			}
 		}
 	}
-</script>
+	</script>
 
 <style lang="scss" scoped>
 	page {
@@ -372,8 +443,8 @@
 	}
 
 	.user-name {
-		font-size: 52rpx;
-		font-weight: 700;
+		font-size: 48rpx;
+		// font-weight: 700;
 		color: #fff;
 		display: block;
 		text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3), 0 0 20rpx rgba(102, 126, 234, 0.5);
@@ -425,7 +496,7 @@
 		gap: 8rpx;
 		background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
 		padding: 6rpx 20rpx;
-		border-radius: 20rpx;
+		border-radius: 25rpx;
 		backdrop-filter: blur(10rpx);
 		border: 2rpx solid rgba(255, 215, 0, 0.3);
 		/* 移除动画效果 */
@@ -450,9 +521,9 @@
 	.online-status {
 		display: flex;
 		align-items: center;
-		padding: 6rpx 16rpx;
+		padding: 12rpx 16rpx;
 		background: rgba(76, 175, 80, 0.15);
-		border-radius: 20rpx;
+		border-radius: 25rpx;
 		backdrop-filter: blur(10rpx);
 		border: 2rpx solid rgba(76, 175, 80, 0.3);
 	}

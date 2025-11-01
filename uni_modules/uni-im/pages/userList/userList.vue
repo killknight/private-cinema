@@ -8,7 +8,7 @@
 			<uni-list v-else :border="false">
 				<uni-im-info-card v-for="(item, index) in data" :key="item._id" link
 					:title="item.nickname"
-					:avatar="item.avatar_file?.url || '/uni_modules/uni-im/static/avatarUrl.png'"
+					:avatarFile="item.avatar_file || '/uni_modules/uni-im/static/avatarUrl.png'"
 					@click="toChat(item._id)"></uni-im-info-card>
 			</uni-list>
 			<uni-im-load-state :status="loading ? 'loading' : loadMoreStatus"></uni-im-load-state>

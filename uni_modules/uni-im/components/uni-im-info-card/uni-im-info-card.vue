@@ -99,6 +99,7 @@
 		watch: {
 			avatarFile: {
 				async handler(avatarFile) {
+          console.log('avatarFile监听', avatarFile)
 					if (avatarFile?.url) {
 						this.avatarFileUrl = await uniIm.utils.getTempFileURL(avatarFile.url);
 					}

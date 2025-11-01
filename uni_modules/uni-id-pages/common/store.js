@@ -83,7 +83,7 @@ export const mutations = {
 		uni.setStorageSync('uni_id_token_expired', 0)
     this.setUserInfo({},{cover:true})
     uni.$emit('uni-id-pages-logout')
-		uni.redirectTo({
+		uni.navigateTo({
 			url: `/${pagesJson.uniIdRouter && pagesJson.uniIdRouter.loginPage ? pagesJson.uniIdRouter.loginPage: 'uni_modules/uni-id-pages/pages/login/login-withoutpwd'}`,
 		});
 	},
