@@ -104,7 +104,8 @@
 				themedRooms: [],
 				loading: true,
 				error: '',
-				isOpenNow: false
+				isOpenNow: false,
+				customerServiceUids: []
 			};
 		},
 			onLoad() {
@@ -138,13 +139,41 @@
 					this.themedRooms = data.themedRooms || this.mockRooms(6);
 					this.banners = data.banners || [];
 					this.business = data.business || null;
-					this.isOpenNow = this.isWithin(this.business.openTime, this.business.closeTime)
+					this.customerServiceUids = data.customerServiceUids || [];
+					this.isOpenNow = this.isWithin(this.business.openTime, this.business.closeTime);
+					
+					// 在首页加载时就缓存客服ID
+					this.cacheCustomerServiceId();
 				} catch (e) {
 					this.error = '加载失败，已为您展示示例数据';
 					this.hotRooms = this.mockRooms(6);
 					this.themedRooms = this.mockRooms(6);
+					this.customerServiceUids = [];
+					// 即使出错也尝试缓存默认客服ID
+					// this.cacheCustomerServiceId();
 				} finally {
 					this.loading = false;
+				}
+			},
+			// 缓存客服ID的方法
+			cacheCustomerServiceId() {
+				// 检查是否已有缓存，没有则缓存
+				const cachedServiceId = uni.getStorageSync('cached_customer_service_id');
+				if (!cachedServiceId) {
+					const uids = this.customerServiceUids || [];
+					let serviceId = ''; // 默认ID
+					
+					if (uids && uids.length > 0) {
+						// 随机选择一个客服ID
+						const randomIndex = Math.floor(Math.random() * uids.length);
+						serviceId = uids[randomIndex];
+					}
+					
+					// 缓存选择的客服ID
+					uni.setStorageSync('cached_customer_service_id', serviceId);
+					console.log('首页加载时缓存客服ID:', serviceId);
+				} else {
+					console.log('已存在客服ID缓存，无需重新缓存');
 				}
 			},
 			mockRooms(n) {
@@ -188,8 +217,25 @@
 						}
 					});
 				} else if (f.key === 'contact') {
-					// 联系客服功能
-					uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat' });
+					// 联系客服功能 - 从uni-config-center获取客服ID
+					this.getCustomerServiceId().then(customerServiceId => {
+						if (customerServiceId) {
+							uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=' + customerServiceId });
+						} else {
+							// 如果获取不到客服ID，提示未获取到客服ID
+							uni.showToast({
+								title: '未获取到客服ID'
+							})
+							// uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=_uni_starter_test_user_id' });
+						}
+					}).catch(err => {
+						console.error('获取客服ID失败:', err);
+						uni.showToast({
+							title: '未获取到客服ID'
+						})
+						// 出错时使用默认ID
+						// uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=_uni_starter_test_user_id' });
+					});
 				}
 			},
 			toMore(key) {
@@ -201,6 +247,15 @@
 			},
 			onBannerChange(e){
 				this.currentBanner = e?.detail?.current || 0;
+			},
+			// 获取客服ID（直接从缓存中获取）
+			getCustomerServiceId() {
+				return new Promise((resolve) => {
+					// 从本地缓存获取客服ID（已在fetchHome时缓存）
+					const cachedServiceId = uni.getStorageSync('cached_customer_service_id');
+					console.log('使用客服ID:', cachedServiceId);
+					resolve(cachedServiceId);
+				});
 			},
 			// 添加图片错误处理方法
 			handleImageError(e, feature) {

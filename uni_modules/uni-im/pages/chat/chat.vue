@@ -324,6 +324,7 @@
       uniIm.audioContext.stop()
     },
     onLoad(param) {
+      console.log('onLoad客服页面---》', param);
       for (const key in param) {
         try{
           param[key] = JSON.parse(param[key])

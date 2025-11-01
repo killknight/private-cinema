@@ -3,6 +3,11 @@
 // 数据库集合名称，可按需修改
 const ROOMS_COLLECTION = 'rooms'
 const BANNER_COLLECTION = 'opendb-banner'
+// 引入配置中心
+const uniConfigCenter = require('uni-config-center')
+const uniImConfig = uniConfigCenter({
+  pluginId: 'uni-im'
+})
 
 // 返回首页数据：热门包厢、主题包厢（来自数据库）；封面图片使用云存储临时链接
 exports.main = async () => {
@@ -52,7 +57,21 @@ exports.main = async () => {
     cinemaName: '星展影院'
   }
 
-  return { code: 0, msg: 'ok', data: { hotRooms, themedRooms, banners, business } }
+  // 获取客服ID配置
+  let customerServiceUids = []
+  try {
+    const uids = uniImConfig.config('customer_service_uids')
+    // 处理字符串类型配置
+    if (typeof uids === 'string') {
+      customerServiceUids = uids.split(',').map(item => item.trim()).filter(item => item)
+    } else if (Array.isArray(uids)) {
+      customerServiceUids = uids
+    }
+  } catch (error) {
+    console.error('获取客服ID配置失败:', error)
+  }
+
+  return { code: 0, msg: 'ok', data: { hotRooms, themedRooms, banners, business, customerServiceUids } }
 }
 
 // 将对象数组中的 cover fileID 转为临时URL
