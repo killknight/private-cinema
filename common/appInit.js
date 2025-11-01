@@ -58,7 +58,7 @@ export default async function() {
 					uni.getClipboardData({
 						success: function(res) {
 							console.log('剪切板内容：'+res.data);
-							if (res.data.slice(0, 18) == 'uniInvitationCode:') {
+							if (res.data && res.data.slice(0, 18) == 'uniInvitationCode:') {
 								let uniInvitationCode = res.data.slice(18, 38)
 								console.log('当前用户是其他用户推荐下载的,推荐者的code是：' + uniInvitationCode);
 								// uni.showModal({
