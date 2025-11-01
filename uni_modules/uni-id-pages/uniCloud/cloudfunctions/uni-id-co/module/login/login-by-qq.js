@@ -149,6 +149,11 @@ module.exports = async function (params = {}) {
     accessToken,
     accessTokenExpired
   })
+  // 确保nickname始终有值，特别是小程序登录时
+  if (!extraData.nickname) {
+    extraData.nickname = ''
+  }
+  
   return postUnifiedLogin.call(this, {
     user,
     extraData: {

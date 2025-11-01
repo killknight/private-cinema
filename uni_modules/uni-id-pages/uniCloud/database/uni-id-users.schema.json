@@ -208,6 +208,7 @@
 			"description": "用户昵称",
 			"title": "昵称",
 			"trim": "both",
+			"defaultValue": "",
 			"permission": {
 				"read": true,
 				"write": "doc._id == auth.uid || 'CREATE_UNI_ID_USERS' in auth.permission || 'UPDATE_UNI_ID_USERS' in auth.permission"

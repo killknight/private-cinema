@@ -99,7 +99,7 @@ module.exports = async function (params = {}) {
     password: passwordHash,
     password_secret_version: version,
     dcloud_appid: authorizedApp || [],
-    nickname,
+    nickname: nickname || '',
     role: role || [],
     mobile,
     email,
