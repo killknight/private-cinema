@@ -27,11 +27,18 @@ exports.main = async (event, context) => {
       }
     }
     
-    // 收集环境图片的fileID
-    if (cinemaData && cinemaData.environments && cinemaData.environments.length > 0) {
-      cinemaData.environments.forEach(env => {
-        if (env.image) fileIds.push(env.image);
-      });
+    // 收集图片的fileID
+    if (cinemaData) {
+      // 收集公众号二维码和logo图片
+      if (cinemaData.wechatQrCode) fileIds.push(cinemaData.wechatQrCode);
+      if (cinemaData.logoImage) fileIds.push(cinemaData.logoImage);
+      
+      // 收集环境图片
+      if (cinemaData.environments && cinemaData.environments.length > 0) {
+        cinemaData.environments.forEach(env => {
+          if (env.image) fileIds.push(env.image);
+        });
+      }
     }
     
     // 收集服务团队头像的fileID
@@ -212,8 +219,22 @@ exports.main = async (event, context) => {
       }
     }
     
-    // 确保地址和经纬度信息存在
+    // 转换公众号二维码和logo图片的fileID为URL
+    if (cinemaInfo.wechatQrCode && fileIdMap[cinemaInfo.wechatQrCode]) {
+      cinemaInfo.wechatQrCode = fileIdMap[cinemaInfo.wechatQrCode];
+    }
+    if (cinemaInfo.logoImage && fileIdMap[cinemaInfo.logoImage]) {
+      cinemaInfo.logoImage = fileIdMap[cinemaInfo.logoImage];
+    }
+    
+    // 设置默认值
+    if (!cinemaInfo.cinemaName) cinemaInfo.cinemaName = "星展影院";
+    if (!cinemaInfo.openTime) cinemaInfo.openTime = "10:00";
+    if (!cinemaInfo.closeTime) cinemaInfo.closeTime = "24:00";
     if (!cinemaInfo.address) cinemaInfo.address = "北京市朝阳区建国路88号";
+    if (!cinemaInfo.phone) cinemaInfo.phone = "400-123-4567";
+    if (!cinemaInfo.wechatQrCode) cinemaInfo.wechatQrCode = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
+    if (!cinemaInfo.logoImage) cinemaInfo.logoImage = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
     if (!cinemaInfo.latitude) cinemaInfo.latitude = 39.908823;
     if (!cinemaInfo.longitude) cinemaInfo.longitude = 116.466544;
     

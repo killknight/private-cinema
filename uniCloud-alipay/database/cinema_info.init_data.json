@@ -6,7 +6,10 @@
     "openTime": "10:00",
     "closeTime": "24:00",
     "tags": ["4K HDR", "杜比音效", "私密空间", "主题包厢"],
-    "address": "北京市朝阳区建国路88号",
+    "address": "北京市朝阳区建国路88号现代城SOHO A座2308室",
+    "phone": "400-123-4567",
+    "wechatQrCode": "cloud://env-00jxu7cbl7c1/app/icon/logo.png",
+    "logoImage": "cloud://env-00jxu7cbl7c1/app/icon/logo.png",
     "latitude": 39.908823,
     "longitude": 116.466544,
     "story": [

@@ -41,6 +41,21 @@
       "description": "影院地址",
       "label": "影院地址"
     },
+    "phone": {
+      "bsonType": "string",
+      "description": "预约电话",
+      "label": "预约电话"
+    },
+    "wechatQrCode": {
+      "bsonType": "string",
+      "description": "公众号二维码图片fileID",
+      "label": "公众号二维码"
+    },
+    "logoImage": {
+      "bsonType": "string",
+      "description": "应用logo图片fileID",
+      "label": "应用logo"
+    },
     "latitude": {
       "bsonType": "number",
       "description": "纬度",
