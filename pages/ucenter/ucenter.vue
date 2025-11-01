@@ -55,7 +55,7 @@
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
-			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList', true)">
+			<view v-if="uniIDHasRole('admin')" class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/userList/userList', true)">
 				<view class="icon-container purple" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);">
 					<uni-icons type="contact" size="30" color="#fff"></uni-icons>
 				</view>
@@ -63,7 +63,7 @@
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view>
 
-			<view class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/index/index', true)">
+			<view v-if="uniIDHasRole('admin')" class="menu-item" @click="navigateTo('/uni_modules/uni-im/pages/index/index', true)">
 				<view class="icon-container green">
 					<uni-icons type="chat" size="30" color="#fff"></uni-icons>
 				</view>
