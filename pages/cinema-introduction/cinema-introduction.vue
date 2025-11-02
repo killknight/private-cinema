@@ -26,7 +26,7 @@
 					<swiper ref="envSwiper" class="env-swiper" circular autoplay interval="4000" duration="500" :indicator-dots="true" :indicator-active-color="'#ffffff'" :indicator-color="'rgba(255, 255, 255, 0.5)'" indicator-dots-class="custom-indicators" @change="onSwiperChange">
 						<swiper-item v-for="(env, idx) in environmentImages" :key="env._id || idx">
 							<view class="swiper-item-wrapper">
-								<image class="env-img" :src="env.image" mode="aspectFill" />
+								<image class="env-img" :src="env.image_url" mode="aspectFill" />
 								<view class="swiper-text-overlay">
 									<text class="swiper-text">{{ env.name || (idx === 0 ? '豪华接待大厅' : `环境 ${idx + 1}`) }}</text>
 								</view>
@@ -39,11 +39,11 @@
 			<view class="section staff">
 				<view class="section-header">
 					<view class="section-title">专业团队</view>
-					<text class="more-btn" @click="toTeamPage" v-if="staffList.length > 3">查看更多 〉</text>
+					<text class="more-btn" @click="toTeamPage" v-if="staffList.length > 4">查看更多 〉</text>
 				</view>
 				<view class="staff-grid">
 					<view class="staff-card" v-for="staff in staffList.slice(0, 4)" :key="staff._id" @click="toEmployeeDetails(staff._id)">
-						<image class="staff-avatar" :src="staff.avatar" mode="aspectFill" />
+						<image class="staff-avatar" :src="staff.avatar_url" mode="aspectFill" />
 						<view class="staff-info">
 							<text class="staff-name">{{ staff.name }}</text>
 							<text class="staff-position">{{ staff.position }}</text>
@@ -52,7 +52,7 @@
 					</view>
 				</view>
 			</view>
-			<image v-if="cinemaInfo && cinemaInfo.cinemaIntroImage" :src="cinemaInfo.cinemaIntroImage" class="image-style" mode="aspectFill"></image>
+			<image v-if="cinemaInfo && cinemaInfo.cinemaIntroImage_url" :src="cinemaInfo.cinemaIntroImage_url" class="image-style" mode="aspectFill"></image>
 			<!-- 包厢类型 -->
 		<!-- <view class="section rooms">
 			<view class="section-header">

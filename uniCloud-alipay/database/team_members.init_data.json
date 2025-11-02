@@ -15,7 +15,7 @@
       {"type": "linkedin", "url": "#"},
       {"type": "email", "url": "#"}
     ],
-    "type": "core",
+    "type": "service",
     "order": 1,
     "createTime": {"$date": "2023-01-01T00:00:00Z"},
     "updateTime": {"$date": "2023-01-01T00:00:00Z"}
@@ -36,7 +36,7 @@
       {"type": "weixin", "url": "#"},
       {"type": "linkedin", "url": "#"}
     ],
-    "type": "core",
+    "type": "service",
     "order": 2,
     "createTime": {"$date": "2023-01-01T00:00:00Z"},
     "updateTime": {"$date": "2023-01-01T00:00:00Z"}
@@ -57,7 +57,7 @@
       {"type": "github", "url": "#"},
       {"type": "linkedin", "url": "#"}
     ],
-    "type": "core",
+    "type": "service",
     "order": 3,
     "createTime": {"$date": "2023-01-01T00:00:00Z"},
     "updateTime": {"$date": "2023-01-01T00:00:00Z"}
@@ -77,60 +77,6 @@
     "socialIcons": [],
     "type": "service",
     "order": 1,
-    "createTime": {"$date": "2023-01-01T00:00:00Z"},
-    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
-  },
-  {
-    "_id": "service_member_2",
-    "name": "陈思",
-    "position": "影院经理",
-    "bio": "7年影院管理经验，熟悉放映技术和影院运营的各个环节",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m5.jpg",
-      "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m5.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m3.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m4.jpg"
-    ],
-    "interests": ["电影史研究", "音乐鉴赏", "骑行"],
-    "socialIcons": [],
-    "type": "service",
-    "order": 2,
-    "createTime": {"$date": "2023-01-01T00:00:00Z"},
-    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
-  },
-  {
-    "_id": "service_member_3",
-    "name": "刘洋",
-    "position": "技术支持专员",
-    "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m6.jpg",
-      "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m5.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m7.jpg"
-    ],
-    "interests": ["音乐制作", "摄影", "健身"],
-    "socialIcons": [],
-    "type": "service",
-    "order": 3,
-    "createTime": {"$date": "2023-01-01T00:00:00Z"},
-    "updateTime": {"$date": "2023-01-01T00:00:00Z"}
-  },
-  {
-    "_id": "service_member_4",
-    "name": "吴思洋",
-    "position": "技术支持专员",
-    "bio": "专业的影音设备调试师，确保每一次观影都有最佳视听体验",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m7.jpg",
-      "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m7.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m1.jpg"
-    ],
-    "interests": ["天文学", "徒步", "电影特效"],
-    "socialIcons": [],
-    "type": "service",
-    "order": 3,
     "createTime": {"$date": "2023-01-01T00:00:00Z"},
     "updateTime": {"$date": "2023-01-01T00:00:00Z"}
   }

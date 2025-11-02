@@ -27,18 +27,18 @@ exports.main = async (event, context) => {
       }
     }
     
-    // 收集图片的fileID
+    // 收集图片的fileID，只收集有效的cloud://格式的路径
     if (cinemaData) {
       // 收集公众号二维码和logo图片
-      if (cinemaData.wechatQrCode) fileIds.push(cinemaData.wechatQrCode);
-      if (cinemaData.logoImage) fileIds.push(cinemaData.logoImage);
+      if (cinemaData.wechatQrCode && cinemaData.wechatQrCode.startsWith('cloud://')) fileIds.push(cinemaData.wechatQrCode);
+      if (cinemaData.logoImage && cinemaData.logoImage.startsWith('cloud://')) fileIds.push(cinemaData.logoImage);
       // 收集影院介绍图片
-      if (cinemaData.cinemaIntroImage) fileIds.push(cinemaData.cinemaIntroImage);
+      if (cinemaData.cinemaIntroImage && cinemaData.cinemaIntroImage.startsWith('cloud://')) fileIds.push(cinemaData.cinemaIntroImage);
       
       // 收集环境图片
       if (cinemaData.environments && cinemaData.environments.length > 0) {
         cinemaData.environments.forEach(env => {
-          if (env.image) fileIds.push(env.image);
+          if (env.image && env.image.startsWith('cloud://')) fileIds.push(env.image);
         });
       }
     }
@@ -46,14 +46,14 @@ exports.main = async (event, context) => {
     // 收集服务团队头像的fileID
     if (staffRes.data && staffRes.data.length > 0) {
       staffRes.data.forEach(staff => {
-        if (staff.avatar) fileIds.push(staff.avatar);
+        if (staff.avatar && staff.avatar.startsWith('cloud://')) fileIds.push(staff.avatar);
       });
     }
     
     // 收集包厢图片的fileID
     if (roomsRes.data && roomsRes.data.length > 0) {
       roomsRes.data.forEach(room => {
-        if (room.cover) fileIds.push(room.cover);
+        if (room.cover && room.cover.startsWith('cloud://')) fileIds.push(room.cover);
       });
     }
     
@@ -69,21 +69,27 @@ exports.main = async (event, context) => {
           result.fileList.forEach(file => {
             if (file.status === 0) { // 成功获取URL
               fileIdMap[file.fileID] = file.tempFileURL;
+            } else {
+              console.warn(`获取文件URL失败，fileID: ${file.fileID}, 错误信息: ${file.message}`);
             }
           });
         }
       } catch (err) {
         console.error('获取临时链接失败:', err);
+        // 继续执行，不中断流程，缺少部分图片URL不应该阻止整体响应
       }
     }
     
-    // 转换环境图片URL并确保包含name字段
+    // 转换环境图片URL并确保包含name字段：保留源fileID并添加新的URL字段
     const environmentData = (cinemaData && cinemaData.environments) ? [...cinemaData.environments] : [];
     environmentData.forEach(env => {
       if (env.image) {
+        // 只对存在于fileIdMap中的cloud://格式路径进行转换为临时URL
+        // 保留源image字段（fileID），添加新的image_url字段
         if (fileIdMap[env.image]) {
-          env.image = fileIdMap[env.image];
+          env.image_url = fileIdMap[env.image];
         }
+        // 对于本地临时路径，保持不变
       }
       // 确保每个环境图片都有name字段，默认为空字符串
       if (!env.hasOwnProperty('name')) {
@@ -91,24 +97,32 @@ exports.main = async (event, context) => {
       }
     });
     
-    // 转换服务团队头像URL并映射字段
+    // 转换服务团队头像URL并映射字段：保留源avatar字段（fileID），添加新的avatar_url字段
     let staffData = staffRes.data || [];
     staffData = staffData.map(staff => ({
       _id: staff._id,
       name: staff.name,
       position: staff.position,
       description: staff.bio, // 将bio字段映射为description
-      avatar: staff.avatar && fileIdMap[staff.avatar] ? fileIdMap[staff.avatar] : staff.avatar
+      avatar: staff.avatar, // 保留原始fileID
+      // 只对存在于fileIdMap中的cloud://格式路径添加URL字段
+      avatar_url: staff.avatar && fileIdMap[staff.avatar] ? fileIdMap[staff.avatar] : null
     }));
     
-    // 转换包厢图片URL并确保字段名正确
+    // 转换包厢图片URL并确保字段名正确：保留源cover字段（fileID），添加新的cover_url和image_url字段
     const roomsData = roomsRes.data || [];
     roomsData.forEach(room => {
       if (room.cover && fileIdMap[room.cover]) {
-        // 为了兼容前端，同时设置cover和image字段
-        room.cover = fileIdMap[room.cover];
-        room.image = room.cover; // 确保前端可以通过image字段访问
+        // 保留原始fileID
+        // 添加新的URL字段
+        room.cover_url = fileIdMap[room.cover];
+        room.image_url = room.cover_url; // 同时添加image_url字段以兼容前端
+        // 为了保持向后兼容，仍设置image字段为fileID
+        if (!room.image) {
+          room.image = room.cover;
+        }
       }
+      // 对于本地临时路径，保持不变
     });
     
     // 处理cinemaInfo数据，确保返回正确的结构
@@ -221,16 +235,16 @@ exports.main = async (event, context) => {
       }
     }
     
-    // 转换公众号二维码和logo图片的fileID为URL
+    // 转换主要图片fileID为临时URL供前端展示
+    // 保留源fileID字段，添加新的URL字段（在源字段后加_url）
     if (cinemaInfo.wechatQrCode && fileIdMap[cinemaInfo.wechatQrCode]) {
-      cinemaInfo.wechatQrCode = fileIdMap[cinemaInfo.wechatQrCode];
+      cinemaInfo.wechatQrCode_url = fileIdMap[cinemaInfo.wechatQrCode];
     }
     if (cinemaInfo.logoImage && fileIdMap[cinemaInfo.logoImage]) {
-      cinemaInfo.logoImage = fileIdMap[cinemaInfo.logoImage];
+      cinemaInfo.logoImage_url = fileIdMap[cinemaInfo.logoImage];
     }
-    // 转换影院介绍图片的fileID为URL
     if (cinemaInfo.cinemaIntroImage && fileIdMap[cinemaInfo.cinemaIntroImage]) {
-      cinemaInfo.cinemaIntroImage = fileIdMap[cinemaInfo.cinemaIntroImage];
+      cinemaInfo.cinemaIntroImage_url = fileIdMap[cinemaInfo.cinemaIntroImage];
     }
     
     // 设置默认值
@@ -239,10 +253,10 @@ exports.main = async (event, context) => {
     if (!cinemaInfo.closeTime) cinemaInfo.closeTime = "24:00";
     if (!cinemaInfo.address) cinemaInfo.address = "北京市朝阳区建国路88号";
     if (!cinemaInfo.phone) cinemaInfo.phone = "400-123-4567";
-    if (!cinemaInfo.wechatQrCode) cinemaInfo.wechatQrCode = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
-    if (!cinemaInfo.logoImage) cinemaInfo.logoImage = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
-    // 设置影院介绍图片默认值
-    if (!cinemaInfo.cinemaIntroImage) cinemaInfo.cinemaIntroImage = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
+    // 图片字段默认空值，避免使用不存在的默认图片
+    if (!cinemaInfo.wechatQrCode) cinemaInfo.wechatQrCode = '';
+    if (!cinemaInfo.logoImage) cinemaInfo.logoImage = '';
+    if (!cinemaInfo.cinemaIntroImage) cinemaInfo.cinemaIntroImage = '';
     if (!cinemaInfo.latitude) cinemaInfo.latitude = 39.908823;
     if (!cinemaInfo.longitude) cinemaInfo.longitude = 116.466544;
     

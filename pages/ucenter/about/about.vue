@@ -5,7 +5,7 @@
       <view class="hero-bg"></view>
       <view class="hero-content">
           <view class="logo">
-            <image :src="cinemaInfo.logoImage || '/static/app/icon/logo.png'" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+            <image :src="cinemaInfo.logoImage_url || '/static/app/icon/logo.png'" mode="aspectFill" style="width: 100%; height: 100%;"></image>
           </view>
           <text class="hero-title">{{ cinemaInfo.cinemaName }}</text>
           <text class="hero-subtitle">沉浸式观影体验 · 尊贵私享空间</text>
@@ -110,7 +110,7 @@
           <view class="wechat-name">{{ cinemaInfo.cinemaName }}</view>
         </view>
         <view class="qr-container">
-          <image :src="cinemaInfo.wechatQrCode || '/static/app/icon/logo.png'" mode="aspectFit" class="qr-image"></image>
+          <image :src="cinemaInfo.wechatQrCode_url || '/static/app/icon/logo.png'" mode="aspectFit" class="qr-image"></image>
           <text class="qr-text">扫码关注公众号</text>
         </view>
       </view>
@@ -175,7 +175,9 @@ export default {
             openTime: info.openTime || '',
             closeTime: info.closeTime || '',
             wechatQrCode: info.wechatQrCode || '',
-            logoImage: info.logoImage || ''
+						 wechatQrCode_url: info.wechatQrCode_url || '',
+            logoImage: info.logoImage || '',
+						logoImage_url: info.logoImage_url || ''
           };
         } else {
           // 返回格式不符合预期时使用默认值

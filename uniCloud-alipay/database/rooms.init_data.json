@@ -13,7 +13,7 @@
 	},
 	{
 		"name": "舒适解压",
-		"capacity": 4,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/ssjy.jpg",
 		"description": "宽敞舒适的家庭观影空间，适合家庭聚会和亲子活动，提供适合各年龄段的电影选择。",
 		"tags": ["亲子", "家庭", "宽敞"],
@@ -25,7 +25,7 @@
 	},
 	{
 		"name": "休息娱乐",
-		"capacity": 6,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/xxyl.jpg",
 		"description": "沉浸式漫威超级英雄主题包厢，墙面上映漫威经典场景，让您仿佛置身于漫威宇宙中。",
 		"tags": ["动漫", "超级英雄", "多人"],
@@ -37,7 +37,7 @@
 	},
 	{
 		"name": "互动解压",
-		"capacity": 4,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/hdjy.jpg",
 		"description": "为游戏爱好者打造的专业观赛空间，高刷新率大屏和专业音响，带来身临其境的电竞体验。",
 		"tags": ["电竞", "游戏", "高清大屏"],
@@ -61,7 +61,7 @@
 	},
 	{
 		"name": "人气优选",
-		"capacity": 4,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/rqyx.jpg",
 		"description": "充满80-90年代怀旧气息的包厢，老式电影海报和复古装饰，带您重温经典时代。",
 		"tags": ["怀旧", "复古", "经典"],
@@ -73,7 +73,7 @@
 	},
 	{
 		"name": "提前预约",
-		"capacity": 4,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/tqyy.jpg",
 		"description": "星际大战主题包厢，星球大战场景重现，适合科幻爱好者和星战迷。",
 		"tags": ["科幻", "太空", "星战"],
@@ -85,7 +85,7 @@
 	},
 	{
 		"name": "浪漫体验",
-		"capacity": 6,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/lmty.jpg",	
 		"description": "梦幻海底世界主题包厢，蓝色海洋氛围和海洋生物装饰，创造沉浸式海洋体验。",
 		"tags": ["海洋", "梦幻", "儿童友好"],
@@ -97,7 +97,7 @@
 	},
 	{
 		"name": "任意想像",
-		"capacity": 6,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/ryxx.jpg",	
 		"description": "梦幻海底世界主题包厢，蓝色海洋氛围和海洋生物装饰，创造沉浸式海洋体验。",
 		"tags": ["海洋", "梦幻", "儿童友好"],
@@ -109,7 +109,7 @@
 	},
 	{
 		"name": "欢迎咨询",
-		"capacity": 6,
+		"capacity": 2,
 		"cover": "cloud://env-00jxu7cbl7c1/bx/hyzx.jpg",	
 		"description": "梦幻海底世界主题包厢，蓝色海洋氛围和海洋生物装饰，创造沉浸式海洋体验。",
 		"tags": ["海洋", "梦幻", "儿童友好"],
