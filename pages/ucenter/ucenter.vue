@@ -81,7 +81,7 @@
 			</view>
 			<view v-if="uniIDHasRole('admin')" class="menu-item" @click="navigateTo('/sys_mgr/index')">
 				<view class="icon-container gray">
-					<uni-icons type="help" size="30" color="#fff"></uni-icons>
+					<uni-icons type="settings" size="30" color="#fff"></uni-icons>
 				</view>
 				<text class="menu-title">系统管理</text>
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>

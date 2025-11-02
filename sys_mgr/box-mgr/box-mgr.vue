@@ -16,27 +16,45 @@
 			</view>
 			
 			<view class="box-item" v-for="item in boxList" :key="item._id">
-				<view class="box-header">
-					<view class="box-name">{{ item.boxName }}</view>
-					<view class="box-status" :class="{ 'status-available': item.status === 'available', 'status-unavailable': item.status === 'unavailable' }">
-						{{ item.status === 'available' ? '可用' : '不可用' }}
+				<!-- 包厢图片 -->
+				<view class="box-cover" v-if="item.cover || item.image">
+					<image :src="item.cover || item.image" mode="aspectFill"></image>
+				</view>
+				<view class="box-cover empty" v-else>
+					<uni-icons type="image" size="40" color="#CCCCCC"></uni-icons>
+				</view>
+				
+				<view class="box-content">
+					<view class="box-header">
+						<view class="box-name">{{ item.name }}</view>
+						<view class="box-features">
+							<view class="feature hot" v-if="item.hot">热门</view>
+							<view class="feature themed" v-if="item.themed">主题精选</view>
+						</view>
 					</view>
+					
+					<view class="box-info">
+						<view class="info-item">
+							<text class="info-label">容纳人数：</text>
+							<text class="info-value">{{ item.capacity }}人</text>
+						</view>
+						<view class="info-item">
+							<text class="info-label">价格：</text>
+							<text class="info-value price">¥{{ item.price }}/{{ item.priceUnit || '小时' }}</text>
+						</view>
+					</view>
+					
+					<!-- 包厢标签 -->
+					<view class="box-tags" v-if="item.tags && item.tags.length > 0">
+						<view class="tag" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</view>
+					</view>
+					
+					<view class="box-actions">
+						<uni-icons type="compose" size="24" color="#007AFF" @click="editBox(item)"></uni-icons>
+						<uni-icons type="trash" size="24" color="#FF3B30" @click="deleteBox(item._id)"></uni-icons>
+					</view>
+				</view>
 			</view>
-			<view class="box-info">
-				<view class="info-item">
-					<text class="info-label">容纳人数：</text>
-					<text class="info-value">{{ item.capacity }}人</text>
-				</view>
-				<view class="info-item">
-					<text class="info-label">价格：</text>
-					<text class="info-value">¥{{ item.price }}/小时</text>
-				</view>
-			</view>
-			<view class="box-actions">
-					<uni-icons type="compose" size="24" color="#007AFF" @click="editBox(item)"></uni-icons>
-					<uni-icons type="trash" size="24" color="#FF3B30" @click="deleteBox(item._id)"></uni-icons>
-				</view>
-		</view>
 		</view>
 	</view>
 </template>
@@ -54,59 +72,50 @@
 			uni.setNavigationBarTitle({
 				title: '包厢维护'
 			});
+			
+		},
+		onShow() {
 			this.loadBoxList();
 		},
 		methods: {
 			// 加载包厢列表
 			loadBoxList() {
-				// 这里应该调用云函数获取包厢数据
-				// 暂时使用模拟数据
+				// 调用云函数获取包厢数据
 				uni.showLoading({
 					title: '加载中...'
 				});
 				
-				setTimeout(() => {
+				uniCloud.callFunction({
+					name: 'roomManager',
+					data: {
+						action: 'getAllRooms',
+						searchText: this.searchText || '',
+						limit: 100 // 加载足够多的数据
+					}
+				}).then(res => {
 					uni.hideLoading();
-					// 模拟数据
-					this.boxList = [
-						{
-							_id: '1',
-							boxName: '豪华观影厅A',
-							capacity: 4,
-							price: 198,
-							status: 'available'
-						},
-						{
-							_id: '2',
-							boxName: '豪华观影厅B',
-							capacity: 6,
-							price: 298,
-							status: 'available'
-						},
-						{
-							_id: '3',
-							boxName: 'VIP包厢',
-							capacity: 2,
-							price: 258,
-							status: 'unavailable'
-						}
-					];
-				}, 1000);
+					if (res.result && res.result.code === 200) {
+						this.boxList = res.result.data.rooms || [];
+					} else {
+						uni.showToast({
+							title: '加载失败',
+							icon: 'none'
+						});
+					}
+				}).catch(error => {
+					uni.hideLoading();
+					console.error('加载包厢列表失败:', error);
+					uni.showToast({
+						title: '加载失败，请稍后重试',
+						icon: 'none'
+					});
+				});
 			},
 			
 			// 搜索包厢
 			searchBox() {
-				// 这里应该实现搜索功能
-				let filtered = this.boxList.filter(item => 
-					item.boxName.toLowerCase().includes(this.searchText.toLowerCase())
-				);
-				// 如果有搜索结果，显示搜索结果，否则显示提示
-				if (filtered.length === 0 && this.searchText) {
-					uni.showToast({
-						title: '未找到相关包厢',
-						icon: 'none'
-					});
-				}
+				// 重新调用云函数进行搜索
+				this.loadBoxList();
 			},
 			
 			// 添加包厢
@@ -132,15 +141,36 @@
 					confirmColor: '#FF3B30',
 					success: (res) => {
 						if (res.confirm) {
-							// 这里应该调用云函数删除包厢
-							uni.showToast({
-								title: '删除成功',
-								icon: 'success'
-							});
-							this.loadBoxList();
+							// 调用云函数删除包厢
+								uniCloud.callFunction({
+									name: 'roomManager',
+									data: {
+										action: 'deleteRoom',
+										_id: id
+									}
+								}).then(result => {
+									if (result.result && result.result.code === 200) {
+										uni.showToast({
+											title: '删除成功',
+											icon: 'success'
+										});
+									} else {
+										uni.showToast({
+											title: result.result?.message || '删除失败',
+											icon: 'none'
+										});
+									}
+									this.loadBoxList();
+								}).catch(error => {
+									console.error('删除包厢失败:', error);
+									uni.showToast({
+										title: '删除失败，请稍后重试',
+										icon: 'none'
+									});
+								});
 						}
 					}
-				})
+				});
 			}
 		}
 	}
@@ -194,43 +224,74 @@
 	.box-item {
 		padding: 30rpx 20rpx;
 		border-bottom: 1rpx solid #EEEEEE;
+		display: flex;
+		gap: 20rpx;
 	}
 	
 	.box-item:last-child {
 		border-bottom: none;
 	}
 	
+	.box-cover {
+		width: 180rpx;
+		height: 120rpx;
+		border-radius: 12rpx;
+		overflow: hidden;
+		background-color: #f5f5f5;
+	}
+	
+	.box-cover image {
+		width: 100%;
+		height: 100%;
+	}
+	
+	.box-cover.empty {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.box-content {
+		flex: 1;
+	}
+	
 	.box-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 15rpx;
+		align-items: flex-start;
+		margin-bottom: 10rpx;
 	}
 	
 	.box-name {
 		font-size: 32rpx;
 		font-weight: bold;
 		color: #333333;
+		flex: 1;
 	}
 	
-	.box-status {
-		padding: 4rpx 20rpx;
-		border-radius: 16rpx;
-		font-size: 24rpx;
+	.box-features {
+		display: flex;
+		gap: 10rpx;
+		margin-left: 10rpx;
 	}
 	
-	.status-available {
-		background-color: #E8F4EA;
-		color: #34C759;
+	.feature {
+		font-size: 20rpx;
+		color: #fff;
+		border-radius: 10rpx;
+		padding: 4rpx 12rpx;
 	}
 	
-	.status-unavailable {
-		background-color: #FEECEB;
-		color: #FF3B30;
+	.feature.hot {
+		background-color: #ff6b6b;
+	}
+	
+	.feature.themed {
+		background-color: #4dabf7;
 	}
 	
 	.box-info {
-		margin-bottom: 20rpx;
+		margin-bottom: 10rpx;
 	}
 	
 	.info-item {
@@ -246,6 +307,27 @@
 	.info-value {
 		font-size: 28rpx;
 		color: #333333;
+	}
+	
+	.info-value.price {
+		color: #e64340;
+		font-weight: 500;
+	}
+	
+	.box-tags {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 10rpx;
+	}
+	
+	.tag {
+		font-size: 20rpx;
+		color: #666;
+		background-color: #f5f5f5;
+		border-radius: 10rpx;
+		padding: 4rpx 12rpx;
+		margin-right: 10rpx;
+		margin-bottom: 8rpx;
 	}
 	
 	.box-actions {

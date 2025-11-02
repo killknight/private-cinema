@@ -875,34 +875,37 @@
 			},
 			
 			// 调用更新云函数
-			callUpdateFunction(data) {
-				uniCloud.callFunction({
-					name: 'updateCinemaInfo',
-					data: data
-				}).then(res => {
-					uni.hideLoading();
-					if (res.result && res.result.code === 200) {
+				callUpdateFunction(data) {
+					uniCloud.callFunction({
+						name: 'updateCinemaInfo',
+						data: data
+					}).then(res => {
+						uni.hideLoading();
+						if (res.result && res.result.code === 200) {
+							uni.showToast({
+								title: '保存成功',
+								icon: 'success',
+								duration: 1500 // 增加显示时间，让用户有足够时间看到提示
+							});
+							// 保存成功后返回上一页
+							setTimeout(() => {
+								uni.navigateBack();
+							}, 1500); // 延迟返回，确保用户看到提示
+						} else {
+							uni.showToast({
+								title: res.result?.message || '保存失败',
+								icon: 'none'
+							});
+						}
+					}).catch(error => {
+						uni.hideLoading();
+						console.error('保存影院信息失败:', error);
 						uni.showToast({
-							title: '保存成功',
-							icon: 'success'
-						});
-						// 重新加载数据以更新页面显示
-						this.loadCinemaInfo();
-					} else {
-						uni.showToast({
-							title: res.result?.message || '保存失败',
+							title: '保存失败，请稍后重试',
 							icon: 'none'
 						});
-					}
-				}).catch(error => {
-					uni.hideLoading();
-					console.error('保存影院信息失败:', error);
-					uni.showToast({
-						title: '保存失败，请稍后重试',
-						icon: 'none'
 					});
-				});
-			}
+				}
 		}
 	}
 </script>
