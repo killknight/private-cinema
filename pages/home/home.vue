@@ -108,10 +108,22 @@
 				customerServiceUids: []
 			};
 		},
-			onLoad() {
+		onLoad() {
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
 			this.fetchHome();
+			// 设置导航颜色
+			uni.setTabBarStyle({
+				backgroundColor: '#0f1320'
+			})
+			uni.setNavigationBarColor({
+				backgroundColor: '#0f1320',
+				frontColor: '#ffffff',
+				animation: {
+					duration: 400,
+					timingFunc: "easeIn",
+				}
+			})
 		},
 		methods: {
 			isWithin(open, close) {

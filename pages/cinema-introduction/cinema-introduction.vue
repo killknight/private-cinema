@@ -3,6 +3,7 @@
 		<!-- 主要内容区域 -->
 		<scroll-view class="content" scroll-y>
 			<!-- 我们的故事 -->
+			<!-- 			
 			<view class="section story">
 				<view class="section-header">
 					<view class="section-title">我们的故事</view>
@@ -14,6 +15,7 @@
 					</template>
 				</view>
 			</view>
+			-->
 
 			<!-- 环境与设施 -->
 			<view class="section environment">
@@ -31,9 +33,6 @@
 							</view>
 						</swiper-item>
 					</swiper>
-					<!-- 左右箭头 -->
-					<!-- <view class="swiper-arrow swiper-arrow-left" @click="prevSwiper">&lt;</view>
-					<view class="swiper-arrow swiper-arrow-right" @click="nextSwiper">&gt;</view> -->
 				</view>
 			</view>
 			<!-- 员工介绍 -->
@@ -53,9 +52,9 @@
 					</view>
 				</view>
 			</view>
-
+			<image src="/static/uni-center/cinema-intro.jpg" class="image-style" mode="aspectFill"></image>
 			<!-- 包厢类型 -->
-		<view class="section rooms">
+		<!-- <view class="section rooms">
 			<view class="section-header">
 				<view class="section-title">包厢类型</view>
 				<text class="more-btn" @click="toRoomsPage" v-if="roomTypes.length > 4">查看更多 〉</text>
@@ -75,10 +74,10 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 
 			<!-- 设备配置 -->
-			<view class="section equipment">
+			<!-- <view class="section equipment">
 				<view class="section-header">
 					<view class="section-title">设备配置</view>
 				</view>
@@ -91,10 +90,10 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 
 			<!-- 服务亮点 -->
-			<view class="section services">
+			<!-- <view class="section services">
 				<view class="section-header">
 					<view class="section-title">服务亮点</view>
 				</view>
@@ -107,33 +106,45 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</scroll-view>
 	</view>
 </template>
 
 <script>
 	export default {
-			data() {
-				return {
-					statusBarHeight: 0,
-					cinemaInfo: null,
-					environmentImages: [
-						{ image: '/static/banner/bj1.jpg', name: '豪华接待大厅' },
-						{ image: '/static/banner/bj2.jpg', name: '精品包厢环境' },
-						{ image: '/static/banner/bj3.jpg', name: '专业影音设备' }
-					],
-					staffList: [],
-					roomTypes: [],
-					equipmentList: [],
-					serviceList: [],
-					swiperCurrent: 0
-				}
-			},
-			onLoad() {
+		data() {
+			return {
+				statusBarHeight: 0,
+				cinemaInfo: null,
+				environmentImages: [
+					{ image: '/static/banner/bj1.jpg', name: '豪华接待大厅' },
+					{ image: '/static/banner/bj2.jpg', name: '精品包厢环境' },
+					{ image: '/static/banner/bj3.jpg', name: '专业影音设备' }
+				],
+				staffList: [],
+				roomTypes: [],
+				equipmentList: [],
+				serviceList: [],
+				swiperCurrent: 0
+			}
+		},
+		onLoad() {
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
 			this.loadCinemaInfo();
+			// 设置导航颜色
+			uni.setTabBarStyle({
+				backgroundColor: '#492445'
+			})
+			uni.setNavigationBarColor({
+				backgroundColor: '#492445',
+				frontColor: '#ffffff',
+				animation: {
+					duration: 400,
+					timingFunc: "easeIn",
+				}
+			})
 		},
 		methods: {
 			async loadCinemaInfo() {
@@ -198,11 +209,14 @@
 
 <style lang="less" scoped>
 .cinema-intro {
-	background: #0f1320;
+	background: #492445;
 	min-height: 100vh;
 	color: #e7e9f0;
 }
-
+.image-style {
+	width: 750rpx;
+	height: 4300rpx;
+}
 .nav {
 	display: flex;
 	align-items: center;
@@ -367,7 +381,7 @@
 }
 .staff-card {
 	display: flex;
-	background: #171b2b;
+	background: #381535;
 	border-radius: 20rpx;
 	padding: 32rpx;
 	gap: 24rpx;
