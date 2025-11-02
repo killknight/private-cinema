@@ -119,6 +119,10 @@
 		onLoad() {
 			// 加载用户信息
 			this.updateAvatarUrl()
+		},
+		onShow() {
+			// 每次页面显示时更新用户信息
+			this.updateAvatarUrl()
 			// 设置导航颜色
 			uni.setTabBarStyle({
 				backgroundColor: '#0f1320'
@@ -131,10 +135,6 @@
 					timingFunc: "easeIn",
 				}
 			})
-		},
-		onShow() {
-			// 每次页面显示时更新用户信息
-			this.updateAvatarUrl()
 		},
 		computed: {
 			userInfo() {

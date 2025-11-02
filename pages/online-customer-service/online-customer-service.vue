@@ -217,18 +217,6 @@
       // 监听键盘高度变化显示最后一条消息
       uni.onKeyboardHeightChange(this.onKeyboardHeightChange);
       // #endif
-			// 设置导航颜色
-			uni.setTabBarStyle({
-				backgroundColor: '#0f1320'
-			})
-			uni.setNavigationBarColor({
-				backgroundColor: '#0f1320',
-				frontColor: '#ffffff',
-				animation: {
-					duration: 400,
-					timingFunc: "easeIn",
-				}
-			})
     },
     mounted() {
       // #ifdef H5
@@ -302,6 +290,18 @@
         this.clearUnreadCount();
         this.updateNavTitle()
       }
+			// 设置导航颜色
+			uni.setTabBarStyle({
+				backgroundColor: '#0f1320'
+			})
+			uni.setNavigationBarColor({
+				backgroundColor: '#0f1320',
+				frontColor: '#ffffff',
+				animation: {
+					duration: 400,
+					timingFunc: "easeIn",
+				}
+			})
     },
     onUnload() {
       // console.log('onUnload');

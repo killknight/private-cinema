@@ -52,7 +52,7 @@
 					</view>
 				</view>
 			</view>
-			<image src="/static/uni-center/cinema-intro.jpg" class="image-style" mode="aspectFill"></image>
+			<image v-if="cinemaInfo && cinemaInfo.cinemaIntroImage" :src="cinemaInfo.cinemaIntroImage" class="image-style" mode="aspectFill"></image>
 			<!-- 包厢类型 -->
 		<!-- <view class="section rooms">
 			<view class="section-header">
@@ -133,6 +133,8 @@
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
 			this.loadCinemaInfo();
+		},
+		onShow() {
 			// 设置导航颜色
 			uni.setTabBarStyle({
 				backgroundColor: '#492445'

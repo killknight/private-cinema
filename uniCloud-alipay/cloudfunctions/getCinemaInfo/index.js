@@ -32,6 +32,8 @@ exports.main = async (event, context) => {
       // 收集公众号二维码和logo图片
       if (cinemaData.wechatQrCode) fileIds.push(cinemaData.wechatQrCode);
       if (cinemaData.logoImage) fileIds.push(cinemaData.logoImage);
+      // 收集影院介绍图片
+      if (cinemaData.cinemaIntroImage) fileIds.push(cinemaData.cinemaIntroImage);
       
       // 收集环境图片
       if (cinemaData.environments && cinemaData.environments.length > 0) {
@@ -226,6 +228,10 @@ exports.main = async (event, context) => {
     if (cinemaInfo.logoImage && fileIdMap[cinemaInfo.logoImage]) {
       cinemaInfo.logoImage = fileIdMap[cinemaInfo.logoImage];
     }
+    // 转换影院介绍图片的fileID为URL
+    if (cinemaInfo.cinemaIntroImage && fileIdMap[cinemaInfo.cinemaIntroImage]) {
+      cinemaInfo.cinemaIntroImage = fileIdMap[cinemaInfo.cinemaIntroImage];
+    }
     
     // 设置默认值
     if (!cinemaInfo.cinemaName) cinemaInfo.cinemaName = "星展影院";
@@ -235,6 +241,8 @@ exports.main = async (event, context) => {
     if (!cinemaInfo.phone) cinemaInfo.phone = "400-123-4567";
     if (!cinemaInfo.wechatQrCode) cinemaInfo.wechatQrCode = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
     if (!cinemaInfo.logoImage) cinemaInfo.logoImage = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
+    // 设置影院介绍图片默认值
+    if (!cinemaInfo.cinemaIntroImage) cinemaInfo.cinemaIntroImage = "cloud://env-00jxu7cbl7c1/app/icon/logo.png";
     if (!cinemaInfo.latitude) cinemaInfo.latitude = 39.908823;
     if (!cinemaInfo.longitude) cinemaInfo.longitude = 116.466544;
     

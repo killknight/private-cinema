@@ -70,7 +70,7 @@
 		</view>
 
 		<!-- 主题包厢精选 -->
-		<view class="section">
+<!-- 		<view class="section">
 			<view class="section-head">
 				<text class="section-title">主题包厢精选</text>
 				<text class="more" @click="toMore('themed')">查看全部 〉</text>
@@ -81,7 +81,7 @@
 					<view class="mini-title">{{ room.name }}</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -112,6 +112,8 @@
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
 			this.fetchHome();
+		},
+		onShow() {
 			// 设置导航颜色
 			uni.setTabBarStyle({
 				backgroundColor: '#0f1320'
@@ -153,7 +155,9 @@
 					this.business = data.business || null;
 					this.customerServiceUids = data.customerServiceUids || [];
 					this.isOpenNow = this.isWithin(this.business.openTime, this.business.closeTime);
-					
+					uni.setNavigationBarTitle({
+						title: this.business.cinemaName
+					})
 					// 在首页加载时就缓存客服ID
 					this.cacheCustomerServiceId();
 				} catch (e) {
@@ -207,10 +211,10 @@
 				} else if (f.key === 'vip') {
 					// 打开地图，使用从云函数返回的店铺位置信息
 					const shopLocation = {
-						name: this.business.cinemaName || '星展影院',
-						address: this.business.address || '北京市朝阳区建国路88号',
-						latitude: this.business.latitude || 39.908823,
-						longitude: this.business.longitude || 116.466544
+						name: this.business.cinemaName,
+						address: this.business.address,
+						latitude: this.business.latitude,
+						longitude: this.business.longitude
 					};
 					
 					// 使用uni-app的打开地图功能

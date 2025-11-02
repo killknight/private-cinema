@@ -2,16 +2,17 @@
   {
     "_id": "cinema_story",
     "title": "我们的故事",
-    "cinemaName": "星展影院",
-    "openTime": "10:00",
-    "closeTime": "24:00",
+    "cinemaName": "独享时光私人影咖",
+    "openTime": "14:00",
+    "closeTime": "02:00",
     "tags": ["4K HDR", "杜比音效", "私密空间", "主题包厢"],
-    "address": "北京市朝阳区建国路88号现代城SOHO A座2308室",
+    "address": "北京市朝阳区水岸南街一号院一号楼",
     "phone": "400-123-4567",
     "wechatQrCode": "cloud://env-00jxu7cbl7c1/app/icon/logo.png",
     "logoImage": "cloud://env-00jxu7cbl7c1/app/icon/logo.png",
-    "latitude": 39.908823,
-    "longitude": 116.466544,
+		"cinemaIntroImage": "cloud://env-00jxu7cbl7c1/other/cinema-intro.jpg",
+    "latitude": 40.053916,
+    "longitude": 116.441624,
     "story": [
       "星辰影院创立于2018年，源于一群电影爱好者对高品质观影体验的追求。我们相信，电影不仅仅是一种娱乐，更是一种生活方式。",
       "在这里，我们致力于打造一个私密、舒适、高品质的观影空间，让每一位顾客都能沉浸在电影的世界中，享受无与伦比的视听盛宴。"
@@ -71,21 +72,27 @@
     "environments": [
       {
         "id": 1,
-        "image": "cloud://env-00jxu7cbl7c1/banner/bj1.jpg",
+        "image": "cloud://env-00jxu7cbl7c1/banner/banner1.jpg",
         "name": "豪华接待大厅",
         "order": 1
       },
       {
         "id": 2,
-        "image": "cloud://env-00jxu7cbl7c1/banner/bj2.jpg",
+        "image": "cloud://env-00jxu7cbl7c1/banner/banner2.jpg",
         "name": "舒适观影区",
         "order": 2
       },
       {
         "id": 3,
-        "image": "cloud://env-00jxu7cbl7c1/banner/bj3.jpg",
+        "image": "cloud://env-00jxu7cbl7c1/banner/banner3.jpg",
         "name": "高级休息区",
         "order": 3
+      },
+      {
+        "id": 4,
+        "image": "cloud://env-00jxu7cbl7c1/banner/banner4.jpg",
+        "name": "高级休息区",
+        "order": 4
       }
     ],
     "createTime": {"$date": "2023-01-01T00:00:00Z"},

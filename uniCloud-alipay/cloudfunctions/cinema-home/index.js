@@ -43,10 +43,10 @@ exports.main = async () => {
     openTime: cinemaInfo.openTime || '10:00',
     closeTime: cinemaInfo.closeTime || '24:00',
     tags: Array.isArray(cinemaInfo.tags) ? cinemaInfo.tags : [],
-    address: cinemaInfo.address || '北京市朝阳区建国路88号',
-    latitude: cinemaInfo.latitude || 39.908823,
-    longitude: cinemaInfo.longitude || 116.466544,
-    cinemaName: cinemaInfo.cinemaName || '星展影院'
+    address: cinemaInfo.address,
+    latitude: cinemaInfo.latitude,
+    longitude: cinemaInfo.longitude,
+    cinemaName: cinemaInfo.cinemaName'
   } : { 
     openTime: '10:00', 
     closeTime: '24:00', 

@@ -56,6 +56,11 @@
       "description": "应用logo图片fileID",
       "label": "应用logo"
     },
+		"cinemaIntroImage": {
+      "bsonType": "string",
+      "description": "影院介绍图片fileID",
+      "label": "影院介绍图片"
+    },
     "latitude": {
       "bsonType": "number",
       "description": "纬度",
