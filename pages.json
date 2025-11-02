@@ -111,6 +111,58 @@
 			}]
 		},
 		{
+			"root": "sys_mgr",
+			"pages": [{
+				"path" : "index",
+				"style" : 
+				{
+					"navigationBarTitleText" : "系统管理"
+				}
+			}, {
+				"path" : "banner-mgr/banner-edit",
+				"style" : 
+				{
+					"navigationBarTitleText" : "Banner编辑"
+				}
+			}, {
+				"path" : "banner-mgr/banner-mgr",
+				"style" : 
+				{
+					"navigationBarTitleText" : "Banner维护"
+				}
+			}, {
+				"path" : "cinema-info-mgr/cinema-info-mgr",
+				"style" : 
+				{
+					"navigationBarTitleText" : "影院信息维护"
+				}
+			}, {
+				"path" : "box-mgr/box-mgr",
+				"style" : 
+				{
+					"navigationBarTitleText" : "包厢信息维护"
+				}
+			}, {
+				"path" : "box-mgr/box-edit",
+				"style" : 
+				{
+					"navigationBarTitleText" : "包厢信息编辑"
+				}
+			}, {
+				"path" : "employee-mgr/employee-mgr",
+				"style" : 
+				{
+					"navigationBarTitleText" : "员工信息维护"
+				}
+			}, {
+				"path" : "employee-mgr/employee-edit",
+				"style" : 
+				{
+					"navigationBarTitleText" : "员工信息编辑"
+				}
+			}]
+		},
+		{
 			"root": "uni_modules/uni-id-pages/pages",
 			"pages": [{
 					"path": "userinfo/userinfo",
