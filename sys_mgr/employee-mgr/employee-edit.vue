@@ -6,8 +6,8 @@
 			<view class="form-item avatar-item">
 				<view class="form-label">头像</view>
 				<view class="avatar-upload">
-					<view class="avatar-preview" v-if="employeeForm.avatar">
-						<image :src="employeeForm.avatar" mode="aspectFill"></image>
+					<view class="avatar-preview" v-if="employeeForm.displayAvatar || employeeForm.avatar">
+						<image :src="employeeForm.displayAvatar || employeeForm.avatar" mode="aspectFill"></image>
 						<view class="avatar-remove" @click="removeAvatar">
 							<uni-icons type="clear" size="24" color="#FFFFFF"></uni-icons>
 						</view>
@@ -31,22 +31,51 @@
 				<uni-easyinput v-model="employeeForm.position" placeholder="请输入职位"></uni-easyinput>
 			</view>
 			
-			<!-- 联系电话 -->
+			<!-- 成员类型 -->
 			<view class="form-item">
-				<view class="form-label">联系电话</view>
-				<uni-easyinput v-model="employeeForm.phone" type="number" placeholder="请输入联系电话"></uni-easyinput>
+				<view class="form-label">成员类型</view>
+				<uni-data-select v-model="employeeForm.type" :localdata="[{value:'core',text:'核心团队'},{value:'service',text:'服务团队'}]" placeholder="请选择成员类型"></uni-data-select>
 			</view>
 			
-			<!-- 电子邮箱 -->
+			<!-- 个人简介 -->
 			<view class="form-item">
-				<view class="form-label">电子邮箱</view>
-				<uni-easyinput v-model="employeeForm.email" placeholder="请输入电子邮箱"></uni-easyinput>
+				<view class="form-label">个人简介</view>
+				<uni-easyinput v-model="employeeForm.bio" type="textarea" :rows="3" placeholder="请输入个人简介"></uni-easyinput>
 			</view>
 			
-			<!-- 员工描述 -->
+			<!-- 排序 -->
 			<view class="form-item">
-				<view class="form-label">备注</view>
-				<uni-easyinput v-model="employeeForm.description" type="textarea" :rows="3" placeholder="请输入备注信息"></uni-easyinput>
+				<view class="form-label">排序</view>
+				<uni-easyinput v-model.number="employeeForm.order" type="number" placeholder="请输入排序数字"></uni-easyinput>
+			</view>
+			
+			<!-- 兴趣爱好 -->
+			<view class="form-item">
+				<view class="form-label">兴趣爱好 <text class="required">*</text></view>
+				<view class="interests-container">
+					<view v-for="(item, index) in employeeForm.interests" :key="index" class="interest-tag">
+						<text>{{ item }}</text>
+						<uni-icons type="clear" size="16" @click="removeInterest(index)"></uni-icons>
+					</view>
+					<input type="text" v-model="newInterest" class="interest-input" placeholder="输入兴趣爱好" @confirm="addInterest" />
+				</view>
+			</view>
+			
+			<!-- 生活照片 -->
+			<view class="form-item">
+				<view class="form-label">生活照片 <text class="required">*</text></view>
+				<view class="life-photos-container">
+					<view v-for="(photo, index) in employeeForm.displayLifeMoments || employeeForm.lifeMoments" :key="index" class="life-photo-item">
+						<image :src="photo" mode="aspectFill"></image>
+						<view class="photo-remove" @click="removeLifePhoto(index)">
+							<uni-icons type="clear" size="20" color="#FFFFFF"></uni-icons>
+						</view>
+					</view>
+					<view class="add-photo-btn" @click="chooseLifePhotos">
+						<uni-icons type="camera" size="32" color="#CCCCCC"></uni-icons>
+						<text>添加照片</text>
+					</view>
+				</view>
 			</view>
 		</view>
 		
@@ -64,11 +93,17 @@
 				employeeForm: {
 					name: '',
 					position: '',
-					phone: '',
-					email: '',
 					avatar: '',
-					description: ''
-				}
+					displayAvatar: '', // 用于显示的头像URL
+					bio: '',
+					type: 'core',
+					order: 0,
+					socialIcons: [],
+					lifeMoments: [],
+					displayLifeMoments: [], // 用于显示的生活照片URL
+					interests: []
+				},
+				newInterest: ''
 			}
 		},
 		onLoad(options) {
@@ -85,27 +120,111 @@
 			}
 		},
 		methods: {
+			// 将fileID转换为URL
+			async fileIDToUrl(fileId) {
+				if (!fileId) return '';
+				try {
+					const res = await uniCloud.getTempFileURL({
+						fileList: [fileId]
+					});
+					return res.fileList[0]?.tempFileURL || '';
+				} catch (error) {
+					console.error('获取文件URL失败:', error);
+					return '';
+				}
+			},
+			
+			// 批量处理文件ID转换为URL
+			async processFileIds(member) {
+				const fileIds = [];
+				if (member.avatar) fileIds.push(member.avatar);
+				if (member.lifeMoments && member.lifeMoments.length > 0) {
+					fileIds.push(...member.lifeMoments);
+				}
+				
+				if (fileIds.length === 0) {
+					return member;
+				}
+				
+				try {
+					const res = await uniCloud.getTempFileURL({
+						fileList: fileIds
+					});
+					
+					const fileIdMap = {};
+					res.fileList.forEach(item => {
+						if (item.tempFileURL) {
+							fileIdMap[item.fileID] = item.tempFileURL;
+						}
+					});
+					
+					return {
+						...member,
+						displayAvatar: member.avatar ? (fileIdMap[member.avatar] || member.avatar) : '',
+						displayLifeMoments: member.lifeMoments ? 
+							member.lifeMoments.map(fileId => fileIdMap[fileId] || fileId) : []
+					};
+				} catch (error) {
+					console.error('批量处理文件URL失败:', error);
+					return {
+						...member,
+						displayAvatar: member.avatar,
+						displayLifeMoments: member.lifeMoments || []
+					};
+				}
+			},
 			
 			// 加载员工详情
-			loadEmployeeDetail() {
-				// 这里应该调用云函数获取员工详情
-				// 暂时模拟数据
+			async loadEmployeeDetail() {
+				// 调用云函数获取员工详情
 				uni.showLoading({
 					title: '加载中...'
 				});
 				
-				setTimeout(() => {
+				try {
+					const res = await uniCloud.callFunction({
+						name: 'teamManager',
+						data: {
+							action: 'getMemberById',
+							data: {
+								_id: this.employeeId
+							}
+						}
+					});
+					
 					uni.hideLoading();
-					// 模拟数据
-					this.employeeForm = {
-						name: '张三',
-						position: '经理',
-						phone: '13800138001',
-						email: 'zhangsan@example.com',
-						avatar: '',
-						description: '负责影院全面管理工作'
-					};
-				}, 1000);
+					if (res.result && res.result.code === 200) {
+						let memberData = res.result.data;
+						// 处理fileID转换为URL
+						memberData = await this.processFileIds(memberData);
+							
+						this.employeeForm = {
+							name: memberData.name,
+							position: memberData.position,
+							avatar: memberData.avatar || '',
+							displayAvatar: memberData.displayAvatar || '',
+							bio: memberData.bio || '',
+							type: memberData.type || 'core',
+							order: memberData.order || 0,
+							socialIcons: memberData.socialIcons || [],
+							lifeMoments: memberData.lifeMoments || [],
+							displayLifeMoments: memberData.displayLifeMoments || [],
+							interests: memberData.interests || []
+						};
+					} else {
+						uni.showToast({
+							title: res.result?.message || '加载失败',
+							icon: 'none'
+						});
+					}
+				} catch (error) {
+					uni.hideLoading();
+					console.error('加载员工详情失败:', error);
+					uni.showToast({
+						title: '加载失败，请稍后重试',
+						icon: 'none'
+					});
+				}
 			},
 			
 			// 选择头像
@@ -115,7 +234,42 @@
 					sizeType: ['compressed'],
 					sourceType: ['album', 'camera'],
 					success: (res) => {
-						this.employeeForm.avatar = res.tempFilePaths[0];
+						// 上传头像到云存储td目录
+						uni.showLoading({
+							title: '上传中...'
+						});
+						
+						const tempFilePath = res.tempFilePaths[0];
+						const fileName = `td/${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
+						
+						uniCloud.uploadFile({
+							cloudPath: fileName,
+							filePath: tempFilePath,
+							success: async (uploadRes) => {
+								uni.hideLoading();
+								// 保存云存储地址
+								this.employeeForm.avatar = uploadRes.fileID;
+								
+								// 获取临时URL用于显示
+								try {
+									const urlRes = await uniCloud.getTempFileURL({
+										fileList: [uploadRes.fileID]
+									});
+									this.employeeForm.displayAvatar = urlRes.fileList[0]?.tempFileURL || tempFilePath;
+								} catch (urlError) {
+									// 失败时使用本地临时路径作为显示
+									this.employeeForm.displayAvatar = tempFilePath;
+								}
+							},
+							fail: (error) => {
+								uni.hideLoading();
+								console.error('上传头像失败:', error);
+								uni.showToast({
+									title: '上传头像失败',
+									icon: 'none'
+								});
+							}
+						});
 					}
 				});
 			},
@@ -123,6 +277,97 @@
 			// 移除头像
 			removeAvatar() {
 				this.employeeForm.avatar = '';
+				this.employeeForm.displayAvatar = '';
+			},
+			
+			// 添加兴趣爱好
+			addInterest() {
+				if (this.newInterest && !this.employeeForm.interests.includes(this.newInterest)) {
+					this.employeeForm.interests.push(this.newInterest);
+					this.newInterest = '';
+				}
+			},
+			
+			// 移除兴趣爱好
+			removeInterest(index) {
+				this.employeeForm.interests.splice(index, 1);
+			},
+			
+			// 选择生活照片
+			chooseLifePhotos() {
+				uni.chooseImage({
+					count: 9 - this.employeeForm.lifeMoments.length,
+					sizeType: ['compressed'],
+					sourceType: ['album', 'camera'],
+					success: async (res) => {
+						uni.showLoading({
+							title: '上传中...'
+						});
+						
+						try {
+							const tempFilePaths = res.tempFilePaths;
+							const newFileIds = [];
+							const tempUrls = [...tempFilePaths]; // 保存临时路径用于显示
+							
+							for (let i = 0; i < tempFilePaths.length; i++) {
+								const tempFilePath = tempFilePaths[i];
+								const fileName = `td/life_${Date.now()}_${i}.jpg`;
+								
+								const uploadRes = await new Promise((resolve, reject) => {
+									uniCloud.uploadFile({
+										cloudPath: fileName,
+										filePath: tempFilePath,
+										success: resolve,
+										fail: reject
+									});
+								});
+								
+								newFileIds.push(uploadRes.fileID);
+							}
+							
+							// 更新fileID列表
+							this.employeeForm.lifeMoments = [...this.employeeForm.lifeMoments, ...newFileIds];
+							
+							// 更新显示用的URL列表
+							if (!this.employeeForm.displayLifeMoments) {
+								this.employeeForm.displayLifeMoments = [];
+							}
+							this.employeeForm.displayLifeMoments = [...this.employeeForm.displayLifeMoments, ...tempUrls];
+							
+							// 尝试获取临时URL用于更持久的显示
+							try {
+								const urlRes = await uniCloud.getTempFileURL({
+									fileList: newFileIds
+								});
+								// 更新已上传的文件URL
+								urlRes.fileList.forEach((item, index) => {
+									if (item.tempFileURL && index < this.employeeForm.displayLifeMoments.length) {
+										this.employeeForm.displayLifeMoments[this.employeeForm.displayLifeMoments.length - newFileIds.length + index] = item.tempFileURL;
+									}
+								});
+							} catch (urlError) {
+								console.error('获取照片URL失败:', urlError);
+								// 失败时继续使用临时路径
+							}
+						} catch (error) {
+							console.error('上传照片失败:', error);
+							uni.showToast({
+								title: '部分照片上传失败',
+								icon: 'none'
+							});
+						} finally {
+							uni.hideLoading();
+						}
+				}
+			});
+			},
+			
+			// 移除生活照片
+			removeLifePhoto(index) {
+				this.employeeForm.lifeMoments.splice(index, 1);
+				if (this.employeeForm.displayLifeMoments) {
+					this.employeeForm.displayLifeMoments.splice(index, 1);
+				}
 			},
 			
 			// 保存员工信息
@@ -144,9 +389,27 @@
 					return;
 				}
 				
-				if (!this.employeeForm.phone) {
+				if (!this.employeeForm.type) {
 					uni.showToast({
-						title: '请输入联系电话',
+						title: '请选择成员类型',
+						icon: 'none'
+					});
+					return;
+				}
+				
+				// 验证兴趣爱好
+				if (!this.employeeForm.interests || this.employeeForm.interests.length === 0) {
+					uni.showToast({
+						title: '请至少添加一个兴趣爱好',
+						icon: 'none'
+					});
+					return;
+				}
+				
+				// 验证生活照片
+				if (!this.employeeForm.lifeMoments || this.employeeForm.lifeMoments.length === 0) {
+					uni.showToast({
+						title: '请至少添加一张生活照片',
 						icon: 'none'
 					});
 					return;
@@ -157,20 +420,59 @@
 					title: '保存中...'
 				});
 				
-				// 这里应该调用云函数保存员工数据
-				// 暂时模拟保存成功
-				setTimeout(() => {
+				// 准备提交的数据
+				const submitData = {
+					name: this.employeeForm.name,
+					position: this.employeeForm.position,
+					avatar: this.employeeForm.avatar,
+					bio: this.employeeForm.bio,
+					type: this.employeeForm.type,
+					order: this.employeeForm.order,
+					socialIcons: this.employeeForm.socialIcons,
+					lifeMoments: this.employeeForm.lifeMoments,
+					interests: this.employeeForm.interests
+				};
+				
+				// 根据操作类型调用不同的云函数方法
+				const action = this.type === 'add' ? 'createMember' : 'updateMember';
+				if (action === 'updateMember') {
+					submitData._id = this.employeeId;
+				}
+				
+				uniCloud.callFunction({
+					name: 'teamManager',
+					data: {
+						action: action,
+						data: submitData
+					}
+				}).then(res => {
 					uni.hideLoading();
+					if (res.result && res.result.code === 200) {
+						uni.showToast({
+							title: '保存成功',
+							icon: 'success'
+						});
+						
+						// 保存成功后返回上一页
+						setTimeout(() => {
+							// 先发送事件通知列表页刷新
+							uni.$emit('refreshEmployeeList');
+							uni.navigateBack();
+						}, 1500);
+					} else {
+						uni.showToast({
+							title: res.result?.message || '保存失败',
+							icon: 'none'
+						});
+					}
+				}).catch(error => {
+					uni.hideLoading();
+					console.error('保存员工信息失败:', error);
 					uni.showToast({
-						title: '保存成功',
-						icon: 'success'
+						title: '保存失败，请稍后重试',
+						icon: 'none'
 					});
-					
-					// 保存成功后返回上一页
-					setTimeout(() => {
-						uni.navigateBack();
-					}, 1500);
-				}, 1000);
+				});
 			}
 		}
 	}
@@ -209,6 +511,10 @@
 		font-size: 28rpx;
 		color: #666666;
 		margin-bottom: 15rpx;
+	}
+	
+	.required {
+		color: #FF3B30;
 	}
 	
 	.avatar-item {
@@ -261,5 +567,77 @@
 		font-size: 24rpx;
 		color: #999999;
 		margin-top: 10rpx;
+	}
+	
+	/* 兴趣爱好样式 */
+	.interests-container {
+		min-height: 60rpx;
+	}
+	
+	.interest-tag {
+		display: inline-flex;
+		align-items: center;
+		background-color: #E9F7FE;
+		color: #1678FF;
+		padding: 8rpx 20rpx;
+		border-radius: 20rpx;
+		margin-right: 15rpx;
+		margin-bottom: 15rpx;
+		font-size: 26rpx;
+	}
+	
+	.interest-input {
+		border: 1rpx dashed #CCCCCC;
+		border-radius: 8rpx;
+		padding: 15rpx;
+		width: 100%;
+		margin-top: 10rpx;
+		font-size: 26rpx;
+	}
+	
+	/* 生活照片样式 */
+	.life-photos-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20rpx;
+	}
+	
+	.life-photo-item {
+		width: 180rpx;
+		height: 180rpx;
+		position: relative;
+		border-radius: 8rpx;
+		overflow: hidden;
+	}
+	
+	.life-photo-item image {
+		width: 100%;
+		height: 100%;
+	}
+	
+	.photo-remove {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		width: 40rpx;
+		height: 40rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.add-photo-btn {
+		width: 180rpx;
+		height: 180rpx;
+		background-color: #F5F5F5;
+		border: 1rpx dashed #CCCCCC;
+		border-radius: 8rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		color: #999999;
+		font-size: 24rpx;
 	}
 </style>
