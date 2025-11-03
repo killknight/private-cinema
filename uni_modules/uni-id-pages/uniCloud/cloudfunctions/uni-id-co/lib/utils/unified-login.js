@@ -87,14 +87,9 @@ async function postUnifiedLogin (params = {}) {
       isThirdParty
     })
   } else if (type === 'register') {
-    // 确保nickname有默认值
-    const registerExtraData = {
-      ...extraData,
-      nickname: extraData.nickname || ''
-    }
     result = await postRegister.call(this, {
       user,
-      extraData: registerExtraData,
+      extraData,
       isThirdParty,
       inviteCode
     })

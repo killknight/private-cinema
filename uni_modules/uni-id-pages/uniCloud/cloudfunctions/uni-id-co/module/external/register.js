@@ -65,14 +65,14 @@ module.exports = async function (params = {}) {
     user: {
       avatar,
       gender,
-      nickname: nickname || '',
+      nickname,
       identities: [
         {
           provider: EXTERNAL_DIRECT_CONNECT_PROVIDER,
           userInfo: {
             avatar,
             gender,
-            nickname: nickname || ''
+            nickname
           },
           uid: externalUid
         }

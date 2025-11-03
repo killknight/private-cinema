@@ -106,11 +106,6 @@ async function postRegister (params = {}) {
   const uniIdToken = this.getUniversalUniIdToken()
 
   merge(user, extraData)
-  
-  // 确保nickname有默认值
-  if (!user.nickname) {
-    user.nickname = ''
-  }
 
   const registerChannel = channel || scene
   user.register_env = {

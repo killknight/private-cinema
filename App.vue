@@ -53,14 +53,7 @@
 			plus.ios.deleteObject(manager);
 			console.log('idfa = '+idfa);*/
 			// #endif
-			uni.getPushClientId({
-			  success(res) {
-			    console.log('getPushClientId', res);
-			  },
-			  fail(err) {
-			    console.log('getPushClientId', err)
-			  }
-			})
+			// push_clientid同步逻辑已在uniIdPagesInit中实现，无需重复调用
 			
 			// #ifdef APP-PLUS
 			// 请求通知权限

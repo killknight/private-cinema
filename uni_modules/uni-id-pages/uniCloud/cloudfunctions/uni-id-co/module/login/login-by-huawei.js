@@ -139,7 +139,7 @@ module.exports = async function (params = {}) {
         url: fileID
       }
     }
-    extraData.nickname = nickname || ''
+    extraData.nickname = nickname
   }
 
   return postUnifiedLogin.call(this, {

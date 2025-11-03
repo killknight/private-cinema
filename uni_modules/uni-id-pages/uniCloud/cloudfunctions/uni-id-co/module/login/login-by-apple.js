@@ -68,7 +68,7 @@ module.exports = async function (params = {}) {
   return postUnifiedLogin.call(this, {
     user,
     extraData: {
-      nickname: nickname || ''
+      nickname
     },
     isThirdParty: true,
     type,

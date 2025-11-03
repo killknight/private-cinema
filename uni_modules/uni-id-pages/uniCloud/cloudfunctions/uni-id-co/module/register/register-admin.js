@@ -65,7 +65,7 @@ module.exports = async function (params = {}) {
     user,
     extraData: {
       ...extraData,
-      nickname: nickname || '',
+      nickname: nickname,
       role: ['admin']
     }
   })
