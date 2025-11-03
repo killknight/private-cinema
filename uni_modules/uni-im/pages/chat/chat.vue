@@ -325,6 +325,16 @@
     },
     onLoad(param) {
       console.log('onLoad客服页面---》', param);
+      
+      // 登录检查
+      if (!uniIm.currentUser || !uniIm.currentUser._id) {
+        console.log('用户未登录，跳转到登录页面');
+        uni.navigateTo({
+          url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd'
+        });
+        return;
+      }
+      
       for (const key in param) {
         try{
           param[key] = JSON.parse(param[key])
