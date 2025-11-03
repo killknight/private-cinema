@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "read": true,
+    "invoke": true
+  },
+  "triggers": [],
+  "timeout": 30000
+}

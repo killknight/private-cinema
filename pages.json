@@ -160,6 +160,12 @@
 				{
 					"navigationBarTitleText" : "员工信息编辑"
 				}
+			}, {
+				"path": "admin-mgr/admin-mgr",
+				"style" :
+				{
+					"navigationBarTitleText" : "设置管理员"
+				}
 			}]
 		},
 		{

@@ -50,6 +50,18 @@
 				</view>
 				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
 			</view>
+			
+			<!-- 设置管理员 -->
+			<view class="function-item" @click="goToAdminMgr">
+				<view class="item-icon">
+					<uni-icons type="personadd" size="28" color="#FF3B30"></uni-icons>
+				</view>
+				<view class="item-content">
+					<view class="item-title">设置管理员</view>
+					<view class="item-desc">管理系统管理员权限</view>
+				</view>
+				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
+			</view>
 		</view>
 	</view>
 </template>
@@ -87,6 +99,13 @@
 			goToEmployeeMgr() {
 				uni.navigateTo({
 					url: '/sys_mgr/employee-mgr/employee-mgr'
+				})
+			},
+			
+			// 跳转到设置管理员页面
+			goToAdminMgr() {
+				uni.navigateTo({
+					url: '/sys_mgr/admin-mgr/admin-mgr'
 				})
 			}
 		}
