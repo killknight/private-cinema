@@ -1,6 +1,6 @@
 {
     "name" : "private-cinema",
-    "appid" : "__UNI__BA90EEE",
+    "appid" : "__UNI__1E2479D",
     "description" : "云端一体应用快速开发基本项目模版",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -39,14 +39,16 @@
             "ios" : {},
             "sdkConfigs" : {
                 "push" : {
-                    "unipush" : null
+                    "unipush" : {
+                        "enable" : true
+                    }
                 }
             }
         }
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx9e040ee0607aa4f4",
+        "appid" : "wx62d8c3f7618cb21e",
         "setting" : {
             "urlCheck" : false,
             "minified" : true

@@ -1,27 +1,27 @@
 [
 	{
-		"bannerfile": "cloud://env-00jxu7cbl7c1/banner/banner1.jpg",
+		"bannerfile": "cloud://env-00jxuascxzaw/banner/banner1.jpg",
 		"title": "专属私密空间",
 		"open_url": "/pages/home/home",
 		"sort": 1,
 		"status": true
 	},
 	{
-		"bannerfile": "cloud://env-00jxu7cbl7c1/banner/banner3.jpg",
+		"bannerfile": "cloud://env-00jxuascxzaw/banner/banner3.jpg",
 		"title": "热门包厢推荐",
 		"open_url": "/pages/list/list.nvue?type=hot",
 		"sort": 2,
 		"status": true
 	},
 	{
-		"bannerfile": "cloud://env-00jxu7cbl7c1/banner/banner2.jpg",
+		"bannerfile": "cloud://env-00jxuascxzaw/banner/banner2.jpg",
 		"title": "主题包厢精选",
 		"open_url": "/pages/home/home",
 		"sort": 3,
 		"status": true
 	},
 	{
-		"bannerfile": "cloud://env-00jxu7cbl7c1/banner/banner4.jpg",
+		"bannerfile": "cloud://env-00jxuascxzaw/banner/banner4.jpg",
 		"title": "主题包厢精选",
 		"open_url": "/pages/home/home",
 		"sort": 4,

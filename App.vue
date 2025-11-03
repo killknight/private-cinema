@@ -61,6 +61,19 @@
 			    console.log('getPushClientId', err)
 			  }
 			})
+			
+			// #ifdef APP-PLUS
+			// 请求通知权限
+			plus.push.requestPermision( function(permision) {
+			    console.log('通知权限请求结果:', permision);
+			    if (permision === 'granted') {
+			        console.log('通知权限已授予');
+			    } else {
+			        console.log('通知权限被拒绝');
+			        // 可以在这里提示用户去系统设置中开启通知权限
+			    }
+			});
+			// #endif
 
 		},
 		onShow: function() {

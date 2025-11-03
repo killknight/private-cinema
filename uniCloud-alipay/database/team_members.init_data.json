@@ -3,11 +3,11 @@
     "name": "张明",
     "position": "创始人兼CEO",
     "bio": "拥有10年电影行业经验，曾就职于多家知名影院集团，致力于打造高品质私人观影体验",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m1.jpg",
+    "avatar": "cloud://env-00jxuascxzaw/td/m1.jpg",
       "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m1.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m2.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m3.jpg"
+      "cloud://env-00jxuascxzaw/td/m1.jpg",
+      "cloud://env-00jxuascxzaw/td/m2.jpg",
+      "cloud://env-00jxuascxzaw/td/m3.jpg"
     ],
     "interests": ["电影收藏", "摄影", "旅行"],
     "socialIcons": [
@@ -25,11 +25,11 @@
     "name": "李芳",
     "position": "运营总监",
     "bio": "8年影院运营管理经验，擅长用户体验设计和会员体系构建",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m2.jpg",
+    "avatar": "cloud://env-00jxuascxzaw/td/m2.jpg",
       "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m2.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m4.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m5.jpg"
+      "cloud://env-00jxuascxzaw/td/m2.jpg",
+      "cloud://env-00jxuascxzaw/td/m4.jpg",
+      "cloud://env-00jxuascxzaw/td/m5.jpg"
     ],
     "interests": ["瑜伽", "阅读", "烹饪"],
     "socialIcons": [
@@ -46,11 +46,11 @@
     "name": "王强",
     "position": "技术总监",
     "bio": "全栈开发工程师，专注于影院数字化建设和智能化观影解决方案",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m3.jpg",
+    "avatar": "cloud://env-00jxuascxzaw/td/m3.jpg",
       "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m3.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m6.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m7.jpg"
+      "cloud://env-00jxuascxzaw/td/m3.jpg",
+      "cloud://env-00jxuascxzaw/td/m6.jpg",
+      "cloud://env-00jxuascxzaw/td/m7.jpg"
     ],
     "interests": ["编程", "游戏开发", "电子竞技"],
     "socialIcons": [
@@ -67,11 +67,11 @@
     "name": "赵娜",
     "position": "客户服务主管",
     "bio": "5年高端客户服务经验，致力于为每一位顾客提供贴心周到的观影服务",
-    "avatar": "cloud://env-00jxu7cbl7c1/td/m4.jpg",
+    "avatar": "cloud://env-00jxuascxzaw/td/m4.jpg",
       "lifeMoments": [
-      "cloud://env-00jxu7cbl7c1/td/m4.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m1.jpg",
-      "cloud://env-00jxu7cbl7c1/td/m2.jpg"
+      "cloud://env-00jxuascxzaw/td/m4.jpg",
+      "cloud://env-00jxuascxzaw/td/m1.jpg",
+      "cloud://env-00jxuascxzaw/td/m2.jpg"
     ],
     "interests": ["插花", "茶艺", "心理学"],
     "socialIcons": [],
