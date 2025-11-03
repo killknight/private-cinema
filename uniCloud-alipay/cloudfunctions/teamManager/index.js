@@ -116,10 +116,10 @@ async function getMemberById(data) {
  */
 async function createMember(data) {
   // 基础字段验证
-  if (!data.name || !data.position || !data.phone) {
+  if (!data.name) {
     return {
       code: 400,
-      message: '姓名、职位和联系电话为必填项'
+      message: '姓名为必填项'
     };
   }
   
@@ -130,14 +130,14 @@ async function createMember(data) {
     phone: data.phone,
     email: data.email || '',
     avatar: data.avatar || '',
-    bio: data.description || '',
+    bio: data.bio || '',
     socialIcons: data.socialIcons || [],
     type: data.type || 'service',
     order: data.order || 999,
-    createTime: db.serverDate(),
-    updateTime: db.serverDate(),
-    lifeMoments: [],
-    interests: []
+    createTime: Date.now(),
+    updateTime: Date.now(),
+    lifeMoments: data.lifeMoments || [],
+    interests: data.interests || []
   };
   
   const result = await teamMembersCollection.add(memberData);
@@ -175,7 +175,7 @@ async function updateMember(data) {
   
   // 准备更新数据
   const updateData = {
-    updateTime: db.serverDate()
+    updateTime: Date.now()
   };
   
   // 只更新提供的字段
@@ -184,10 +184,12 @@ async function updateMember(data) {
   if (data.phone !== undefined) updateData.phone = data.phone;
   if (data.email !== undefined) updateData.email = data.email;
   if (data.avatar !== undefined) updateData.avatar = data.avatar;
-  if (data.description !== undefined) updateData.bio = data.description;
+  if (data.bio !== undefined) updateData.bio = data.bio;
   if (data.socialIcons !== undefined) updateData.socialIcons = data.socialIcons;
   if (data.type !== undefined) updateData.type = data.type;
   if (data.order !== undefined) updateData.order = data.order;
+  if (data.lifeMoments !== undefined) updateData.lifeMoments = data.lifeMoments;
+  if (data.interests !== undefined) updateData.interests = data.interests;
   
   await teamMembersCollection.doc(data._id).update(updateData);
   
@@ -213,23 +215,37 @@ async function deleteMember(data) {
   
   // 检查员工是否存在
   const memberInfo = await teamMembersCollection.doc(data._id).get();
-  if (!memberInfo.data) {
+  // 获取员工信息对象（从数组中获取第一个元素）
+  const memberData = memberInfo.data && memberInfo.data.length > 0 ? memberInfo.data[0] : memberInfo.data;
+  
+  if (!memberData) {
     return {
       code: 404,
       message: '员工不存在'
     };
   }
   
-  // 如果有头像文件，尝试删除头像文件
-  if (memberInfo.data.avatar && memberInfo.data.avatar.includes('cloud://')) {
+  // 准备要删除的文件列表（包括头像和生活照片）
+  const filesToDelete = [];
+  
+  // 添加头像文件
+  if (memberData.avatar) {
+    filesToDelete.push(memberData.avatar);
+  }
+  
+  // 添加生活照片文件
+  if (memberData.lifeMoments && Array.isArray(memberData.lifeMoments) && memberData.lifeMoments.length > 0) {
+    filesToDelete.push(...memberData.lifeMoments);
+  }
+  
+  // 如果有文件需要删除，执行删除操作
+  if (filesToDelete.length > 0) {
     try {
-      // 从URL中提取文件ID
-      const fileID = memberInfo.data.avatar;
       await uniCloud.deleteFile({
-        fileList: [fileID]
+        fileList: filesToDelete
       });
     } catch (error) {
-      console.warn('删除头像文件失败，但继续删除员工记录:', error);
+      console.warn('删除文件失败，但继续删除员工记录:', error);
     }
   }
   

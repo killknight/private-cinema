@@ -61,9 +61,10 @@
 			uni.setNavigationBarTitle({
 				title: '员工维护'
 			});
-			this.loadEmployeeList();
+			
 		},
 		onShow() {
+			this.loadEmployeeList();
 			// 监听刷新列表事件
 			uni.$on('refreshEmployeeList', this.loadEmployeeList);
 		},

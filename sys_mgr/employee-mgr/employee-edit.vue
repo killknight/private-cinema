@@ -21,7 +21,7 @@
 			
 			<!-- 员工姓名 -->
 			<view class="form-item">
-				<view class="form-label">姓名</view>
+				<view class="form-label">姓名<text class="required">*</text></view>
 				<uni-easyinput v-model="employeeForm.name" placeholder="请输入员工姓名"></uni-easyinput>
 			</view>
 			
@@ -57,7 +57,10 @@
 						<text>{{ item }}</text>
 						<uni-icons type="clear" size="16" @click="removeInterest(index)"></uni-icons>
 					</view>
-					<input type="text" v-model="newInterest" class="interest-input" placeholder="输入兴趣爱好" @confirm="addInterest" />
+					<view class="interest-input-wrapper">
+						<input type="text" v-model="newInterest" class="interest-input" placeholder="输入兴趣爱好" @confirm="addInterest" />
+						<button class="add-interest-btn" @click="addInterest">添加</button>
+					</view>
 				</view>
 			</view>
 			
@@ -245,21 +248,27 @@
 						uniCloud.uploadFile({
 							cloudPath: fileName,
 							filePath: tempFilePath,
-							success: async (uploadRes) => {
+							success: (uploadRes) => {
 								uni.hideLoading();
 								// 保存云存储地址
 								this.employeeForm.avatar = uploadRes.fileID;
 								
-								// 获取临时URL用于显示
-								try {
-									const urlRes = await uniCloud.getTempFileURL({
-										fileList: [uploadRes.fileID]
-									});
-									this.employeeForm.displayAvatar = urlRes.fileList[0]?.tempFileURL || tempFilePath;
-								} catch (urlError) {
-									// 失败时使用本地临时路径作为显示
-									this.employeeForm.displayAvatar = tempFilePath;
-								}
+								// 立即使用本地临时路径作为显示，确保用户能看到图片
+								this.employeeForm.displayAvatar = tempFilePath;
+								
+								// 异步获取临时URL用于更持久的显示
+								uniCloud.getTempFileURL({
+									fileList: [uploadRes.fileID],
+									success: (urlRes) => {
+										if (urlRes.fileList[0]?.tempFileURL) {
+											this.employeeForm.displayAvatar = urlRes.fileList[0].tempFileURL;
+										}
+									},
+									fail: (urlError) => {
+										console.error('获取头像临时URL失败:', urlError);
+										// 继续使用本地临时路径，不影响用户体验
+									}
+								});
 							},
 							fail: (error) => {
 								uni.hideLoading();
@@ -372,7 +381,7 @@
 			
 			// 保存员工信息
 			saveEmployee() {
-				// 表单验证
+				// 表单验证 - 只保留姓名必填
 				if (!this.employeeForm.name) {
 					uni.showToast({
 						title: '请输入员工姓名',
@@ -381,21 +390,8 @@
 					return;
 				}
 				
-				if (!this.employeeForm.position) {
-					uni.showToast({
-						title: '请输入职位',
-						icon: 'none'
-					});
-					return;
-				}
-				
-				if (!this.employeeForm.type) {
-					uni.showToast({
-						title: '请选择成员类型',
-						icon: 'none'
-					});
-					return;
-				}
+				// 职位不再必填
+				// 成员类型也不再验证，允许空值
 				
 				// 验证兴趣爱好
 				if (!this.employeeForm.interests || this.employeeForm.interests.length === 0) {
@@ -420,13 +416,13 @@
 					title: '保存中...'
 				});
 				
-				// 准备提交的数据
+				// 准备提交的数据，只包含页面上有的字段
 				const submitData = {
 					name: this.employeeForm.name,
-					position: this.employeeForm.position,
+					position: this.employeeForm.position || '', // 允许为空
 					avatar: this.employeeForm.avatar,
 					bio: this.employeeForm.bio,
-					type: this.employeeForm.type,
+					type: this.employeeForm.type || '', // 允许为空
 					order: this.employeeForm.order,
 					socialIcons: this.employeeForm.socialIcons,
 					lifeMoments: this.employeeForm.lifeMoments,
@@ -573,7 +569,7 @@
 	.interests-container {
 		min-height: 60rpx;
 	}
-	
+
 	.interest-tag {
 		display: inline-flex;
 		align-items: center;
@@ -585,14 +581,32 @@
 		margin-bottom: 15rpx;
 		font-size: 26rpx;
 	}
-	
-	.interest-input {
-		border: 1rpx dashed #CCCCCC;
-		border-radius: 8rpx;
-		padding: 15rpx;
-		width: 100%;
+
+	.interest-input-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 15rpx;
 		margin-top: 10rpx;
+	}
+
+	.interest-input {
+		border: 1rpx solid #E0E0E0;
+		border-radius: 8rpx;
+		padding: 8rpx 15rpx;
+		flex: 1;
+		height: 50rpx;
 		font-size: 26rpx;
+	}
+
+	.add-interest-btn {
+		background-color: #007AFF;
+		color: #FFFFFF;
+		border: none;
+		border-radius: 8rpx;
+		padding: 0 30rpx;
+		height: 68rpx;
+		font-size: 28rpx;
+		line-height: 64rpx;
 	}
 	
 	/* 生活照片样式 */

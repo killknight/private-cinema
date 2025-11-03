@@ -54,10 +54,16 @@
       <!-- 包厢标签 -->
       <view class="form-item">
         <view class="form-label">包厢标签</view>
-        <uni-easyinput
-          v-model="tagsInput"
-          placeholder="请输入标签，用逗号分隔"
-        ></uni-easyinput>
+        <view class="tags-container">
+          <view v-for="(tag, index) in boxForm.tags" :key="index" class="tag-item">
+            <text>{{ tag }}</text>
+            <uni-icons type="clear" size="16" @click="removeTag(index)"></uni-icons>
+          </view>
+          <view class="tag-input-wrapper">
+            <input type="text" v-model="newTag" class="tag-input" placeholder="输入标签" @confirm="addTag" />
+            <button class="add-tag-btn" @click="addTag">添加</button>
+          </view>
+        </view>
       </view>
 
       <!-- 是否热门 -->
@@ -120,26 +126,26 @@
 
 <script>
 export default {
-	data() {
-		return {
-			type: 'add', // add或edit
-			boxId: '',
-			boxForm: {
-				name: '',
-				capacity: 1,
-				price: 0,
-				priceUnit: '',
-				description: '',
-				tags: [],
-				hot: false,
-				themed: false,
-				sort: 999,
-				cover: ''
-			},
-			tagsInput: '',
-			fileList: [],
-			uploading: false
-		}
+		data() {
+			return {
+				type: 'add', // add或edit
+				boxId: '',
+				boxForm: {
+					name: '',
+					capacity: 1,
+					price: 0,
+					priceUnit: '',
+					description: '',
+					tags: [],
+					hot: false,
+					themed: false,
+					sort: 999,
+					cover: ''
+				},
+				newTag: '',
+				fileList: [],
+				uploading: false
+			}
 	},
 	onLoad(options) {
 		this.type = options.type || 'add';
@@ -184,8 +190,7 @@ export default {
 						sort: roomData.sort !== undefined ? roomData.sort : 999,
 						cover: roomData.cover || ''
 					};
-					// 设置标签输入
-					this.tagsInput = this.boxForm.tags.join(', ');
+					// 标签数据已在boxForm.tags中设置
 					// 设置封面图片
 					if (this.boxForm.cover) {
 						// 如果有cover_url字段，使用它来显示图片
@@ -277,6 +282,19 @@ export default {
 		},
 
 			// 保存包厢
+			// 添加标签
+			addTag() {
+				if (this.newTag && !this.boxForm.tags.includes(this.newTag)) {
+					this.boxForm.tags.push(this.newTag);
+					this.newTag = '';
+				}
+			},
+
+			// 移除标签
+			removeTag(index) {
+				this.boxForm.tags.splice(index, 1);
+			},
+
 		saveBox() {
 			// 表单验证
 			if (!this.boxForm.name) {
@@ -303,8 +321,7 @@ export default {
 				return;
 			}
 
-			// 转换标签输入为数组
-			this.boxForm.tags = this.tagsInput ? this.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+			// 标签已经是数组格式，不需要转换
 
 			// 提交数据
 			uni.showLoading({
@@ -408,5 +425,49 @@ export default {
   font-size: 28rpx;
   font-weight: bold;
   margin-top: 20rpx;
+}
+
+/* 标签样式 */
+.tags-container {
+  min-height: 60rpx;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  background-color: #E9F7FE;
+  color: #1678FF;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  margin-right: 15rpx;
+  margin-bottom: 15rpx;
+  font-size: 26rpx;
+}
+
+.tag-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  margin-top: 10rpx;
+}
+
+.tag-input {
+  border: 1rpx solid #E0E0E0;
+  border-radius: 8rpx;
+  padding: 8rpx 15rpx;
+  flex: 1;
+  height: 50rpx;
+  font-size: 26rpx;
+}
+
+.add-tag-btn {
+  background-color: #007AFF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8rpx;
+  padding: 0 30rpx;
+  height: 68rpx;
+  font-size: 28rpx;
+  line-height: 64rpx;
 }
 </style>

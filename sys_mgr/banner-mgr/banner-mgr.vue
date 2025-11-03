@@ -36,7 +36,6 @@
 			}
 		},
 		onLoad() {
-			this.loadBannerList();
 		},
 		onShow() {
 			// 每次显示页面时重新加载数据，确保新增或修改后能看到最新数据

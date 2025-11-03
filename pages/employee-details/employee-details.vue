@@ -51,7 +51,7 @@
 			</view>
 
 			<!-- 关于我 -->
-			<view class="about-section">
+			<view class="about-section" v-if="bioParagraphs.length > 0">
 				<view class="section-title">关于我</view>
 				<view class="about-content">
 					<!-- 循环渲染每个段落 -->

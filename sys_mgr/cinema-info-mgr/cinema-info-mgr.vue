@@ -23,7 +23,16 @@
 			<!-- 特色标签 -->
 			<view class="form-item">
 				<view class="form-label">特色标签</view>
-				<uni-easyinput v-model="tagsInput" placeholder="请输入特色标签，用逗号分隔"></uni-easyinput>
+				<view class="tags-container">
+					<view v-for="(tag, index) in cinemaForm.tags" :key="index" class="tag-item">
+						<text>{{ tag }}</text>
+						<uni-icons type="clear" size="16" @click="removeTag(index)"></uni-icons>
+					</view>
+					<view class="tag-input-wrapper">
+						<input type="text" v-model="newTag" class="tag-input" placeholder="输入标签" @confirm="addTag" />
+						<button class="add-tag-btn" @click="addTag">添加</button>
+					</view>
+				</view>
 			</view>
 			
 			<!-- 影院地址 -->
@@ -110,6 +119,23 @@
 				></uni-file-picker>
 			</view>
 			
+			<!-- 环境信息列表 -->
+			<view class="form-section">
+				<view class="section-header">
+					<view class="section-title">环境信息 ({{cinemaForm.environments.length}})</view>
+					<view class="add-button" @click="showEnvironmentPopup(-1)">添加环境</view>
+				</view>
+				<view class="info-list">
+					<view class="info-item" v-for="(item, index) in cinemaForm.environments" :key="index">
+						<view class="info-title">{{item.name || '未命名环境'}}</view>
+						<view class="info-actions">
+							<text class="edit-btn" @click="showEnvironmentPopup(index)">编辑</text>
+							<text class="delete-btn" @click="removeEnvironment(index)">删除</text>
+						</view>
+					</view>
+				</view>
+			</view>
+			
 			<!-- 设备信息列表 -->
 				<view class="form-section">
 					<view class="section-header">
@@ -139,23 +165,6 @@
 							<view class="info-actions">
 								<text class="edit-btn" @click="showServicePopup(index)">编辑</text>
 								<text class="delete-btn" @click="removeService(index)">删除</text>
-							</view>
-						</view>
-					</view>
-				</view>
-				
-				<!-- 环境信息列表 -->
-				<view class="form-section">
-					<view class="section-header">
-						<view class="section-title">环境信息 ({{cinemaForm.environments.length}})</view>
-						<view class="add-button" @click="showEnvironmentPopup(-1)">添加环境</view>
-					</view>
-					<view class="info-list">
-						<view class="info-item" v-for="(item, index) in cinemaForm.environments" :key="index">
-							<view class="info-title">{{item.name || '未命名环境'}}</view>
-							<view class="info-actions">
-								<text class="edit-btn" @click="showEnvironmentPopup(index)">编辑</text>
-								<text class="delete-btn" @click="removeEnvironment(index)">删除</text>
 							</view>
 						</view>
 					</view>
@@ -296,7 +305,7 @@
 					services: [],
 					environments: []
 				},
-				tagsInput: '',
+				newTag: '',
 				storyInput: '',
 				wechatQrCodeList: [],
 				logoImageList: [],
@@ -359,8 +368,7 @@
 								environments: cinemaInfo.environments || []
 							};
 							
-							// 转换数组为字符串显示
-							this.tagsInput = this.cinemaForm.tags.join(', ');
+							// 标签数据已在cinemaForm.tags中设置
 							this.storyInput = this.cinemaForm.story.join('\n');
 							
 							// 设置图片列表 - 使用新的_url字段显示图片，但保留原始fileID用于修改操作
@@ -747,48 +755,59 @@
 					});
 				},
 				
-				// 删除环境 - 使用真实的云存储删除API
-				removeEnvironment(index) {
-					uni.showModal({
-						title: '确认删除',
-						content: '确定要删除这个环境吗？',
-						confirmText: '删除',
-						cancelText: '取消',
-						confirmColor: '#ff3b30',
-						success: (res) => {
-							if (res.confirm) {
-								const env = this.cinemaForm.environments[index];
-								if (env.image && env.image.startsWith('cloud://')) {
-									// 使用uniCloud.deleteFile进行真实的文件删除
-									uniCloud.deleteFile({
-										fileList: [env.image],
-										success: (res) => {
-											console.log('环境图片删除成功:', res);
-										},
-										fail: (err) => {
-											console.error('环境图片删除失败:', err);
-										},
-										complete: () => {
-											// 无论删除成功与否，都从本地数据中移除
-											this.cinemaForm.environments.splice(index, 1);
-											uni.showToast({
-												title: '删除成功',
-												icon: 'success'
-											});
-										}
-									});
-								} else {
-									// 非云存储路径，直接从本地数据中移除
+				// 删除环境 - 使用云函数删除图片
+			removeEnvironment(index) {
+				uni.showModal({
+					title: '确认删除',
+					content: '确定要删除这个环境吗？',
+					confirmText: '删除',
+					cancelText: '取消',
+					confirmColor: '#ff3b30',
+					success: (res) => {
+						if (res.confirm) {
+							const env = this.cinemaForm.environments[index];
+							if (env.image && env.image.startsWith('cloud://')) {
+								// 使用云函数删除图片
+								uni.showLoading({
+									title: '删除中...'
+								});
+								
+								uniCloud.callFunction({
+									name: 'deleteCloudFile',
+									data: {
+										fileIDs: [env.image]
+									}
+								}).then(res => {
+									console.log('云函数删除图片结果:', res);
+									// 无论云函数执行结果如何，都从本地数据中移除
 									this.cinemaForm.environments.splice(index, 1);
 									uni.showToast({
 										title: '删除成功',
 										icon: 'success'
 									});
-								}
+								}).catch(error => {
+									console.error('调用云函数删除图片失败:', error);
+									// 即使云函数调用失败，也从本地数据中移除
+									this.cinemaForm.environments.splice(index, 1);
+									uni.showToast({
+										title: '环境已删除，图片删除失败',
+										icon: 'none'
+									});
+								}).finally(() => {
+									uni.hideLoading();
+								});
+							} else {
+								// 非云存储路径，直接从本地数据中移除
+								this.cinemaForm.environments.splice(index, 1);
+								uni.showToast({
+									title: '删除成功',
+									icon: 'success'
+								});
 							}
 						}
-					});
-				},
+					}
+				});
+			},
 				
 				// 处理临时环境图片选择
 			handleTempEnvironmentImageSelect(e) {
@@ -821,7 +840,20 @@
 				}
 			},
 			
-			// 保存影院信息
+			// 添加标签
+				addTag() {
+					if (this.newTag && !this.cinemaForm.tags.includes(this.newTag)) {
+						this.cinemaForm.tags.push(this.newTag);
+						this.newTag = '';
+					}
+				},
+
+				// 移除标签
+				removeTag(index) {
+					this.cinemaForm.tags.splice(index, 1);
+				},
+
+				// 保存影院信息
 			saveCinemaInfo() {
 				// 表单验证
 				if (!this.cinemaForm.cinemaName) {
@@ -848,12 +880,9 @@
 					return;
 				}
 				
-				// 转换输入为数组格式
+				// 标签已经是数组格式，不需要转换
 							const formData = {...this.cinemaForm};
-							formData.tags = this.tagsInput ? this.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 							formData.story = this.storyInput ? this.storyInput.split('\n').filter(line => line.trim()) : [];
-							// 删除临时字段
-							delete formData.title;
 				
 				// 提交数据
 				uni.showLoading({
@@ -942,6 +971,50 @@
 		font-size: 28rpx;
 		font-weight: bold;
 		margin-top: 20rpx;
+	}
+
+	/* 标签样式 */
+	.tags-container {
+		min-height: 60rpx;
+	}
+
+	.tag-item {
+		display: inline-flex;
+		align-items: center;
+		background-color: #E9F7FE;
+		color: #1678FF;
+		padding: 8rpx 20rpx;
+		border-radius: 20rpx;
+		margin-right: 15rpx;
+		margin-bottom: 15rpx;
+		font-size: 26rpx;
+	}
+
+	.tag-input-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 15rpx;
+		margin-top: 10rpx;
+	}
+
+	.tag-input {
+		border: 1rpx solid #E0E0E0;
+		border-radius: 8rpx;
+		padding: 8rpx 15rpx;
+		flex: 1;
+		height: 50rpx;
+		font-size: 26rpx;
+	}
+
+	.add-tag-btn {
+		background-color: #007AFF;
+		color: #FFFFFF;
+		border: none;
+		border-radius: 8rpx;
+		padding: 0 30rpx;
+		height: 68rpx;
+		font-size: 28rpx;
+		line-height: 64rpx;
 	}
 	
 	.form-section {
