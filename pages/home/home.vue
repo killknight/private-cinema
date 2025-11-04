@@ -31,14 +31,18 @@
 
 		<!-- 核心功能入口 -->
 		<view class="features">
-			<view class="feature" v-for="f in features" :key="f.key" @click="onFeatureClick(f)">
-				<!-- 使用每个功能对应的图标路径，并添加错误处理 -->
-				<view class="f-icon">
-					<image class="f-image" :src="f.icon" mode="scaleToFill" style="width: 45rpx; height: 45rpx;" @error="handleImageError($event, f)" />
+				<view class="feature" v-for="f in features" :key="f.key" @click="onFeatureClick(f)">
+					<!-- 使用每个功能对应的图标路径，并添加错误处理 -->
+					<view class="f-icon">
+						<image class="f-image" :src="f.icon" mode="scaleToFill" style="width: 45rpx; height: 45rpx;" @error="handleImageError($event, f)" />
+						<!-- 未读消息数气泡提示，仅在联系客服功能且有未读消息时显示 -->
+						<view class="badge" v-if="f.key === 'contact' && unreadMsgCount > 0">
+					{{ unreadMsgCount > 99 ? '99+' : unreadMsgCount }}
 				</view>
-				<text class="f-text">{{ f.text }}</text>
+					</view>
+					<text class="f-text">{{ f.text }}</text>
+				</view>
 			</view>
-		</view>
 
 		<!-- 营业信息与标签 -->
 		<view class="status-card">
@@ -86,28 +90,30 @@
 </template>
 
 <script>
+import uniIm from '@/uni_modules/uni-im/sdk/index.js';
+
 	export default {
 		data() {
-			return {
-				bannerImage: '/static/banner/bj1.jpg',
-				statusBarHeight: 0,
-				currentBanner: 0,
-				features: [
-					{ key: 'intro', icon: '/static/tabbar/intro_active.png', text: '影院介绍' },
-					{ key: 'vip', icon: '/static/tabbar/vip_active.png', text: '怎么去' },
-					{ key: 'contact', icon: '/static/tabbar/contact_active.png', text: '联系客服' }
-				],
-				banners: [],
-				business: null,
-				tags: ['4K HDR','杜比视界','独立观影','私密空间','卫生保障'],
-				hotRooms: [],
-				themedRooms: [],
-				loading: true,
-				error: '',
-				isOpenNow: false,
-				customerServiceUids: []
-			};
-		},
+				return {
+					statusBarHeight: 0,
+					bannerImage: '/static/bx.jpg',
+					currentBanner: 0,
+					features: [
+						{ key: 'vip', icon: '/static/tabbar/vip_active.png', text: '怎么去' },
+						{ key: 'intro', icon: '/static/tabbar/intro_active.png', text: '影院介绍' },
+						{ key: 'contact', icon: '/static/tabbar/contact_active.png', text: '联系客服' }
+					],
+					banners: [],
+					business: null,
+					tags: ['4K HDR','杜比视界','独立观影','私密空间','卫生保障'],
+					hotRooms: [],
+					themedRooms: [],
+					loading: true,
+					error: '',
+					isOpenNow: false,
+					customerServiceUids: []
+				};
+			},
 		onLoad() {
 			const info = uni.getSystemInfoSync();
 			this.statusBarHeight = (info.statusBarHeight || 0);
@@ -126,24 +132,16 @@
 					timingFunc: "easeIn",
 				}
 			})
-			// uni.getPushClientId({
-      //   success: async function (e) {
-      //     // console.log(e)
-      //     const pushClientId = e.cid
-      //     console.log('获取到pushClientId:', pushClientId);
-      //     uni.showToast({
-      //       title: 'cid:' + pushClientId,
-      //       icon: 'none'
-      //     })
-      //   },
-      //   fail (e) {
-      //     console.error('获取pushClientId失败:', e)
-			// 		uni.showToast({
-      //       title: 'cid获取失败',
-      //       icon: 'none'
-      //     })
-      //   }
-      // })
+		},
+		// 组件卸载时移除事件监听
+		beforeDestroy() {
+			// 不需要再监听自定义事件
+		},
+		// 计算属性：获取未读消息数
+		computed: {
+			unreadMsgCount() {
+				return uniIm?.conversation?.unreadCount() || 0;
+			}
 		},
 		methods: {
 			isWithin(open, close) {
@@ -257,21 +255,20 @@
 					// 联系客服功能 - 从uni-config-center获取客服ID
 					this.getCustomerServiceId().then(customerServiceId => {
 						if (customerServiceId) {
-							uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=' + customerServiceId });
+							// 跳转到聊天页面
+							uni.navigateTo({
+								url: '/uni_modules/uni-im/pages/chat/chat?user_id=' + customerServiceId
+							});
 						} else {
 							// 如果获取不到客服ID，提示未获取到客服ID
 							uni.showToast({
 								title: '未获取到客服ID'
-							})
-							// uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=_uni_starter_test_user_id' });
-						}
+							})}
 					}).catch(err => {
 						console.error('获取客服ID失败:', err);
 						uni.showToast({
 							title: '未获取到客服ID'
 						})
-						// 出错时使用默认ID
-						// uni.navigateTo({ url: '/uni_modules/uni-im/pages/chat/chat?user_id=_uni_starter_test_user_id' });
 					});
 				}
 			},
@@ -298,7 +295,11 @@
 			handleImageError(e, feature) {
 				// 设置默认图标或其他处理
 				e.target.src = '/static/bx.jpg'; // 使用默认图片作为备选
-			}
+			},
+			
+			
+			
+
 		}
 	}
 </script>
@@ -359,7 +360,27 @@
 	flex-direction: column;
 	align-items: center;
 }
-.f-icon { margin-bottom: 12rpx; background: #9333ea33; width: 80rpx; height: 80rpx; border-radius: 999rpx; display:flex; align-items:center; justify-content:center; }
+.f-icon { margin-bottom: 12rpx; background: #9333ea33; width: 80rpx; height: 80rpx; border-radius: 999rpx; display:flex; align-items:center; justify-content:center; position: relative; }
+
+// 未读消息数气泡样式
+.badge {
+  position: absolute;
+  top: -8rpx;
+  right: -14rpx;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 18rpx;
+  font-weight: 700;
+  min-width: 32rpx;
+  height: 32rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rpx;
+  line-height: 1;
+  box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.5);
+}
 .f-text { font-size: 26rpx; color: #d6daf0; }
 
 .status-card { margin: 0 24rpx; background: #1e2440ab; border-radius: 16rpx; padding: 28rpx 24rpx; box-shadow: none; border: 1rpx solid rgba(255,255,255,0.05); }

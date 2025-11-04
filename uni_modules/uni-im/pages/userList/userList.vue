@@ -80,6 +80,7 @@ import uniIm from '@/uni_modules/uni-im/sdk/index.js';
 					//若为宽屏，则触发右侧详情页的自定义事件，通知右侧窗体刷新详情
           location.href = '/#/uni_modules/uni-im/pages/index/index?user_id=' + user_id
 				} else {
+					console.log('toChat', user_id);
 					// 若为窄屏，则打开新窗体，在新窗体打开详情页面
 					uni.navigateTo({
 						url: '/uni_modules/uni-im/pages/chat/chat?user_id=' + user_id

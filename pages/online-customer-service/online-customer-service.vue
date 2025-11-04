@@ -402,22 +402,6 @@
       // 监听群成员数变化
       'conversation.group.member_count'(){
         this.updateNavTitle()
-      },
-      // 监听用户昵称变化，从无到有时重新加载页面
-      userNickname: {
-        handler(newNickname, oldNickname) {
-          console.log('用户昵称已设置，重新加载页面12');
-          // 当昵称从无到有时（oldNickname为空或不存在，newNickname有值）
-          if ((!oldNickname || oldNickname.trim() === '') && newNickname && newNickname.trim() !== '') {
-            console.log('用户昵称已设置，重新加载页面');
-            // 使用$nextTick确保DOM更新后再执行
-            this.$nextTick(() => {
-              // 重新加载当前页面
-              this.load(this.$route?.query || {});
-            });
-          }
-        },
-        immediate: true // 立即执行一次
       }
     },
     methods: {

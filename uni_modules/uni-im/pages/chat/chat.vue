@@ -292,6 +292,7 @@
       if(uniIm.ext._previewImageIsOpen){
         return
       }
+			console.log("onShow id", this.currentConversationId)
       if (this.conversation.id) {
         // 用于打开会话窗口后，切换到后台，再切回时设置当前会话id。
         uniIm.currentConversationId = this.conversation.id
@@ -334,6 +335,7 @@
     },
     onLoad(param) {
       console.log('onLoad客服页面---》', param);
+			console.log('onload id', this.currentConversationId)
       
       // 登录检查
       if (!uniIm.currentUser || !uniIm.currentUser._id) {
@@ -387,22 +389,6 @@
       // 监听群成员数变化
       'conversation.group.member_count'(){
         this.updateNavTitle()
-      },
-      // 监听用户昵称变化，从无到有时重新加载页面
-      userNickname: {
-        handler(newNickname, oldNickname) {
-          console.log('用户昵称已设置，重新加载页面12');
-          // 当昵称从无到有时（oldNickname为空或不存在，newNickname有值）
-          if ((!oldNickname || oldNickname.trim() === '') && newNickname && newNickname.trim() !== '') {
-            console.log('用户昵称已设置，重新加载页面');
-            // 使用$nextTick确保DOM更新后再执行
-            this.$nextTick(() => {
-              // 重新加载当前页面
-              this.load(this.$route?.query || {});
-            });
-          }
-        },
-        immediate: true // 立即执行一次
       }
     },
     methods: {
