@@ -79,6 +79,7 @@
   // #ifdef H5
   import uniImShareMsg from '@/uni_modules/uni-im/pages/share-msg/share-msg.vue';
   // #endif
+  import { store, mutations } from '@/uni_modules/uni-id-pages/common/store.js';
   
 
 /**
@@ -112,6 +113,8 @@
         checkedMsgList: [],
         // 聊天输入框内容
         chatInputContent: '',
+        // 用于响应式监听用户信息
+        userInfo: store.userInfo
       };
     },
     props: {
@@ -140,6 +143,10 @@
       //当前用户自己的uid
       current_uid() {
         return uniIm.currentUser._id;
+      },
+      // 获取最新的用户昵称，保证响应式更新
+      userNickname() {
+        return store.userInfo?.nickname || '';
       },
       extChatTitle(){
         if(this.conversation){
@@ -336,13 +343,32 @@
       uniIm.audioContext.stop()
     },
     onLoad(param) {
-			console.log('onload------------->', param);
+		console.log('onload------------->', param);
       
       // 登录检查
       if (!uniIm.currentUser || !uniIm.currentUser._id) {
         console.log('用户未登录，跳转到登录页面');
         uni.navigateTo({
           url: '/uni_modules/uni-id-pages/pages/login/login-withoutpwd'
+        });
+        return;
+      }
+      
+      // 昵称检查
+      const nickname = this.userNickname;
+      if (!nickname || nickname.trim() === '') {
+        console.log('用户未设置昵称，提示设置昵称');
+        uni.showModal({
+          title: '提示',
+          content: '与客服联系需要先设置昵称',
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              uni.navigateTo({
+                url: '/uni_modules/uni-id-pages/pages/userinfo/userinfo?from=customer_service'
+              });
+            }
+          }
         });
         return;
       }
@@ -376,6 +402,22 @@
       // 监听群成员数变化
       'conversation.group.member_count'(){
         this.updateNavTitle()
+      },
+      // 监听用户昵称变化，从无到有时重新加载页面
+      userNickname: {
+        handler(newNickname, oldNickname) {
+          console.log('用户昵称已设置，重新加载页面12');
+          // 当昵称从无到有时（oldNickname为空或不存在，newNickname有值）
+          if ((!oldNickname || oldNickname.trim() === '') && newNickname && newNickname.trim() !== '') {
+            console.log('用户昵称已设置，重新加载页面');
+            // 使用$nextTick确保DOM更新后再执行
+            this.$nextTick(() => {
+              // 重新加载当前页面
+              this.load(this.$route?.query || {});
+            });
+          }
+        },
+        immediate: true // 立即执行一次
       }
     },
     methods: {

@@ -71,7 +71,8 @@ const uniIdCo = uniCloud.importObject("uni-id-co")
 				// },
 				hasPwd: false,
 				showLoginManage: false ,//通过页面传参隐藏登录&退出登录按钮
-				setNicknameIng:false
+				setNicknameIng:false,
+				fromSource: '' // 来源页面参数
 			}
 		},
 		async onShow() {
@@ -82,6 +83,8 @@ const uniIdCo = uniCloud.importObject("uni-id-co")
 			if (e.showLoginManage) {
 				this.showLoginManage = true //通过页面传参隐藏登录&退出登录按钮
 			}
+			// 存储来源参数
+			this.fromSource = e.from || ''
 			//判断当前用户是否有密码，否则就不显示密码修改功能
 			let res = await uniIdCo.getAccountInfo()
 			this.hasPwd = res.isPasswordSet
@@ -165,6 +168,22 @@ const uniIdCo = uniCloud.importObject("uni-id-co")
 					})
 					this.setNicknameIng = false
 					this.$refs.dialog.close()
+					
+					// 检查是否从客服页面跳转过来
+					if (this.fromSource === 'customer_service') {
+						// 跳转到首页
+						uni.reLaunch({
+							url: '/pages/home/home',
+							fail: (err1) => {
+								uni.switchTab({
+									url:'/pages/home/home',
+									fail: (err2) => {
+										console.log(err1,err2)
+									}
+								})
+							}
+						})
+					}
 				} else {
 					this.$refs.dialog.open()
 				}
