@@ -104,6 +104,7 @@ async function getUserList(event, context) {
   const processedUsers = users.map(user => ({
     ...user,
     isAdmin: user.isAdmin || (user.role && user.role.includes('admin')) || false,
+    isCustomerService: user.isCustomerService || (user.role && user.role.includes('customerService')) || false,
     // 将avatar_file.url映射到avatar字段供前端使用
     avatar: user.avatar_file && user.avatar_file.url && tempUrls[user.avatar_file.url] ? tempUrls[user.avatar_file.url] : (user.avatar_file && user.avatar_file.url ? user.avatar_file.url : '')
   }));
@@ -125,19 +126,19 @@ async function getUserList(event, context) {
   };
 }
 
-// 更新用户管理员权限函数
+// 更新用户权限函数（支持管理员和客服权限）
 async function updateUserRole(event, context) {
-  const { userId, isAdmin } = event;
+  const { userId, isAdmin, isCustomerService } = event;
   
   // 验证参数
-  if (!userId || typeof isAdmin !== 'boolean') {
+  if (!userId || (typeof isAdmin !== 'boolean' && typeof isCustomerService !== 'boolean')) {
     return {
       code: 400,
       msg: '参数错误'
     };
   }
   
-  // 验证当前用户是否有权限设置管理员（需要是管理员）
+  // 验证当前用户是否有权限设置（需要是管理员）
   const { OPENID } = context;
   const db = uniCloud.database();
   
@@ -160,17 +161,37 @@ async function updateUserRole(event, context) {
     };
   }
   
-  // 更新用户管理员权限
-  const updateData = {
-    isAdmin: isAdmin
-  };
+  // 更新用户权限
+  const updateData = {};
   
-  // 如果要设置为管理员，更新role字段
-  if (isAdmin) {
-    updateData.role = db.command.addToSet('admin');
-  } else {
-    // 如果要取消管理员，从role中移除admin
-    updateData.role = db.command.pull('admin');
+  // 处理管理员权限
+  if (typeof isAdmin === 'boolean') {
+    updateData.isAdmin = isAdmin;
+    if (isAdmin) {
+      updateData.role = db.command.addToSet('admin');
+    } else {
+      // 如果要取消管理员，从role中移除admin
+      updateData.role = db.command.pull('admin');
+    }
+  }
+  
+  // 处理客服权限
+  if (typeof isCustomerService === 'boolean') {
+    updateData.isCustomerService = isCustomerService;
+    
+    // 需要先获取当前用户的role字段，避免覆盖之前的操作
+    if (typeof updateData.role === 'undefined') {
+      const userRes = await db.collection('uni-id-users').doc(userId).field({ role: true }).get();
+      const user = userRes.data && userRes.data[0];
+      updateData.role = user ? user.role || [] : [];
+    }
+    
+    // 使用命令更新客服角色
+    if (isCustomerService) {
+      updateData.role = db.command.addToSet('customerService');
+    } else {
+      updateData.role = db.command.pull('customerService');
+    }
   }
   
   const updateRes = await db.collection('uni-id-users')
@@ -178,9 +199,22 @@ async function updateUserRole(event, context) {
     .update(updateData);
   
   if (updateRes.updated === 1) {
+    // 根据操作类型返回相应的成功消息
+    let successMsg = '';
+    if (typeof isAdmin === 'boolean' && typeof isCustomerService === 'boolean') {
+      // 同时更新了管理员和客服权限
+      successMsg = (isAdmin ? '设置管理员成功' : '取消管理员成功') + '，' + (isCustomerService ? '设置客服成功' : '取消客服成功');
+    } else if (typeof isAdmin === 'boolean') {
+      // 只更新了管理员权限
+      successMsg = isAdmin ? '设置管理员成功' : '取消管理员成功';
+    } else if (typeof isCustomerService === 'boolean') {
+      // 只更新了客服权限
+      successMsg = isCustomerService ? '设置客服成功' : '取消客服成功';
+    }
+    
     return {
       code: 0,
-      msg: isAdmin ? '设置管理员成功' : '取消管理员成功'
+      msg: successMsg
     };
   } else {
     return {

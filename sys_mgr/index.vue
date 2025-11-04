@@ -62,6 +62,18 @@
 				</view>
 				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
 			</view>
+			
+			<!-- 设置客服 -->
+			<view class="function-item" @click="goToCustomerServiceMgr">
+				<view class="item-icon">
+					<uni-icons type="chatbubble" size="28" color="#5AC8FA"></uni-icons>
+				</view>
+				<view class="item-content">
+					<view class="item-title">设置客服</view>
+					<view class="item-desc">管理系统客服权限</view>
+				</view>
+				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
+			</view>
 		</view>
 	</view>
 </template>
@@ -106,6 +118,13 @@
 			goToAdminMgr() {
 				uni.navigateTo({
 					url: '/sys_mgr/admin-mgr/admin-mgr'
+				})
+			},
+			
+			// 跳转到设置客服页面
+			goToCustomerServiceMgr() {
+				uni.navigateTo({
+					url: '/sys_mgr/customer-service-mgr/customer-service-mgr'
 				})
 			}
 		}

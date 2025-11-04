@@ -173,10 +173,13 @@
 			},
 			// 缓存客服ID的方法
 			cacheCustomerServiceId() {
-				// 检查是否已有缓存，没有则缓存
+				const uids = this.customerServiceUids || [];
 				const cachedServiceId = uni.getStorageSync('cached_customer_service_id');
-				if (!cachedServiceId) {
-					const uids = this.customerServiceUids || [];
+				
+				// 检查条件：
+				// 1. 如果没有缓存，需要缓存
+				// 2. 如果有缓存但不在当前查询的客服ID列表中，需要更新缓存
+				if (!cachedServiceId || (uids.length > 0 && !uids.includes(cachedServiceId))) {
 					let serviceId = ''; // 默认ID
 					
 					if (uids && uids.length > 0) {
@@ -187,9 +190,9 @@
 					
 					// 缓存选择的客服ID
 					uni.setStorageSync('cached_customer_service_id', serviceId);
-					console.log('首页加载时缓存客服ID:', serviceId);
+					console.log('缓存客服ID:', serviceId);
 				} else {
-					console.log('已存在客服ID缓存，无需重新缓存');
+					console.log('已存在有效客服ID缓存，无需更新');
 				}
 			},
 			mockRooms(n) {

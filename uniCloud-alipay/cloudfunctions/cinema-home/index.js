@@ -57,18 +57,25 @@ exports.main = async () => {
     cinemaName: '星展影院'
   }
 
-  // 获取客服ID配置
+  // 获取客服ID - 从数据库查询具有客服角色的用户
   let customerServiceUids = []
   try {
-    const uids = uniImConfig.config('customer_service_uids')
-    // 处理字符串类型配置
-    if (typeof uids === 'string') {
-      customerServiceUids = uids.split(',').map(item => item.trim()).filter(item => item)
-    } else if (Array.isArray(uids)) {
-      customerServiceUids = uids
+    // 从数据库查询具有客服角色的用户
+    const userCollection = db.collection('uni-id-users')
+    // 查询条件：isCustomerService为true或role数组包含'customerService'
+    const userRes = await userCollection.where({
+      $or: [
+        { isCustomerService: true },
+        { role: db.command.all(['customerService']) }
+      ]
+    }).get()
+    
+    if (userRes && userRes.data && userRes.data.length > 0) {
+      customerServiceUids = userRes.data.map(user => user._id)
     }
+    console.log('查询到的客服用户ID列表:', customerServiceUids)
   } catch (error) {
-    console.error('获取客服ID配置失败:', error)
+    console.error('获取客服ID失败:', error)
   }
 
   return { code: 0, msg: 'ok', data: { hotRooms, themedRooms, banners, business, customerServiceUids } }

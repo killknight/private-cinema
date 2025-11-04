@@ -175,6 +175,8 @@
       // console.log('chat created',this.systemInfo)
       // 监听推送消息
       this.onImMsg = (res) => {
+				console.log('聊天页面-收到消息 刚进来时，判断为什么没有接收到消息: ', JSON.stringify(res));
+        // 判断消息类型是否为im，且为当前页面对应会话消息
         if(uniIm.isDisabled){
           return console.log('uniIm isDisabled')
         }

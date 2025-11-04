@@ -166,6 +166,12 @@
 				{
 					"navigationBarTitleText" : "设置管理员"
 				}
+			}, {
+				"path": "customer-service-mgr/customer-service-mgr",
+				"style" :
+				{
+					"navigationBarTitleText" : "设置客服"
+				}
 			}]
 		},
 		{
@@ -475,11 +481,6 @@
 			"iconPath": "static/tabbar/intro.png",
 			"selectedIconPath": "static/tabbar/intro_active.png",
 			"text": "影院介绍"
-		}, {
-			"pagePath": "pages/online-customer-service/online-customer-service",
-			"iconPath": "/static/tabbar/contact.png",
-			"selectedIconPath": "/static/tabbar/contact_active.png",
-			"text": "联系客服"
 		}, {
 			"pagePath": "pages/ucenter/ucenter",
 			"iconPath": "static/tabbar/me.png",
