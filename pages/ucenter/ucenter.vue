@@ -104,12 +104,12 @@
 				<uni-icons type="arrowright" size="24" color="#999"></uni-icons>
 			</view> -->
 
-			<!-- 退出登录 -->
-			<view class="menu-item logout" @click="changeLoginState">
-				<view class="icon-container red" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-					<uni-icons type="clear" size="30" color="#fff"></uni-icons>
+			<!-- 登录/退出登录按钮 -->
+			<view class="menu-item" :class="{logout: hasLogin}" @click="changeLoginState">
+				<view class="icon-container" :class="{red: hasLogin}" :style="hasLogin ? 'background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);' : 'background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);'">
+					<uni-icons :type="hasLogin ? 'clear' : 'arrow-right'" size="30" color="#fff"></uni-icons>
 				</view>
-				<text class="menu-title logout">退出登录</text>
+				<text class="menu-title" :class="{logout: hasLogin}">{{hasLogin ? '退出登录' : '立即登录'}}</text>
 			</view>
 		</view>
 	</view>
