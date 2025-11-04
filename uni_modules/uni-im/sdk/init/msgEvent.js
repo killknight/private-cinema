@@ -149,6 +149,7 @@ msgEvent.onMsg(async res=>{
                                   !isMuteMsg &&
                                   // 不是自己发的消息
                                   msg.from_uid != $state.currentUser._id
+
     // 判断并创建通知栏消息
     // #ifdef H5
     if (canCreateNotification) {
@@ -166,6 +167,159 @@ msgEvent.onMsg(async res=>{
 
       // 调用扩展程序告知有新消息到达
       $extensions.invokeExts('ui-new-message')
+    }
+    // #endif
+    
+    // #ifndef H5
+    // 震动和声音提醒 - 仅在非H5平台、非当前会话、非自己发送的消息、可读消息、非静音消息时触发
+    if (conversation_id != $state.currentConversationId && msg.from_uid != $state.currentUser._id && isReadableMsg && !isMuteMsg) {
+      try {
+        // 长震动提醒
+        uni.vibrateLong();
+        console.log('长震动提醒成功');
+        
+        // 云存储音频文件FileID
+        const cloudAudioFileID = 'cloud://env-00jxuascxzaw/sy/msg_tip.mp3';
+        // 本地缓存文件路径
+        const localFilePath = `${uni.env.USER_DATA_PATH}/msg_tip.mp3`;
+        
+        // 播放音频函数
+        function playAudio(src) {
+          const innerAudioContext = uni.createInnerAudioContext();
+          innerAudioContext.src = src;
+          innerAudioContext.volume = 0.5;
+          
+          // 尝试播放
+          try {
+            innerAudioContext.play();
+            console.log('提示音播放开始:', src);
+          } catch (playError) {
+            console.error('播放音频失败:', playError);
+          }
+          
+          // 播放结束后释放资源
+          innerAudioContext.onEnded(() => {
+            try {
+              innerAudioContext.destroy();
+            } catch (destroyError) {
+              console.error('销毁音频实例失败:', destroyError);
+            }
+          });
+          
+          // 播放错误处理
+          innerAudioContext.onError((err) => {
+            console.error('音频播放错误:', err);
+            try {
+              innerAudioContext.destroy();
+            } catch (err) {
+              console.error('销毁音频实例失败:', err);
+            }
+          });
+        }
+        
+        // 下载并缓存音频文件函数
+        function downloadAndCacheAudio(httpUrl, filePath) {
+          try {
+            uni.downloadFile({
+              url: httpUrl,
+              filePath: filePath,
+              success: (res) => {
+                if (res.statusCode === 200) {
+                  console.log('音频文件下载成功并缓存到本地:', filePath);
+                  playAudio(filePath);
+                } else {
+                  console.error('下载音频文件失败，状态码:', res.statusCode);
+                  // 降级方案：直接尝试播放云端临时URL
+                  playAudio(httpUrl);
+                }
+              },
+              fail: (err) => {
+                console.error('下载音频文件失败:', err);
+                // 降级方案：直接尝试播放云端临时URL
+                playAudio(httpUrl);
+              }
+            });
+          } catch (err) {
+            console.error('下载和缓存音频错误:', err);
+            // 降级方案：直接尝试播放云端临时URL
+            playAudio(httpUrl);
+          }
+        }
+        
+        // 从云存储获取临时访问链接
+        function getCloudFileTempUrl(fileID) {
+          return new Promise((resolve, reject) => {
+            try {
+              uniCloud.getTempFileURL({
+                fileList: [fileID],
+                success: res => {
+                  if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+                    resolve(res.fileList[0].tempFileURL);
+                  } else {
+                    reject(new Error('获取云文件临时URL失败'));
+                  }
+                },
+                fail: err => {
+                  reject(err);
+                }
+              });
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }
+        
+        try {
+          // 检查本地是否已有缓存文件
+          const fs = uni.getFileSystemManager();
+          try {
+            // 尝试获取文件信息，如果文件存在则使用本地缓存
+            fs.getFileInfo({
+              filePath: localFilePath,
+              success: function() {
+                console.log('使用本地缓存的提示音文件');
+                playAudio(localFilePath);
+              },
+              fail: function() {
+                console.log('本地缓存不存在，准备获取云文件临时链接');
+                // 获取云文件临时URL后下载
+                getCloudFileTempUrl(cloudAudioFileID)
+                  .then(tempUrl => {
+                    console.log('获取到云文件临时URL:', tempUrl);
+                    downloadAndCacheAudio(tempUrl, localFilePath);
+                  })
+                  .catch(err => {
+                    console.error('获取云文件临时URL失败:', err);
+                    // 降级方案：使用备用本地音频文件
+                    const fallbackAudioPath = '/static/msg_tip.mp3';
+                    console.log('尝试使用备用本地音频:', fallbackAudioPath);
+                    playAudio(fallbackAudioPath);
+                  });
+              }
+            });
+          } catch (err) {
+            console.error('文件系统操作错误:', err);
+            // 降级方案：尝试获取云文件临时URL
+            getCloudFileTempUrl(cloudAudioFileID)
+              .then(tempUrl => {
+                console.log('获取到云文件临时URL:', tempUrl);
+                playAudio(tempUrl);
+              })
+              .catch(err => {
+                console.error('获取云文件临时URL失败:', err);
+                // 降级方案：使用备用本地音频文件
+                const fallbackAudioPath = '/static/msg_tip.mp3';
+                console.log('尝试使用备用本地音频:', fallbackAudioPath);
+                playAudio(fallbackAudioPath);
+              });
+          }
+        } catch (err) {
+          console.error('音频播放相关错误:', err);
+          // 确保即使出现错误也不会影响应用的其他功能
+        }
+      } catch (error) {
+        console.error('震动或声音提醒失败', error);
+      }
     }
     // #endif
     
