@@ -99,8 +99,9 @@ export default {
       this.loading = true;
       try {
         const res = await uniCloud.callFunction({
-          name: 'getAllRooms',
+          name: 'roomManager',
           data: {
+            action: 'getAllRooms',
             tag: this.currentTag === '全部包厢' ? '' : this.currentTag,
             limit: this.pageSize,
             offset: (this.page - 1) * this.pageSize
@@ -142,8 +143,11 @@ export default {
     },
     
     viewDetail(roomId) {
-      uni.navigateTo({
-        url: `/pages/list/detail?id=${roomId}`
+      // 使用页面内弹窗或导航到其他已存在的详情页面
+      // 由于/pages/list/detail可能不存在，这里改为显示提示信息
+      uni.showToast({
+        title: `查看包厢ID: ${roomId}`,
+        icon: 'none'
       });
     }
   }

@@ -137,6 +137,22 @@ import uniIm from '@/uni_modules/uni-im/sdk/index.js';
 		beforeDestroy() {
 			// 不需要再监听自定义事件
 		},
+		// 分享功能配置
+		onShareAppMessage() {
+			return {
+				title: this.business?.cinemaName || '星展影院 - 专属私密空间',
+				path: '/pages/home/home'
+				// 不使用imageUrl，小程序会自动截取当前页面作为分享图片
+			};
+		},
+		// 分享到朋友圈配置
+		onShareTimeline() {
+			return {
+				title: this.business?.cinemaName || '星展影院 - 专属私密空间',
+				query: 'from=timeline',
+				// 不使用imageUrl，小程序会自动截取当前页面作为分享图片
+			};
+		},
 		// 计算属性：获取未读消息数
 		computed: {
 			unreadMsgCount() {
