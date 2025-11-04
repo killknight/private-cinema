@@ -126,6 +126,24 @@
 					timingFunc: "easeIn",
 				}
 			})
+			// uni.getPushClientId({
+      //   success: async function (e) {
+      //     // console.log(e)
+      //     const pushClientId = e.cid
+      //     console.log('获取到pushClientId:', pushClientId);
+      //     uni.showToast({
+      //       title: 'cid:' + pushClientId,
+      //       icon: 'none'
+      //     })
+      //   },
+      //   fail (e) {
+      //     console.error('获取pushClientId失败:', e)
+			// 		uni.showToast({
+      //       title: 'cid获取失败',
+      //       icon: 'none'
+      //     })
+      //   }
+      // })
 		},
 		methods: {
 			isWithin(open, close) {

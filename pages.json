@@ -482,6 +482,11 @@
 			"selectedIconPath": "static/tabbar/intro_active.png",
 			"text": "影院介绍"
 		}, {
+			"pagePath": "pages/online-customer-service/online-customer-service",
+			"iconPath": "static/tabbar/contact.png",
+			"selectedIconPath": "static/tabbar/contact_active.png",
+			"text": "在线客服"
+		}, {
 			"pagePath": "pages/ucenter/ucenter",
 			"iconPath": "static/tabbar/me.png",
 			"selectedIconPath": "static/tabbar/me_active.png",

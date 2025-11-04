@@ -71,38 +71,25 @@ export default async function () {
   // db.off('error', onDBError)
 
   // 4. 同步客户端push_clientid至device表
-  // 定义获取并同步push_clientid的函数
-  async function syncPushClientId() {
-    if (uni.getPushClientId) {
-      uni.getPushClientId({
-        success: async function (e) {
-          // console.log(e)
-          const pushClientId = e.cid
-          // console.log('获取到pushClientId:', pushClientId);
-          try {
-            const res = await uniIdCo.setPushCid({
-              pushClientId
-            })
-            // console.log('同步pushClientId成功:', res);
-          } catch (err) {
-            console.error('同步pushClientId失败:', err);
-          }
-        },
-        fail (e) {
-          console.error('获取pushClientId失败:', e)
-        }
-      })
-    }
-  }
-  
-  // 在token刷新时同步push_clientid
   if (uniCloud.onRefreshToken) {
     uniCloud.onRefreshToken(() => {
       // console.log('onRefreshToken');
-      syncPushClientId();
+      if (uni.getPushClientId) {
+        uni.getPushClientId({
+          success: async function (e) {
+            // console.log(e)
+            const pushClientId = e.cid
+            console.log("获取到pushClientId:", pushClientId);
+            const res = await uniIdCo.setPushCid({
+              pushClientId
+            })
+            // console.log('getPushClientId', res);
+          },
+          fail (e) {
+            // console.log(e)
+          }
+        })
+      }
     })
   }
-  
-  // 立即尝试同步push_clientid，确保小程序扫码登录时也能正确注册
-  syncPushClientId();
 }
