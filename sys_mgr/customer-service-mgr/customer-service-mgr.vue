@@ -53,6 +53,18 @@
 		onLoad() {
 			this.loadUsers();
 		},
+		// 下拉刷新 - 移到根级别
+		onPullDownRefresh() {
+			this.loadUsers(true);
+			uni.stopPullDownRefresh();
+		},
+		// 上拉加载更多 - 移到根级别
+		onReachBottom() {
+			// 搜索模式下不上拉加载更多
+			if (!this.keyword && this.hasMore && this.loadStatus !== 'loading') {
+				this.loadUsers(false);
+			}
+		},
 		methods: {
 			// 头像加载失败处理
 			onAvatarError(event, index) {
@@ -219,20 +231,6 @@
 				});
 			},
 
-			// 下拉刷新
-			onPullDownRefresh() {
-				this.loadUsers(true);
-				uni.stopPullDownRefresh();
-			},
-
-			// 上拉加载更多
-			onReachBottom() {
-				// 搜索模式下不上拉加载更多
-				if (!this.keyword && this.hasMore && this.loadStatus !== 'loading') {
-					this.loadUsers(false);
-				}
-			},
-			
 			// 搜索功能
 			search() {
 				this.page = 1;
