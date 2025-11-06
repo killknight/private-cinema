@@ -187,7 +187,7 @@ msgEvent.onMsg(async res=>{
         function playAudio(src) {
           const innerAudioContext = uni.createInnerAudioContext();
           innerAudioContext.src = src;
-          innerAudioContext.volume = 0.5;
+          innerAudioContext.volume = 1.0;
           
           // 尝试播放
           try {
