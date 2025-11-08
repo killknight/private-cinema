@@ -102,7 +102,7 @@
     </view>
     
     <!-- 公众号 -->
-    <view class="wechat-section">
+    <view class="wechat-section" v-if="cinemaInfo.wechatQrCode_url">
       <view class="wechat-content">
         <view class="wechat-info">
           <view class="section-title-small">关注公众号</view>
@@ -118,7 +118,7 @@
     
     <!-- 底部版权 -->
     <view class="footer">
-      <view class="copyright">© 2025 星辰私人影院 版权所有</view>
+      <!-- <view class="copyright">© 2025 星辰私人影院 版权所有</view> -->
       <!-- <view class="license">京ICP备12345678号-1</view> -->
     </view>
   </view>

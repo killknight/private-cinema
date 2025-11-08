@@ -26,13 +26,13 @@
 							<view class="name-animation"></view>
 						</view>
 						<view class="status-section">
-							<view class="verified-badge" style="font-weight: normal; font-size: 12px;">
-								<uni-icons type="phone" size="16" color="#fff"></uni-icons>
-								<text style="font-weight: normal; font-size: 12px;line-height: 10rpx;">{{userInfo.mobile ? '已认证' : '未认证'}}</text>
+							<view class="online-status" :class="{'offline': socketIsClose}">
+								<view class="online-dot" :class="{'offline': socketIsClose}"></view>
+								<text class="status-text" :class="{'offline-text': socketIsClose}">{{socketIsClose ? '客服链接断开' : '客服已链接'}}</text>
 							</view>
-							<view class="online-status" style="font-weight: normal; font-size: 12px;">
-								<view class="online-dot"></view>
-								<text style="font-weight: normal; font-size: 12px;line-height: 10rpx;">{{hasLogin ? '在线' : '未登录'}}</text>
+							<view class="verified-badge" :class="{'logged-in': hasLogin}">
+								<uni-icons type="person" size="16" :color="hasLogin ? '#4caf50' : '#ff9800'"></uni-icons>
+								<text>{{hasLogin ? '登录中' : '未登录'}}</text>
 							</view>
 						</view>
 					</view>
@@ -156,6 +156,25 @@
 			},
 			notificationUnreadCount(){
 				return uniIm.notification.unreadCount()
+			},
+			socketIsClose(){
+				return uniIm.socketIsClose
+			}
+		},
+		watch: {
+			socketIsClose(newVal, oldVal) {
+				if (newVal) {
+					// 弹窗提示用户连接已断开
+					// uni.showModal({
+					// 	title: '提示',
+					// 	content: '客服连接已断开，请退出重新打开小程序',
+					// 	showCancel: false
+					// })
+					uni.showToast({
+						title: '客服连接已断开，请退出重新打开小程序',
+						icon: 'none'
+					});
+				}
 			}
 		},
 		methods: {
@@ -514,12 +533,18 @@
 		display: flex;
 		align-items: center;
 		gap: 8rpx;
-		background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
-		padding: 6rpx 20rpx;
-		border-radius: 25rpx;
+		background: rgba(76, 175, 80, 0.15);
+		padding: 8rpx 16rpx;
+		border-radius: 34rpx;
 		backdrop-filter: blur(10rpx);
-		border: 2rpx solid rgba(255, 215, 0, 0.3);
-		/* 移除动画效果 */
+		border: 2rpx solid rgba(76, 175, 80, 0.3);
+		white-space: nowrap;
+		transition: all 0.3s ease;
+	}
+	
+	.verified-badge:not(.logged-in) {
+		background: rgba(255, 152, 0, 0.15);
+		border-color: rgba(255, 152, 0, 0.3);
 	}
 	
 	@keyframes badgeFloat {
@@ -533,9 +558,13 @@
 
 	.verified-badge text {
 		font-size: 28rpx;
-		color: #fff;
-		font-weight: 600;
-		text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+		color: #4caf50;
+		font-weight: 500;
+		transition: color 0.3s ease;
+	}
+	
+	.verified-badge:not(.logged-in) text {
+		color: #ff9800;
 	}
 
 	.online-status {
@@ -543,15 +572,27 @@
 		align-items: center;
 		padding: 12rpx 16rpx;
 		background: rgba(76, 175, 80, 0.15);
-		border-radius: 25rpx;
+		border-radius: 34rpx;
 		backdrop-filter: blur(10rpx);
 		border: 2rpx solid rgba(76, 175, 80, 0.3);
+		transition: all 0.3s ease;
+		white-space: nowrap;
 	}
 
-	.online-status text {
+	.online-status.offline {
+		background: rgba(244, 67, 54, 0.15);
+		border-color: rgba(244, 67, 54, 0.3);
+	}
+
+	.status-text {
 		font-size: 28rpx;
 		color: #4caf50;
 		font-weight: 500;
+		transition: color 0.3s ease;
+	}
+
+	.status-text.offline-text {
+		color: #f44336;
 	}
 
 	.online-dot {
@@ -561,7 +602,13 @@
 		border-radius: 50%;
 		margin-right: 10rpx;
 		box-shadow: 0 0 16rpx #4caf50, 0 0 32rpx rgba(76, 175, 80, 0.3);
-		animation: pulse 2s infinite; /* 只保留脉冲效果 */
+		animation: pulse 2s infinite;
+		transition: all 0.3s ease;
+	}
+
+	.online-dot.offline {
+		background-color: #f44336;
+		box-shadow: 0 0 16rpx #f44336, 0 0 32rpx rgba(244, 67, 54, 0.3);
 	}
 	
 	@keyframes floatUpDown {

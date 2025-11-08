@@ -36,9 +36,12 @@
 					<view class="f-icon">
 						<image class="f-image" :src="f.icon" mode="scaleToFill" style="width: 45rpx; height: 45rpx;" @error="handleImageError($event, f)" />
 						<!-- 未读消息数气泡提示，仅在联系客服功能且有未读消息时显示 -->
-						<view class="badge" v-if="f.key === 'contact' && unreadMsgCount > 0">
-					{{ unreadMsgCount > 99 ? '99+' : unreadMsgCount }}
-				</view>
+						<view class="badge" v-if="f.key === 'contact' && unreadMsgCount > 0 && !socketIsClose">
+							{{ unreadMsgCount > 99 ? '99+' : unreadMsgCount }}
+						</view>
+						<view class="badge ws-badge" v-if="f.key === 'contact' && socketIsClose">
+							链接断开
+						</view>
 					</view>
 					<text class="f-text">{{ f.text }}</text>
 				</view>
@@ -99,7 +102,7 @@ import uniIm from '@/uni_modules/uni-im/sdk/index.js';
 					bannerImage: '/static/bx.jpg',
 					currentBanner: 0,
 					features: [
-						{ key: 'vip', icon: '/static/tabbar/vip_active.png', text: '怎么去' },
+						{ key: 'vip', icon: '/static/tabbar/vip_active.png', text: '导航' },
 						{ key: 'intro', icon: '/static/tabbar/intro_active.png', text: '影院介绍' },
 						{ key: 'contact', icon: '/static/tabbar/contact_active.png', text: '联系客服' }
 					],
@@ -157,6 +160,25 @@ import uniIm from '@/uni_modules/uni-im/sdk/index.js';
 		computed: {
 			unreadMsgCount() {
 				return uniIm?.conversation?.unreadCount() || 0;
+			},
+			socketIsClose(){
+				return uniIm.socketIsClose;
+			}
+		},
+		watch: {
+			socketIsClose(newVal, oldVal) {
+				if (newVal) {
+					// 弹窗提示用户连接已断开
+					// uni.showModal({
+					// 	title: '提示',
+					// 	content: '客服连接已断开，请退出重新打开小程序',
+					// 	showCancel: false
+					// })
+					uni.showToast({
+						title: '客服连接已断开，请退出重新打开小程序',
+						icon: 'none'
+					});
+				}
 			}
 		},
 		methods: {
@@ -396,6 +418,12 @@ import uniIm from '@/uni_modules/uni-im/sdk/index.js';
   padding: 2rpx;
   line-height: 1;
   box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.5);
+}
+.ws-badge {
+  top: -8rpx;
+  right: -50rpx;
+  font-weight: 400;
+	padding: 2rpx 6rpx;
 }
 .f-text { font-size: 26rpx; color: #d6daf0; }
 
