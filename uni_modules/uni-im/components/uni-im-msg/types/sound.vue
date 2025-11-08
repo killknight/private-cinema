@@ -18,7 +18,8 @@
       return {
         soundPlayState: 0,
         isInit: false,
-        currentAudioContext: null
+        currentAudioContext: null,
+        audioContext: null
       }
     },
     created() {
@@ -68,14 +69,13 @@
     },
     destroyed() {
       console.log('销毁音频组件，清理资源');
-      if(this.isInit){
-        const audioContext = uniIm.audioContext
-        audioContext.offPlay(this.onPlay);
-        audioContext.offPause(this.soundPlayEnd);
-        audioContext.offStop(this.soundPlayEnd);
-        audioContext.offEnded(this.soundPlayEnd);
-        audioContext.offError(this.onAudioError);
-        console.log('移除全局音频上下文事件监听');
+      if(this.isInit && this.audioContext){
+        this.audioContext.offPlay(this.onPlay);
+        this.audioContext.offPause(this.soundPlayEnd);
+        this.audioContext.offStop(this.soundPlayEnd);
+        this.audioContext.offEnded(this.soundPlayEnd);
+        this.audioContext.offError(this.onAudioError);
+        console.log('移除组件音频上下文事件监听');
       }
       
       // 清理当前组件创建的音频上下文
@@ -101,51 +101,50 @@
     },
     methods: {
 			init(){
-				if (this.isInit) {
-				  return
-				}
-				console.log('初始化音频播放器');
-				const audioContext = uniIm.audioContext
-				
-				// 监听播放事件
-				this.onPlay = async () => {
-				  console.log('音频开始播放');
-				  const currentAudioUrl = await uniIm.utils.getTempFileURL(this.msg.body.url)
-				  if (audioContext.src == currentAudioUrl) {
-				    this.soundPlayState = 1
-				    console.log('当前音频正在播放:', currentAudioUrl);
-				  } else {
-				    this.soundPlayState = 0
-				    console.log('音频URL不匹配，停止播放');
-				  }
-				}
-				audioContext.onPlay(this.onPlay);
-				
-				// 监听错误事件，这是关键的调试信息
-				this.onAudioError = (err) => {
-				  console.error('音频播放错误:', err);
-				  this.soundPlayState = 0
-				}
-				audioContext.onError(this.onAudioError);
-				
-				// 监听其他事件
-				this.soundPlayEnd = () => {
-				  console.log('音频播放结束或停止');
-				  this.soundPlayState = 0
-				}
-				audioContext.onPause(this.soundPlayEnd);
-				audioContext.onStop(this.soundPlayEnd);
-				audioContext.onEnded(this.soundPlayEnd);
-				
-				// 检查audioContext是否有问题
-				console.log('音频上下文初始化完成:', { 
-				  volume: audioContext.volume,
-				  muted: audioContext.muted,
-				  state: audioContext.state
-				});
-				
-				this.isInit = true
-			},
+			if (this.isInit) {
+			  return
+			}
+			console.log('初始化音频播放器');
+			// 自己创建音频上下文，使用WebAudio实现以获得更好的兼容性
+			this.audioContext = uni.createInnerAudioContext({
+			  useWebAudioImplement: true
+			});
+			
+			// 监听播放事件
+			this.onPlay = () => {
+			  console.log('音频开始播放');
+			  // 简化播放状态设置，不再异步获取临时URL进行严格匹配
+			  // 只要开始播放，就设置为播放状态
+			  this.soundPlayState = 1
+			  console.log('当前音频正在播放，设置播放状态为1');
+			}
+			this.audioContext.onPlay(this.onPlay);
+			
+			// 监听错误事件，这是关键的调试信息
+			this.onAudioError = (err) => {
+			  console.error('音频播放错误:', err);
+			  this.soundPlayState = 0
+			}
+			this.audioContext.onError(this.onAudioError);
+			
+			// 监听其他事件
+			this.soundPlayEnd = () => {
+			  console.log('音频播放结束或停止');
+			  this.soundPlayState = 0
+			}
+			this.audioContext.onPause(this.soundPlayEnd);
+			this.audioContext.onStop(this.soundPlayEnd);
+			this.audioContext.onEnded(this.soundPlayEnd);
+			
+			// 检查audioContext是否有问题
+			console.log('音频上下文初始化完成:', { 
+			  volume: this.audioContext.volume,
+			  muted: this.audioContext.muted,
+			  state: this.audioContext.state
+			});
+			
+			this.isInit = true
+		},
       async getCachedAudioUrl(originalUrl) {
         const now = Date.now();
         const cacheKey = `audio_${originalUrl}`;
@@ -195,7 +194,7 @@
       
       async playSound() {
 	this.init()
-	const audioContext = uniIm.audioContext
+	const audioContext = this.audioContext
         
         // 重置音频上下文设置
         audioContext.volume = 1.0;
@@ -218,84 +217,35 @@
             // 停止其他正在播放的音频
             this.stopAllAudio();
             
-            // 尝试直接创建新的音频上下文播放
+            // 直接使用组件自己创建的音频上下文播放
             try {
-              console.log('尝试创建新的音频上下文播放');
-              const newAudioContext = uni.createInnerAudioContext();
-              newAudioContext.volume = 1.0;
-              newAudioContext.muted = false;
-              newAudioContext.src = audioUrl;
+              console.log('使用组件自己的音频上下文播放');
+              audioContext.src = audioUrl;
               
-              // 监听新音频上下文的事件
-              newAudioContext.onPlay(() => {
-                console.log('新音频上下文播放开始');
-                this.soundPlayState = 1;
-                // 更新全局播放状态
-                uniIm._playingAudio = {
-                  instance: newAudioContext,
-                  msgId: this.msg._id,
-                  component: this
-                };
-              });
+              // 先停止再播放，确保状态正确
+              try {
+                audioContext.stop();
+              } catch (stopError) {
+                console.log('停止音频时可能尚未播放，忽略错误:', stopError);
+              }
               
-              newAudioContext.onError((err) => {
-                console.error('新音频上下文播放错误:', err);
-                this.soundPlayState = 0;
-                // 清除全局播放状态
-                if (uniIm._playingAudio && uniIm._playingAudio.msgId === this.msg._id) {
+              setTimeout(() => {
+                try {
+                  audioContext.play();
+                  console.log('调用audioContext.play()');
+                  // 更新全局播放状态
                   uniIm._playingAudio = {
-                    instance: null,
-                    msgId: null,
-                    component: null
+                    instance: audioContext,
+                    msgId: this.msg._id,
+                    component: this
                   };
+                } catch (playError) {
+                  console.error('播放失败:', playError);
                 }
-              });
-              
-              newAudioContext.onEnded(() => {
-                console.log('新音频上下文播放结束');
-                this.soundPlayState = 0;
-                // 清除全局播放状态
-                if (uniIm._playingAudio && uniIm._playingAudio.msgId === this.msg._id) {
-                  uniIm._playingAudio = {
-                    instance: null,
-                    msgId: null,
-                    component: null
-                  };
-                }
-              });
-              
-              // 播放音频
-              newAudioContext.play();
-              console.log('调用newAudioContext.play()');
-              
-              // 保存引用以便后续停止
-              this.currentAudioContext = newAudioContext;
+              }, 100);
               
             } catch (error) {
-              console.error('创建新音频上下文失败:', error);
-              
-              // 降级方案：使用原来的方式
-              try {
-                console.log('降级到使用全局audioContext');
-                audioContext.src = audioUrl;
-                audioContext.stop(); // 确保停止
-                setTimeout(() => {
-                  try {
-                    audioContext.play();
-                    console.log('调用audioContext.play()');
-                    // 更新全局播放状态
-                    uniIm._playingAudio = {
-                      instance: audioContext,
-                      msgId: this.msg._id,
-                      component: this
-                    };
-                  } catch (innerError) {
-                    console.error('全局audioContext播放失败:', innerError);
-                  }
-                }, 100);
-              } catch (fallbackError) {
-                console.error('降级方案也失败:', fallbackError);
-              }
+              console.error('播放音频失败:', error);
             }
           }
         }, 0)
@@ -304,10 +254,21 @@
         // 停止当前组件的音频
         if (this.currentAudioContext) {
           try {
-            console.log('停止当前组件的音频');
+            console.log('停止当前组件的额外音频上下文');
             this.currentAudioContext.stop();
           } catch (error) {
-            console.error('停止当前音频上下文时出错:', error);
+            console.error('停止当前额外音频上下文时出错:', error);
+          }
+          this.soundPlayState = 0;
+        }
+        
+        // 停止组件自己的音频上下文
+        if (this.audioContext) {
+          try {
+            console.log('停止组件自己的音频上下文');
+            this.audioContext.stop();
+          } catch (error) {
+            console.error('停止组件音频上下文时出错:', error);
           }
           this.soundPlayState = 0;
         }
@@ -330,14 +291,6 @@
             msgId: null,
             component: null
           };
-        }
-        
-        // 停止全局audioContext
-        try {
-          console.log('停止全局audioContext');
-          uniIm.audioContext.stop();
-        } catch (error) {
-          console.error('停止全局audioContext时出错:', error);
         }
       }
     }

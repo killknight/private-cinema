@@ -36,7 +36,7 @@
 				</view>
 			</view>
 			<!-- 员工介绍 -->
-			<view class="section staff">
+			<view class="section staff" v-if="staffList.length > 0">
 				<view class="section-header">
 					<view class="section-title">专业团队</view>
 					<text class="more-btn" @click="toTeamPage" v-if="staffList.length > 4">查看更多 〉</text>
