@@ -21,9 +21,9 @@
 			</view>
 
 			<!-- 联系电话 -->
-			<view class="form-item">
-				<view class="form-label">预约电话</view>
-				<uni-easyinput v-model="cinemaForm.phone" placeholder="请输入预约电话"></uni-easyinput>
+			<view class="form-item" v-if="uniIDHasRole('admin')">
+				<view class="form-label">联系方式</view>
+				<uni-easyinput v-model="cinemaForm.phone" placeholder="请输入影院的联系方式"></uni-easyinput>
 			</view>
 			
 			<!-- 特色标签 -->
@@ -42,7 +42,7 @@
 			</view>
 			
 			<!-- 影院地址 -->
-			<view class="form-item">
+			<view class="form-item" v-if="uniIDHasRole('admin')">
 				<view class="form-label">影院地址</view>
 				<uni-easyinput v-model="cinemaForm.address" type="textarea" placeholder="请输入影院详细地址"></uni-easyinput>
 				<button class="location-btn" @click="getLocation" :disabled="gettingLocation">
@@ -51,13 +51,13 @@
 			</view>
 			
 			<!-- 纬度 -->
-			<view class="form-item">
+			<view class="form-item" v-if="uniIDHasRole('admin')">
 				<view class="form-label">纬度</view>
 				<uni-easyinput v-model.number="cinemaForm.latitude" type="number" placeholder="请输入纬度"></uni-easyinput>
 			</view>
 			
 			<!-- 经度 -->
-			<view class="form-item">
+			<view class="form-item" v-if="uniIDHasRole('admin')">
 				<view class="form-label">经度</view>
 				<uni-easyinput v-model.number="cinemaForm.longitude" type="number" placeholder="请输入经度"></uni-easyinput>
 			</view>
