@@ -254,9 +254,48 @@ export default async function (initParam) {
   setIsWidescreen();
   // #endif
 
-  const audioContext = uni.createInnerAudioContext()
-  let _audioContext = {}
-  Object.defineProperty(_audioContext, 'src', {
+  // 创建音频上下文，针对微信小程序做特殊处理
+  const audioContext = uni.createInnerAudioContext({
+    useWebAudioImplement: true
+  })
+  
+  // 设置必要的属性确保音频正常播放
+  audioContext.obeyMuteSwitch = false; // 允许在静音模式下播放
+  audioContext.autoplay = false;
+  
+  // 监听音频事件
+  audioContext.onError((err) => {
+    console.error('音频播放错误:', err);
+  });
+  
+  // 不使用Proxy，直接使用更兼容的方式
+  $state.audioContext = {
+    // 直接暴露原始audioContext的关键方法和属性
+    play: () => audioContext.play(),
+    pause: () => audioContext.pause(),
+    stop: () => audioContext.stop(),
+    destroy: () => audioContext.destroy(),
+    
+    // getter和setter方法
+    getSrc: () => audioContext.src,
+    setSrc: (url) => {
+      audioContext.src = url;
+    },
+    
+    // 事件监听方法
+    onPlay: (callback) => audioContext.onPlay(callback),
+    onPause: (callback) => audioContext.onPause(callback),
+    onStop: (callback) => audioContext.onStop(callback),
+    onEnded: (callback) => audioContext.onEnded(callback),
+    onError: (callback) => audioContext.onError(callback),
+    onTimeUpdate: (callback) => audioContext.onTimeUpdate(callback),
+    
+    // 暴露原始对象以兼容现有代码
+    _rawContext: audioContext
+  }
+  
+  // 为了向后兼容，添加src属性的getter和setter
+  Object.defineProperty($state.audioContext, 'src', {
     set(url) {
       audioContext.src = url;
     },
@@ -264,11 +303,27 @@ export default async function (initParam) {
       return audioContext.src;
     }
   })
-  $state.audioContext = new Proxy(_audioContext, {
-    get(target, propKey, receiver) {
-      return audioContext[propKey]
-    }
-  })
+  
+  // 添加对其他常用属性的访问支持
+  const audioProps = ['duration', 'currentTime', 'paused', 'volume'];
+  if (Array.isArray(audioProps)) {
+    audioProps.forEach(prop => {
+      try {
+        Object.defineProperty($state.audioContext, prop, {
+          get() {
+            return audioContext && typeof audioContext[prop] !== 'undefined' ? audioContext[prop] : 0;
+          },
+          set(value) {
+            if (audioContext && typeof audioContext[prop] !== 'undefined') {
+              audioContext[prop] = value;
+            }
+          }
+        });
+      } catch (e) {
+        console.error('Failed to define property:', prop, e);
+      }
+    });
+  }
   
   // 获取系统信息
   $state.systemInfo = uni.getSystemInfoSync()

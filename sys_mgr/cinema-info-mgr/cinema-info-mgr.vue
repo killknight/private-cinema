@@ -19,6 +19,12 @@
 				<view class="form-label">打烊时间</view>
 				<uni-easyinput v-model="cinemaForm.closeTime" placeholder="如：23:00"></uni-easyinput>
 			</view>
+
+			<!-- 联系电话 -->
+			<view class="form-item">
+				<view class="form-label">预约电话</view>
+				<uni-easyinput v-model="cinemaForm.phone" placeholder="请输入预约电话"></uni-easyinput>
+			</view>
 			
 			<!-- 特色标签 -->
 			<view class="form-item">
@@ -39,12 +45,9 @@
 			<view class="form-item">
 				<view class="form-label">影院地址</view>
 				<uni-easyinput v-model="cinemaForm.address" type="textarea" placeholder="请输入影院详细地址"></uni-easyinput>
-			</view>
-			
-			<!-- 联系电话 -->
-			<view class="form-item">
-				<view class="form-label">预约电话</view>
-				<uni-easyinput v-model="cinemaForm.phone" placeholder="请输入预约电话"></uni-easyinput>
+				<button class="location-btn" @click="getLocation" :disabled="gettingLocation">
+					{{ gettingLocation ? '定位中...' : '获取定位' }}
+				</button>
 			</view>
 			
 			<!-- 纬度 -->
@@ -288,44 +291,46 @@
 	export default {
 		data() {
 			return {
-				cinemaForm: {
-					cinemaName: '',
-					openTime: '',
-					closeTime: '',
-					tags: [],
-					address: '',
-					phone: '',
-					wechatQrCode: '',
-					logoImage: '',
-					cinemaIntroImage: '',
-					latitude: '',
-					longitude: '',
-					story: [],
-					equipment: [],
-					services: [],
-					environments: []
-				},
-				newTag: '',
-				storyInput: '',
-				wechatQrCodeList: [],
-				logoImageList: [],
-				cinemaIntroImageList: [],
-				uploadFiles: {
-					wechatQrCode: null,
-					logoImage: null,
-					cinemaIntroImage: null,
-					environmentImages: []
-				},
-				// 弹窗相关数据
-				editingEquipmentIndex: -1,
-				tempEquipment: {},
-				editingServiceIndex: -1,
-				tempService: {},
-				editingEnvironmentIndex: -1,
-				tempEnvironment: {},
-				tempEnvironmentImage: null,
-				// 上传状态
-				uploading: false
+			cinemaForm: {
+				cinemaName: '',
+				openTime: '',
+				closeTime: '',
+				tags: [],
+				address: '',
+				phone: '',
+				wechatQrCode: '',
+				logoImage: '',
+				cinemaIntroImage: '',
+				latitude: '',
+				longitude: '',
+				story: [],
+				equipment: [],
+				services: [],
+				environments: []
+			},
+			newTag: '',
+			storyInput: '',
+			wechatQrCodeList: [],
+			logoImageList: [],
+			cinemaIntroImageList: [],
+			uploadFiles: {
+				wechatQrCode: null,
+				logoImage: null,
+				cinemaIntroImage: null,
+				environmentImages: []
+			},
+			// 弹窗相关数据
+			editingEquipmentIndex: -1,
+			tempEquipment: {},
+			editingServiceIndex: -1,
+			tempService: {},
+			editingEnvironmentIndex: -1,
+			tempEnvironment: {},
+			tempEnvironmentImage: null,
+			// 上传状态
+			uploading: false,
+			// 定位状态
+			gettingLocation: false
 			}
 		},
 		onLoad() {
@@ -336,6 +341,81 @@
 			this.loadCinemaInfo();
 		},
 		methods: {
+			// 获取定位
+			getLocation() {
+				this.gettingLocation = true;
+				uni.getLocation({
+					type: 'gcj02',
+					highAccuracyExpireTime: 3000,
+					success: (res) => {
+						// 保存经纬度
+						this.cinemaForm.latitude = res.latitude;
+						this.cinemaForm.longitude = res.longitude;
+						
+						// 调用逆地理编码获取地址
+						this.getAddressByLocation(res.latitude, res.longitude);
+					},
+					fail: (err) => {
+						console.error('获取定位失败:', err);
+						let errorMsg = '获取定位失败';
+						
+						switch(err.errCode) {
+							case 1:
+								errorMsg = '位置权限未授权，请在设置中开启';
+								break;
+							case 2:
+								errorMsg = '位置信息不可用';
+								break;
+							case 3:
+								errorMsg = '获取位置信息超时';
+								break;
+						}
+						
+						uni.showToast({
+							title: errorMsg,
+							icon: 'none'
+						});
+					},
+					complete: () => {
+						this.gettingLocation = false;
+					}
+				});
+			},
+			
+			// 根据经纬度获取地址
+			getAddressByLocation(latitude, longitude) {
+				// 在微信小程序环境中使用wx.chooseLocation API
+				// 这将打开地图选择器，用户可以选择当前位置或其他位置
+				wx.chooseLocation({
+					latitude: latitude,
+					longitude: longitude,
+					name: '',
+					address: '',
+					success: (res) => {
+						// 更新经纬度和地址信息
+						this.cinemaForm.latitude = res.latitude;
+						this.cinemaForm.longitude = res.longitude;
+						this.cinemaForm.address = res.address;
+						
+						uni.showToast({
+							title: '定位成功，已获取地址信息',
+							icon: 'success'
+						});
+					},
+					fail: (err) => {
+						console.error('选择位置失败:', err);
+						
+						// 检查是否是用户取消选择
+						if (err.errMsg.indexOf('cancel') === -1) {
+							uni.showToast({
+								title: '获取地址信息失败',
+								icon: 'none'
+							});
+						}
+					}
+				});
+			},
+			
 			// 加载影院信息
 				loadCinemaInfo() {
 					uni.showLoading({
@@ -971,6 +1051,21 @@
 		font-size: 28rpx;
 		font-weight: bold;
 		margin-top: 20rpx;
+	}
+	
+	.location-btn {
+		background-color: #4CD964;
+		color: #FFFFFF;
+		border: none;
+		border-radius: 8rpx;
+		padding: 0rpx 30rpx;
+		font-size: 28rpx;
+		margin-top: 15rpx;
+	}
+	
+	.location-btn:disabled {
+		background-color: #CCCCCC;
+		color: #999999;
 	}
 
 	/* 标签样式 */
