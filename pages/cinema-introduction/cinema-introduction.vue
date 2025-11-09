@@ -77,7 +77,7 @@
 			</view> -->
 
 			<!-- 设备配置 -->
-			<!-- <view class="section equipment">
+			<view class="section equipment" v-if="!cinemaInfo.cinemaIntroImage_url">
 				<view class="section-header">
 					<view class="section-title">设备配置</view>
 				</view>
@@ -90,10 +90,10 @@
 						</view>
 					</view>
 				</view>
-			</view> -->
+			</view>
 
 			<!-- 服务亮点 -->
-			<!-- <view class="section services">
+			<view class="section services" v-if="!cinemaInfo.cinemaIntroImage_url">
 				<view class="section-header">
 					<view class="section-title">服务亮点</view>
 				</view>
@@ -106,7 +106,7 @@
 						</view>
 					</view>
 				</view>
-			</view> -->
+			</view>
 		</scroll-view>
 	</view>
 </template>
@@ -522,7 +522,8 @@
 	gap: 24rpx;
 }
 .service-card {
-	background: #171b2b;
+	// background: #171b2b;
+	background: #40143c;
 	border-radius: 20rpx;
 	padding: 32rpx;
 	display: flex;
