@@ -6,6 +6,9 @@ exports.main = async (event, context) => {
   const { action, data } = event;
   const auth = context.auth;
   
+  // 将event设置为全局变量，以便在各个函数中访问
+  global.event = event;
+  
   // 根据操作类型执行不同的逻辑
   switch (action) {
     case 'getReplies':
@@ -26,10 +29,21 @@ exports.main = async (event, context) => {
 // 获取所有启用的快捷回复（用于客服端显示）
 async function getReplies() {
   try {
+    // 获取type参数，默认为customerService
+    const type = global.event?.type || 'customerService';
+    
+    // 构建查询条件
+    const queryCondition = {
+      status: true
+    };
+    
+    // 如果指定了type，则添加类型筛选条件
+    if (type) {
+      queryCondition.type = type;
+    }
+    
     const res = await db.collection('im-quick-replies')
-      .where({
-        status: true
-      })
+      .where(queryCondition)
       .orderBy('sort', 'asc')
       .get();
     
@@ -54,7 +68,19 @@ async function getReplies() {
 // 获取所有快捷回复（用于管理界面）
 async function getAllReplies() {
   try {
+    // 获取type参数（从event中获取）
+    const type = global.event?.type;
+    
+    // 构建查询条件
+    const queryCondition = {};
+    
+    // 如果指定了type，则添加类型筛选条件
+    if (type !== undefined && type !== null) {
+      queryCondition.type = type;
+    }
+    
     const res = await db.collection('im-quick-replies')
+      .where(queryCondition)
       .orderBy('sort', 'asc')
       .get();
     
@@ -85,6 +111,7 @@ async function createReply(data, auth) {
       content: data.content,
       sort: data.sort || 0,
       status: data.status !== undefined ? data.status : true,
+      type: data.type || 'customerService', // 添加type字段，默认为customerService
       // create_by: auth.uid,
       // update_by: auth.uid,
       create_date: new Date(),
@@ -116,10 +143,15 @@ async function updateReply(data, auth) {
     //   return { code: 401, message: '请先登录' };
     // }
     
-    const { _id, ...updateData } = data;
+    const { _id } = data;
     // updateData.update_by = auth.uid;
-		const updateDate = data;
-		delete updateDate._id;
+    
+		const updateData = data;
+    // 如果data中包含type字段，则更新它；如果没有，可以选择设置默认值
+    if (updateData.type === undefined) {
+      updateData.type = 'customerService'; // 默认为customerService
+    }
+    
     updateData.update_date = new Date();
     
     await db.collection('im-quick-replies')

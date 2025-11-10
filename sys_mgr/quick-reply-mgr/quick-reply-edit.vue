@@ -16,6 +16,22 @@
 			</view>
 			
 			<view class="form-item">
+				<text class="label">回复类型 *</text>
+				<view class="type-options">
+					<view 
+						class="type-option" 
+						:class="{ active: replyForm.type === 'customerService' }"
+						@click="replyForm.type = 'customerService'"
+					>客服</view>
+					<view 
+						class="type-option" 
+						:class="{ active: replyForm.type === 'user' }"
+						@click="replyForm.type = 'user'"
+					>普通用户</view>
+				</view>
+			</view>
+			
+			<view class="form-item">
 				<text class="label">状态 *</text>
 				<view class="switch-container">
 					<switch :checked="replyForm.status" @change="replyForm.status = $event.detail.value" class="status-switch" checked-color="#07C160" />
@@ -49,7 +65,8 @@
 					content: '',
 					sort: 0,
 					status: true,
-					remark: ''
+					remark: '',
+					type: 'customerService' // 回复类型：customerService(客服)或user(普通用户)
 				}
 			}
 		},
@@ -95,7 +112,8 @@
 								content: reply.content,
 								sort: reply.sort || 0,
 								status: reply.status,
-								remark: reply.remark || ''
+								remark: reply.remark || '',
+								type: reply.type || 'customerService' // 如果没有类型字段，默认为客服
 							};
 						} else {
 							uni.showToast({
@@ -169,7 +187,8 @@
 					content: this.replyForm.content.trim(),
 					sort: this.replyForm.sort,
 					status: this.replyForm.status,
-					remark: this.replyForm.remark.trim()
+					remark: this.replyForm.remark.trim(),
+					type: this.replyForm.type
 				};
 
 				// 确定操作类型
@@ -331,5 +350,32 @@
 	.switch-label {
 		font-size: 28rpx;
 		color: #333333;
+	}
+	
+	.type-options {
+		display: flex;
+		flex-direction: row;
+		gap: 20rpx;
+	}
+	
+	.type-option {
+		flex: 1;
+		height: 80rpx;
+		line-height: 80rpx;
+		text-align: center;
+		font-size: 28rpx;
+		background-color: #F5F5F5;
+		border-radius: 8rpx;
+		color: #333333;
+		transition: all 0.3s ease;
+	}
+	
+	.type-option:active {
+		background-color: #E8E8E8;
+	}
+	
+	.type-option.active {
+		background-color: #007AFF;
+		color: #FFFFFF;
 	}
 </style>

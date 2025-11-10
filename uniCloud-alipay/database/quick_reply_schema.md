@@ -11,6 +11,7 @@
 | content | String | 是 | 无 | 快捷回复的内容文本 |
 | sort | Number | 否 | 0 | 排序序号，用于控制显示顺序，数字越小越靠前 |
 | status | Boolean | 否 | true | 状态标志，true表示启用，false表示禁用 |
+| type | String | 否 | "customerService" | 快捷回复类型，customerService表示客服，user表示普通用户 |
 | remark | String | 否 | "" | 备注信息，可选 |
 | create_by | String | 是 | 无 | 创建者ID，关联用户系统 |
 | update_by | String | 是 | 无 | 最后更新者ID |
@@ -33,6 +34,7 @@
   "content": "您好，欢迎使用在线客服！请问有什么可以帮助您的？",
   "sort": 1,
   "status": true,
+  "type": "customerService",
   "remark": "客服开场白",
   "create_by": "user123",
   "update_by": "user123",
@@ -46,7 +48,7 @@
 1. **获取所有启用的快捷回复**（用于客服端显示）
    ```javascript
    db.collection('uni-im-quick-replies')
-     .where({ status: true })
+     .where({ status: true, type: 'customerService' })
      .orderBy('sort', 'asc')
      .get()
    ```
@@ -58,18 +60,27 @@
      .get()
    ```
 
-3. **添加新的快捷回复**
+3. **获取指定类型的快捷回复**
+   ```javascript
+   db.collection('uni-im-quick-replies')
+     .where({ type: 'customerService' })
+     .orderBy('sort', 'asc')
+     .get()
+   ```
+
+4. **添加新的快捷回复**
    ```javascript
    db.collection('uni-im-quick-replies').add({
      content: "感谢您的咨询，祝您生活愉快！",
      sort: 5,
      status: true,
+     type: "customerService",
      create_by: "admin456",
      update_by: "admin456"
    })
    ```
 
-4. **更新快捷回复**
+5. **更新快捷回复**
    ```javascript
    db.collection('uni-im-quick-replies')
      .doc('5f9a1b7c6e4d3c2a1b8e7f6d')
@@ -77,12 +88,13 @@
        content: "更新后的回复内容",
        sort: 2,
        status: false,
+       type: "user",
        update_by: "admin456",
        update_date: db.serverDate()
      })
    ```
 
-5. **删除快捷回复**
+6. **删除快捷回复**
    ```javascript
    db.collection('uni-im-quick-replies')
      .doc('5f9a1b7c6e4d3c2a1b8e7f6d')

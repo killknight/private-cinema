@@ -26,6 +26,11 @@
 			"description": "是否启用，true启用、false禁用",
 			"defaultValue": true
 		},
+		"type": {
+			"bsonType": "string",
+			"description": "快捷回复类型，customerService-客服，user-普通用户",
+			"defaultValue": "customerService"
+		},
 		"create_date": {
 			"bsonType": "timestamp",
 			"description": "创建时间",

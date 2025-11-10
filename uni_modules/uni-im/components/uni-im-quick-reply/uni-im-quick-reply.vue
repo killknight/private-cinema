@@ -15,6 +15,9 @@
         >
           <text class="quick-reply-text">{{ reply }}</text>
         </view>
+        <view v-if="quickReplyList.length === 0" class="empty-tip">
+          暂无快捷回复
+        </view>
       </scroll-view>
     </view>
   </view>
@@ -77,7 +80,8 @@ export default {
         const res = await uniCloud.callFunction({
           name: 'quickReplyManager',
           data: {
-            action: 'getReplies'
+            action: 'getReplies',
+            type: this.uniIDHasRole('customerService') ? 'customerService' : 'user'
           }
         });
         
@@ -197,6 +201,16 @@ export default {
         background-color: #f8f8f8;
       }
     }
+  }
+  
+  .empty-tip {
+    text-align: center;
+    padding: 100rpx 0;
+    color: #999999;
+    font-size: 28rpx;
+    background-color: #FFFFFF;
+    border-radius: 12rpx;
+    margin: 0 20rpx 20rpx;
   }
 }
 

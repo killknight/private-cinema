@@ -2,41 +2,55 @@
   {
     "content": "您好，欢迎使用在线客服！",
     "sort": 1,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "请问有什么可以帮助您的？",
     "sort": 2,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "好的，请稍等片刻",
     "sort": 3,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "感谢您的咨询，祝您生活愉快！",
     "sort": 4,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "我们的营业时间是：周一至周日 9:00-22:00",
     "sort": 5,
-    "status": true
+    "status": true,
+    "type": "customerService"		
   },
   {
     "content": "您可以在首页查看更多影院信息",
     "sort": 6,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "如有其他问题，请随时咨询",
     "sort": 7,
-    "status": true
+    "status": true,
+    "type": "customerService"
   },
   {
     "content": "感谢您的反馈，我们会不断改进",
     "sort": 8,
-    "status": true
+    "status": true,
+    "type": "customerService"
+  },
+  {
+    "content": "你们的地址在哪？",
+    "sort": 1,
+    "status": true,
+    "type": "user"
   }
 ]

@@ -33,25 +33,49 @@
 		</view>
 		
 		<!-- 下滑显示的筛选内容 -->
-		<view class="filter-content" :class="{ 'slide-down': filterExpanded }">
-			<view class="filter-items">
-				<view 
-					class="filter-item" 
-					:class="{ active: statusFilter === null }"
-					@click="setStatusFilter(null)"
-				>全部</view>
-				<view 
-					class="filter-item" 
-					:class="{ active: statusFilter === true }"
-					@click="setStatusFilter(true)"
-				>启用</view>
-				<view 
-					class="filter-item" 
-					:class="{ active: statusFilter === false }"
-					@click="setStatusFilter(false)"
-				>停用</view>
+			<view class="filter-content" :class="{ 'slide-down': filterExpanded }">
+				<view class="filter-section">
+					<text class="filter-section-title">状态筛选</text>
+					<view class="filter-items">
+						<view 
+							class="filter-item" 
+							:class="{ active: statusFilter === null }"
+							@click="setStatusFilter(null)"
+						>全部</view>
+						<view 
+							class="filter-item" 
+							:class="{ active: statusFilter === true }"
+							@click="setStatusFilter(true)"
+						>启用</view>
+						<view 
+							class="filter-item" 
+							:class="{ active: statusFilter === false }"
+							@click="setStatusFilter(false)"
+						>停用</view>
+					</view>
+				</view>
+				
+				<view class="filter-section">
+					<text class="filter-section-title">类型筛选</text>
+					<view class="filter-items">
+						<view 
+							class="filter-item" 
+							:class="{ active: typeFilter === null }"
+							@click="setTypeFilter(null)"
+						>全部</view>
+						<view 
+							class="filter-item" 
+							:class="{ active: typeFilter === 'customerService' }"
+							@click="setTypeFilter('customerService')"
+						>客服</view>
+						<view 
+							class="filter-item" 
+							:class="{ active: typeFilter === 'user' }"
+							@click="setTypeFilter('user')"
+						>普通用户</view>
+					</view>
+				</view>
 			</view>
-		</view>
 		
 		<!-- 快捷回复列表 -->
 		<view class="reply-list">
@@ -62,12 +86,15 @@
 				<view class="reply-content">
 					<text class="content-text">{{ reply.content }}</text>
 					<view class="reply-meta">
-						<text class="sort">排序: {{ reply.sort }}</text>
-						<text class="status" :class="reply.status ? 'active' : 'inactive'">
-							{{ reply.status ? '启用' : '禁用' }}
-						</text>
-						<text class="time">{{ formatTime(reply.create_date) }}</text>
-					</view>
+				<text class="sort">排序: {{ reply.sort }}</text>
+				<text class="type-tag" :class="reply.type === 'customerService' ? 'type-customer-service' : 'type-user'">
+					{{ reply.type === 'customerService' ? '客服' : '普通用户' }}
+				</text>
+				<text class="status" :class="reply.status ? 'active' : 'inactive'">
+					{{ reply.status ? '启用' : '禁用' }}
+				</text>
+				<text class="time">{{ formatTime(reply.create_date) }}</text>
+			</view>
 				</view>
 				<view class="action-buttons">
 					<view class="icon-btn edit-icon" @click="navigateToEdit(reply)" title="编辑">
@@ -89,6 +116,7 @@
 				replies: [],
 				keyword: '',
 				statusFilter: null, // 状态筛选：null表示全部，true表示启用，false表示停用
+				typeFilter: 'customerService', // 类型筛选：默认筛选客服类型，'customerService'表示客服，'user'表示普通用户，null表示全部
 				filterExpanded: false // 筛选器展开状态
 			}
 		},
@@ -115,6 +143,13 @@
 				this.filterExpanded = false;
 				this.search();
 			},
+			
+			// 设置类型筛选
+			setTypeFilter(type) {
+				this.typeFilter = type;
+				this.filterExpanded = false;
+				this.search();
+			},
 			// 加载快捷回复列表
 			loadReplies() {
 				uni.showLoading({
@@ -131,16 +166,19 @@
 					if (res.result && res.result.code === 200) {
 					let replies = res.result.data || [];
 					// 应用过滤条件
-					replies = replies.filter(item => {
-						// 关键词过滤
-						const keywordMatch = !this.keyword || 
-							item.content.toLowerCase().includes(this.keyword.toLowerCase());
-							
-						// 状态过滤
-						const statusMatch = this.statusFilter === null || item.status === this.statusFilter;
-							
-						return keywordMatch && statusMatch;
-					});
+				replies = replies.filter(item => {
+					// 关键词过滤
+					const keywordMatch = !this.keyword || 
+						item.content.toLowerCase().includes(this.keyword.toLowerCase());
+						
+					// 状态过滤
+					const statusMatch = this.statusFilter === null || item.status === this.statusFilter;
+					
+					// 类型过滤
+					const typeMatch = this.typeFilter === null || item.type === this.typeFilter;
+						
+					return keywordMatch && statusMatch && typeMatch;
+				});
 					this.replies = replies;
 				} else {
 						uni.showToast({
@@ -186,8 +224,8 @@
 								data: {
 									action: 'deleteReply',
 									data: {
-											_id: id
-										}
+										_id: id
+									}
 								}
 							}).then(res => {
 								if (res.result && res.result.code === 200) {
@@ -298,7 +336,19 @@
 		}
 		
 		.filter-content.slide-down {
-			height: 100rpx;
+			height: 310rpx;
+		}
+		
+		.filter-section {
+			padding: 15rpx 20rpx 0;
+		}
+		
+		.filter-section-title {
+			display: block;
+			font-size: 24rpx;
+			color: #999999;
+			margin-bottom: 10rpx;
+			padding-left: 10rpx;
 		}
 		
 		.filter-items {
@@ -378,12 +428,28 @@
 	}
 
 	.status.active {
-		color: #07C160;
-	}
-
-	.status.inactive {
-		color: #999999;
-	}
+			color: #07C160;
+		}
+		
+		.status.inactive {
+			color: #999999;
+		}
+		
+		.type-tag {
+			padding: 2rpx 12rpx;
+			border-radius: 12rpx;
+			font-size: 22rpx;
+		}
+		
+		.type-customer-service {
+			background-color: #E6F7FF;
+			color: #1890FF;
+		}
+		
+		.type-user {
+			background-color: #F6FFED;
+			color: #52C41A;
+		}
 
 	.action-buttons {
 		position: absolute;
@@ -427,6 +493,6 @@
 		font-size: 28rpx;
 		background-color: #FFFFFF;
 		border-radius: 12rpx;
-		margin: 0 20rpx 20rpx;
+		/* margin: 0 20rpx 20rpx; */
 	}
 </style>
