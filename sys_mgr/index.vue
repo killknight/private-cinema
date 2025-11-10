@@ -74,6 +74,18 @@
 				</view>
 				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
 			</view>
+			
+			<!-- 快捷回复管理 -->
+			<view class="function-item" @click="goToQuickReplyMgr">
+				<view class="item-icon">
+					<uni-icons type="list" size="28" color="#FFCC00"></uni-icons>
+				</view>
+				<view class="item-content">
+					<view class="item-title">快捷回复管理</view>
+					<view class="item-desc">管理客服快捷回复内容</view>
+				</view>
+				<uni-icons type="right" size="20" color="#CCCCCC"></uni-icons>
+			</view>
 		</view>
 	</view>
 </template>
@@ -125,6 +137,13 @@
 			goToCustomerServiceMgr() {
 				uni.navigateTo({
 					url: '/sys_mgr/customer-service-mgr/customer-service-mgr'
+				})
+			},
+			
+			// 跳转到快捷回复管理页面
+			goToQuickReplyMgr() {
+				uni.navigateTo({
+					url: '/sys_mgr/quick-reply-mgr/quick-reply-mgr'
 				})
 			}
 		}

@@ -70,7 +70,7 @@
   let currentModelValue = '';
   export default {
     name: 'uni-im-chat-input',
-    emits: ["update:modelValue","confirm","input","sendSoundMsg","sendCodeMsg","showMenberList"],
+    emits: ["update:modelValue","confirm","input","sendSoundMsg","sendCodeMsg","showMenberList","showQuickReply"],
     data() {
       return {
         bHeight:uniIm.systemInfo.safeAreaInsets.bottom/2,
@@ -88,6 +88,10 @@
           {
             "title": "文件",
             "iconCode": "e69e"
+          },
+          {
+            "title": "快捷回复",
+            "iconCode": "e67e"
           }
         ],
         emojiCodes,
@@ -330,6 +334,10 @@
           });
           // #endif
           parrent.chooseFileSendMsg('all')
+        }
+        if (index === 3) {
+          // 触发快捷回复功能
+          this.$emit('showQuickReply');
         }
       },
       confirm() {

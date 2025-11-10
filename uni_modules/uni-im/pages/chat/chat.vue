@@ -38,6 +38,7 @@
         @sendSoundMsg="sendSoundMsg"
         @sendCodeMsg="beforeSendMsg"
         @showMenberList="showMenberList"
+        @showQuickReply="showQuickReply = true"
       >
         <template #about-msg>
           <view class="answer-msg" v-if="answerMsg !== false">
@@ -59,6 +60,13 @@
     <uni-im-share-msg v-if="isWidescreen" id="uni-im-share-msg" ref="share-msg"></uni-im-share-msg>
     <!-- #endif -->
     
+    <!-- 快捷回复组件 -->
+    <uni-im-quick-reply 
+      :show="showQuickReply"
+      @close="showQuickReply = false"
+      @select="handleQuickReplySelect"
+    ></uni-im-quick-reply>
+    
     <view style="position: fixed;top: 200px;left: 0;background-color: #FFFFFF;z-index: 9999;">
       <!-- keyboardMaxHeight:{{keyboardMaxHeight}}
 			conversation.leave:{{conversation.leave}}
@@ -75,6 +83,7 @@
   import uniIm from '@/uni_modules/uni-im/sdk/index.js';
   import msgPopupControl from '@/uni_modules/uni-im/components/uni-im-msg/popup-control.vue';
   import toolbar from './toolbar.vue';
+  import uniImQuickReply from '@/uni_modules/uni-im/components/uni-im-quick-reply/uni-im-quick-reply.vue';
   import {markRaw} from "vue";
   // #ifdef H5
   import uniImShareMsg from '@/uni_modules/uni-im/pages/share-msg/share-msg.vue';
@@ -95,7 +104,8 @@
       uniImShareMsg,
       // #endif
       msgPopupControl,
-      toolbar
+      toolbar,
+      uniImQuickReply
     },
     data() {
       return {
@@ -109,10 +119,12 @@
         keyboardHeight: 0,
         keyboardMaxHeight: 0,
         answerMsg: false,
-        chooseMoreMsg: false,
-        checkedMsgList: [],
-        // 聊天输入框内容
-        chatInputContent: '',
+      chooseMoreMsg: false,
+      checkedMsgList: [],
+      // 聊天输入框内容
+      chatInputContent: '',
+      // 控制快捷回复弹窗显示
+      showQuickReply: false,
         // 用于响应式监听用户信息
         userInfo: store.userInfo
       };
@@ -854,6 +866,15 @@
         if ( this.conversation.unread_count > 0) {
           this.conversation.clearUnreadCount();
         }
+      },
+      
+      // 处理快捷回复选择
+      handleQuickReplySelect(reply) {
+        console.log('选择了快捷回复:', reply);
+        // 设置输入框内容为选中的快捷回复
+        this.chatInputContent = reply;
+        // 调用发送消息方法
+        this.beforeSendMsg();
       }
     },
     onNavigationBarButtonTap(e) {

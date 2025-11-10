@@ -1,0 +1,11 @@
+{
+  "name": "quickReplyManager",
+  "version": "1.0.0",
+  "description": "快捷回复管理云函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

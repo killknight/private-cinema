@@ -163,6 +163,18 @@
 				{
 					"navigationBarTitleText" : "设置客服"
 				}
+			}, {
+				"path" : "quick-reply-mgr/quick-reply-mgr",
+				"style" : 
+				{
+					"navigationBarTitleText" : "快捷回复管理"
+				}
+			}, {
+				"path" : "quick-reply-mgr/quick-reply-edit",
+				"style" : 
+				{
+					"navigationBarTitleText" : "快捷回复编辑"
+				}
 			}]
 		},
 		{
