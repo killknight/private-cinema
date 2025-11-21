@@ -1,0 +1,31 @@
+.home.pink {
+	background: #FFF5F7 !important;
+	color: #333333;
+}
+
+.home.pink .brand-icon { color: #FF6B9D; }
+
+.home.pink .subtitle { color: #666666; }
+
+.home.pink .feature {
+	background: #FFEFF3;
+	border: 1rpx solid rgba(255, 107, 157, 0.3);
+}
+
+.home.pink .f-icon { background: #FF6B9D25; }
+
+.home.pink .f-text { color: #333333; }
+
+.home.pink .status-card { background: #FFEFF3; border: 1rpx solid rgba(255, 107, 157, 0.3); }
+
+.home.pink .s-text { color: #666666; }
+
+.home.pink .tag { background: rgba(255, 107, 157, 0.25); color: #FF6B9D; }
+
+.home.pink .more { color: #FF6B9D; }
+
+.home.pink .grid .card { background: #FFFFFF; border: 1rpx solid rgba(255, 107, 157, 0.3); box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); }
+
+.home.pink .card-body { background: #FFFFFF; }
+
+.home.pink .c-meta { color: #666666; }

@@ -1,0 +1,39 @@
+.home.dark {
+	background: #0f1320 !important;
+	color: #e7e9f0;
+}
+
+.home.dark .brand-icon { color: #8b5cf6; }
+
+.home.dark .subtitle { color: #b7bdd1; }
+
+.home.dark .feature {
+	background: #1e2440ab;
+}
+
+.home.dark .f-icon { background: #9333ea33; }
+
+.home.dark .f-text { color: #d6daf0; }
+
+.home.dark .status-card { background: #1e2440ab; border: 1rpx solid rgba(255,255,255,0.05); }
+
+.home.dark .s-text { color: #c9d1ee; }
+
+.home.dark .tag { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+
+.home.dark .more { color: #8b5cf6; }
+
+.home.dark .grid .card { background: #1e2440ab; border: 1rpx solid rgba(255,255,255,.06); }
+
+.home.dark .card-body { background: #1e2440ab; }
+
+.home.dark .c-meta { color: #9aa3c7; }
+
+.home.dark .contact-section { border-top: 1rpx solid rgba(255,255,255,0.05); }
+.home.dark .contact-info { background: rgba(30, 36, 64, 0.8); }
+.home.dark .contact-info:active { background: rgba(40, 48, 84, 0.8); }
+.home.dark .contact-label { color: #b7bdd1; }
+.home.dark .contact-value { color: #e7e9f0; }
+.home.dark .contact-arrow { color: #9aa3c7; }
+
+.home.dark .dot2.active { background: #8b5cf6; box-shadow: 0 2rpx 6rpx rgba(139, 92, 246, 0.4); }

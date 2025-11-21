@@ -1,0 +1,31 @@
+.home.blue {
+	background: #FFFFFF !important;
+	color: #1A1A1A;
+}
+
+.home.blue .brand-icon { color: #409EFF; }
+
+.home.blue .subtitle { color: #666666; }
+
+.home.blue .feature {
+	background: #F5F9FF;
+	border: 1rpx solid #409EFF;
+}
+
+.home.blue .f-icon { background: #409EFF25; }
+
+.home.blue .f-text { color: #333333; }
+
+.home.blue .status-card { background: #F5F9FF; border: 1rpx solid #409EFF; }
+
+.home.blue .s-text { color: #666666; }
+
+.home.blue .tag { background: rgba(64, 158, 255, 0.25); color: #409EFF; }
+
+.home.blue .more { color: #409EFF; }
+
+.home.blue .grid .card { background: #FFFFFF; border: 1rpx solid #409EFF; box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); }
+
+.home.blue .card-body { background: #FFFFFF; }
+
+.home.blue .c-meta { color: #666666; }

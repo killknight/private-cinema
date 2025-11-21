@@ -81,10 +81,24 @@
 <style>
 	/*每个页面公共css */
 	body {
-		background: #0f1320;
+		margin: 0;
+		padding: 0;
 	}
 	page {
 		min-height: 100vh;
-		/* background: #0f1320; */
+		margin: 0;
+		padding: 0;
+		/* 默认深色主题背景 */
+		background-color: #0f1320;
+	}
+	
+	/* 蓝色主题页面背景 */
+	page.theme-blue {
+		background-color: #FFFFFF !important;
+	}
+	
+	/* 粉色主题页面背景 */
+	page.theme-pink {
+		background-color: #FFF5F7 !important;
 	}
 </style>

@@ -1,0 +1,9 @@
+/* 导入所有主题样式 */
+/* 深色主题 */
+@import './dark/home/home.css';
+
+/* 蓝色主题 */
+@import './blue/home/home.css';
+
+/* 粉色主题 */
+@import './pink/home/home.css';

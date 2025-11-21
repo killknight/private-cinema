@@ -565,7 +565,8 @@
           'all':()=>{
             let chooseFile = uni.chooseFile;
             // #ifdef MP-WEIXIN
-            chooseFile = wx.chooseMedia;
+            // chooseFile = wx.chooseMedia;
+            chooseFile = wx.chooseMessageFile;
             // #endif
             chooseFile({
             	type: 'all',
