@@ -48,11 +48,11 @@
 				<text v-for="t in (business && business.tags ? business.tags : tags)" :key="t" class="tag">{{ t }}</text>
 			</view>
 			<view class="contact-section" style="margin-top: 20rpx; padding-top: 20rpx; ">
-				<view class="contact-info" @tap="makePhoneCall('15533699320')">
+				<view class="contact-info" @tap="makePhoneCall(business?.phone)">
 					<view class="contact-icon">📞</view>
 					<view class="contact-details">
 						<text class="contact-label">联系电话</text>
-						<text class="contact-value">付先生 15533699320</text>
+						<text class="contact-value">付先生 {{ business?.phone }}</text>
 					</view>
 					<view class="contact-arrow">〉</view>
 				</view>

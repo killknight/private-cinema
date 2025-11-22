@@ -46,7 +46,8 @@ exports.main = async () => {
     address: cinemaInfo.address,
     latitude: cinemaInfo.latitude,
     longitude: cinemaInfo.longitude,
-    cinemaName: cinemaInfo.cinemaName
+    cinemaName: cinemaInfo.cinemaName,
+		phone: cinemaInfo.phone
   } : { 
     openTime: '10:00', 
     closeTime: '24:00', 
